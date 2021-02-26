@@ -1,3 +1,5 @@
+import random
+
 from .Room import Room, RoomUtils
 
 
@@ -46,17 +48,46 @@ class Maze:
                     self.width - 2) * 2 + 4 * 2 - 4
         min_doors = self.width * self.height
 
-        # randomly add doors to the path from the set of possible connections
-        # generate random door values for each possible neighbor for each room
-        # add starting room to path
-        # while path has less than width*height nodes
-        #   get a list of all possible neighbors of all nodes in the path
-        #   randomly select one of the neighbors to add
-        #   add a connected neighbor ref to the room in the path
-        #   add a connected neighbor ref to the room we connected to
-        #   remove possible neighbor ref from path room
-        #   remove possible neighbor ref from added room
-        #   add the connected neighbor to the path
+        path = [start_room]
+        while len(path) < min_doors:
+            possible_neighbors = RoomUtils.get_all_neighbors(path)
+            to_add = random.choice(possible_neighbors)
+            if to_add is None:
+                print("no more rooms to add")
+                break
+            # TODO Door order is picked to increase "maziness", possibly refactor to make truely random
+            if RoomUtils.get_neighbor_in_in_direction(to_add, "north", path) is not None:
+                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "north", path)
+                to_add.north_door = path_room
+                path_room.south_door = to_add
+                to_add.possible_neighbors.remove(path_room)
+                path_room.possible_neighbors.remove(to_add)
+                path.append(to_add)
+            elif RoomUtils.get_neighbor_in_in_direction(to_add, "east", path) is not None:
+                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "east", path)
+                to_add.east_door = path_room
+                path_room.west_door = to_add
+                to_add.possible_neighbors.remove(path_room)
+                path_room.possible_neighbors.remove(to_add)
+                path.append(to_add)
+            elif RoomUtils.get_neighbor_in_in_direction(to_add, "west", path) is not None:
+                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "west", path)
+                to_add.west_door = path_room
+                path_room.east_door = to_add
+                to_add.possible_neighbors.remove(path_room)
+                path_room.possible_neighbors.remove(to_add)
+                path.append(to_add)
+            elif RoomUtils.get_neighbor_in_in_direction(to_add, "south", path) is not None:
+                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "south", path)
+                to_add.south_door = path_room
+                path_room.north_door = to_add
+                to_add.possible_neighbors.remove(path_room)
+                path_room.possible_neighbors.remove(to_add)
+                path.append(to_add)
+            else:
+                self.rooms = potential_rooms
+                print(self)
+                raise Exception("Selected room has no connection to path. Something bad has happened. {}".format(to_add))
 
         remaining_doors = (max_doors - min_doors) // difficulty
 
@@ -74,7 +105,12 @@ class Maze:
             y_coord = 2*room.y_coord+1
             x_coord = 2*room.x_coord+1
             count += 1
-            grid[y_coord][x_coord] = " "
+            if room.x_coord == self.entry_coords[0] and room.y_coord == self.entry_coords[1]:
+                grid[y_coord][x_coord] = "S"
+            elif room.x_coord == self.exit_coords[0] and room.y_coord == self.exit_coords[1]:
+                grid[y_coord][x_coord] = "E"
+            else:
+                grid[y_coord][x_coord] = "O"
             if room.north_door is not None:
                 grid[y_coord-1][x_coord] = "-"
             if room.south_door is not None:

@@ -14,7 +14,16 @@ class Room:
 
     @property
     def connected_neighbors(self):
-        return [self.north_door, self.east_door, self.south_door, self.west_door]
+        result = []
+        if self.north_door is not None:
+            result.append(self.north_door)
+        if self.east_door is not None:
+            result.append(self.east_door)
+        if self.south_door is not None:
+            result.append(self.south_door)
+        if self.west_door is not None:
+            result.append(self.west_door)
+        return result
 
     def is_starting_room(self, maze):
         return self.x_coord == maze.entry_coords[0] and self.y_coord == maze.entry_coords[1]
@@ -28,12 +37,30 @@ class RoomUtils:
     def get_all_neighbors(rooms):
         neighbors = []
         for room in rooms:
-            neighbors.append([x for x in room.possible_neighbors if x not in neighbors])
+            if room is not None:
+                neighbors = neighbors + [x for x in room.possible_neighbors if x not in neighbors and x not in rooms]
+            else:
+                raise Exception("null room in passed rooms")
         return neighbors
 
     @staticmethod
     def get_room_by_coords(x, y, rooms):
         return next(iter(filter(lambda i: i.x_coord == x and i.y_coord == y, rooms)), None)
+
+    @staticmethod
+    def get_neighbor_in_in_direction(room, direction, rooms):
+        if room is None:
+            return None
+        offsets = {
+            "north": (0, -1),
+            "east": (1, 0),
+            "south": (0, 1),
+            "west": (-1, 0)
+        }
+        result = RoomUtils.get_room_by_coords(room.x_coord+offsets[direction][0], room.y_coord+offsets[direction][1], rooms)
+        if result in room.possible_neighbors:
+            return result
+        return None
 
     @staticmethod
     def get_row(y, rooms):
