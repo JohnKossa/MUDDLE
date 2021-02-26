@@ -12,39 +12,32 @@ class Maze:
     def generate_maze(self, difficulty=2):
         potential_rooms = []
 
-        def get_room_at(x, y):
-            return next([i for i in potential_rooms if i.x_coord == x and i.y_coord == y])
-
-        for x in 0..width:
-            for y in 0..height:
+        for x in range(self.width):
+            for y in range(self.height):
                 potential_rooms.append(Room(x, y))
-        for x in 0..width:
-            for y in 0..height:
-                room = get_room_at(x, y)
+        for x in range(self.width):
+            for y in range(self.height):
+                room = RoomUtils.get_room_by_coords(x, y, potential_rooms)
                 if x == 0:
-                    room.possible_neighbors.append(get_room_at(x+1, y))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x + 1, y, potential_rooms))
                 elif x == self.width-1:
-                    room.possible_neighbors.append(get_room_at(x-1, y))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x - 1, y, potential_rooms))
                 else:
-                    room.possible_neighbors.append(get_room_at(x + 1, y))
-                    room.possible_neighbors.append(get_room_at(x - 1, y))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x + 1, y, potential_rooms))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x - 1, y, potential_rooms))
                 if y == 0:
-                    room.possible_neighbors.append(get_room_at(x, y + 1))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
                 elif y == self.height-1:
-                    room.possible_neighbors.append(get_room_at(x, y-1))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y - 1, potential_rooms))
                 else:
-                    room.possible_neighbors.append(get_room_at(x, y + 1))
-                    room.possible_neighbors.append(get_room_at(x, y - 1))
-        # at this point, all rooms are created and linked to each other
-        # override start room and end room to disconnect them from anything other than the one above and below them
-        start_room = get_room_at(self.entry_coords[0], self.entry_coords[1])
-        start_room.possible_neighbors = [get_room_at(self.entry_coords[0], self.entry_coords[1]-1)]
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
+                    room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y - 1, potential_rooms))
 
-        end_room = get_room_at(self.exit_coords[0], self.exit_coords[1])
-        end_room.possible_neighbors = [get_room_at(self.exit_coords[0], self.exit_coords[1] + 1)]
+        start_room = RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1], potential_rooms)
+        start_room.possible_neighbors = [RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1]-1, potential_rooms)]
 
-        # remove stat room as an option from the rooms to the left and right
-        # remove end room as an option from the rooms to the left and right
+        end_room = RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1], potential_rooms)
+        end_room.possible_neighbors = [RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1]+1, potential_rooms)]
 
         max_doors = 4 * (self.width - 1) * (self.height - 1) + 3 * (self.height - 2) * 2 + 3 * (
                     self.width - 2) * 2 + 4 * 2 - 4
@@ -64,34 +57,53 @@ class Maze:
 
         remaining_doors = (max_doors - min_doors) // difficulty
 
-        for i in 0..remaining_doors:
+        for i in range(remaining_doors):
             pass
             # add more missing connections
 
         self.rooms = potential_rooms
 
     def __str__(self):
-        return "something"
-
-
-class RoomCollection:
-    def __init__(self, rooms):
-        self.rooms = rooms
-
-    def get_all_neighbors(self):
-        neighbors = []
+        result = ""
+        grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
+        count = 0
         for room in self.rooms:
+            y_coord = 2*room.y_coord+1
+            x_coord = 2*room.x_coord+1
+            count += 1
+            grid[y_coord][x_coord] = " "
+            if room.north_door is not None:
+                grid[y_coord-1][x_coord] = "-"
+            if room.south_door is not None:
+                grid[y_coord+1][x_coord] = "-"
+            if room.west_door is not None:
+                grid[y_coord][x_coord-1] = "|"
+            if room.east_door is not None:
+                grid[y_coord][x_coord+1] = "|"
+        for row in grid:
+            result += "".join(row)+"\n"
+        return result
+
+
+class RoomUtils:
+    @staticmethod
+    def get_all_neighbors(rooms):
+        neighbors = []
+        for room in rooms:
             neighbors.append([x for x in room.possible_neighbors if x not in neighbors])
         return neighbors
 
-    def get_room_by_coords(self, x, y):
-        return next([i for i in self.rooms if i.x_coord == x and i.y_coord == y])
+    @staticmethod
+    def get_room_by_coords(x, y, rooms):
+        return next(iter(filter(lambda i: i.x_coord == x and i.y_coord == y, rooms)), None)
 
-    def get_row(self, y):
-        return [i for i in self.rooms if i.y_coord == y]
+    @staticmethod
+    def get_row(y, rooms):
+        return [i for i in rooms if i.y_coord == y]
 
-    def get_col(self, x):
-        return [i for i in self.rooms if i.x_coord == x]
+    @staticmethod
+    def get_col(x, rooms):
+        return [i for i in rooms if i.x_coord == x]
 
 
 class Room:
@@ -99,11 +111,18 @@ class Room:
         self.x_coord = x_coord
         self.y_coord = y_coord
         self.possible_neighbors = []
-        self.connected_neighbors = []
+        self.north_door = None
+        self.east_door = None
+        self.south_door = None
+        self.west_door = None
 
-    def is_starting_room(self, map):
-        return self.x_coord == map.entry_coords[0] and self.y_coord == map.entry_coords[1]
+    @property
+    def connected_neighbors(self):
+        return [self.north_door, self.east_door, self.south_door, self.west_door]
 
-    def is_exit_room(self, map):
-        return self.x_coord == map.exit_coords[0] and self.y_coord == map.exit_coords[1]
+    def is_starting_room(self, maze):
+        return self.x_coord == maze.entry_coords[0] and self.y_coord == maze.entry_coords[1]
+
+    def is_exit_room(self, maze):
+        return self.x_coord == maze.exit_coords[0] and self.y_coord == maze.exit_coords[1]
 
