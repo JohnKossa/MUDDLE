@@ -1,7 +1,7 @@
 # MUDDLE
 Multi User Discord Death Labyrinth Experience
 
-##Current road map is:
+## Current road map is:
 1. Maze Generation
 1. Navigate a single player through the maze via Discord commands and feedback
 1. Give the player an "attack" and "defend" option, and populate the maze with a few simple enemies
