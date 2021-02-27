@@ -19,3 +19,6 @@ Multi User Discord Death Labyrinth Experience
 
 ## Completed Milestones
 ~~1. Maze Generation~~
+
+## Nice-to-haves
+1. Multiple sized rooms in the maze, maybe combining clusters of fully connected rooms into one large room for variety
