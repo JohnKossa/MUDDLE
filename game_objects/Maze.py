@@ -38,11 +38,19 @@ class Maze:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y - 1, potential_rooms))
 
-        start_room = RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1], potential_rooms)
-        start_room.possible_neighbors = [RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1]-1, potential_rooms)]
+        start_x = self.entry_coords[0]
+        start_y = self.entry_coords[1]
+        start_room = RoomUtils.get_room_by_coords(start_x, start_y, potential_rooms)
+        start_room.possible_neighbors = [RoomUtils.get_room_by_coords(start_x, start_y-1, potential_rooms)]
+        RoomUtils.get_room_by_coords(start_x - 1, start_y, potential_rooms).possible_neighbors.remove(start_room)
+        RoomUtils.get_room_by_coords(start_x + 1, start_y, potential_rooms).possible_neighbors.remove(start_room)
 
-        end_room = RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1], potential_rooms)
-        end_room.possible_neighbors = [RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1]+1, potential_rooms)]
+        exit_x = self.exit_coords[0]
+        exit_y = self.exit_coords[1]
+        end_room = RoomUtils.get_room_by_coords(exit_x, exit_y, potential_rooms)
+        end_room.possible_neighbors = [RoomUtils.get_room_by_coords(exit_x, exit_y+1, potential_rooms)]
+        RoomUtils.get_room_by_coords(exit_x-1, exit_y, potential_rooms).possible_neighbors.remove(end_room)
+        RoomUtils.get_room_by_coords(exit_x+1, exit_y, potential_rooms).possible_neighbors.remove(end_room)
 
         max_doors = 4 * (self.width - 1) * (self.height - 1) + 3 * (self.height - 2) * 2 + 3 * (
                     self.width - 2) * 2 + 4 * 2 - 4
@@ -87,6 +95,7 @@ class Maze:
             else:
                 self.rooms = potential_rooms
                 print(self)
+                print("Tile in question: {},{}".format(to_add.x_coord, to_add.y_coord))
                 raise Exception("Selected room has no connection to path. Something bad has happened. {}".format(to_add))
 
         remaining_doors = (max_doors - min_doors) // difficulty
