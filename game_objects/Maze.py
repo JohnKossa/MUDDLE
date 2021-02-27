@@ -14,6 +14,14 @@ class Maze:
             self.exit_coords = exit_coords
             self.rooms = []
 
+    @property
+    def last_row_index(self):
+        return self.height-1
+
+    @property
+    def last_col_index(self):
+        return self.width-1
+
     def generate_maze(self, difficulty=2):
         potential_rooms = []
 
@@ -25,14 +33,14 @@ class Maze:
                 room = RoomUtils.get_room_by_coords(x, y, potential_rooms)
                 if x == 0:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x + 1, y, potential_rooms))
-                elif x == self.width-1:
+                elif x == self.last_col_index:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x - 1, y, potential_rooms))
                 else:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x + 1, y, potential_rooms))
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x - 1, y, potential_rooms))
                 if y == 0:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
-                elif y == self.height-1:
+                elif y == self.last_row_index:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y - 1, potential_rooms))
                 else:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
@@ -61,7 +69,7 @@ class Maze:
             possible_neighbors = RoomUtils.get_all_neighbors(path)
             to_add = random.choice(possible_neighbors)
             if to_add is None:
-                print("no more rooms to add")
+                print("No more rooms to add. If this state is reached, it may indicate an error.")
                 break
             # TODO Door order is picked to increase "maziness", possibly refactor to make truely random
             if RoomUtils.get_neighbor_in_in_direction(to_add, "north", path) is not None:
@@ -101,6 +109,7 @@ class Maze:
         remaining_doors = (max_doors - min_doors) // difficulty
 
         for i in range(remaining_doors):
+            # randomly select a new connection to add to the maze
             pass
             # add more missing connections
 
@@ -119,7 +128,7 @@ class Maze:
             elif room.x_coord == self.exit_coords[0] and room.y_coord == self.exit_coords[1]:
                 grid[y_coord][x_coord] = "E"
             else:
-                grid[y_coord][x_coord] = "O"
+                grid[y_coord][x_coord] = " "
             if room.north_door is not None:
                 grid[y_coord-1][x_coord] = "-"
             if room.south_door is not None:
@@ -129,5 +138,5 @@ class Maze:
             if room.east_door is not None:
                 grid[y_coord][x_coord+1] = "|"
         for row in grid:
-            result += "".join(row)+"\n"
+            result += " ".join(row)+"\n"
         return result
