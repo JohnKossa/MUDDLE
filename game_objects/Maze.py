@@ -69,49 +69,63 @@ class Maze:
             possible_neighbors = RoomUtils.get_all_neighbors(path)
             to_add = random.choice(possible_neighbors)
             if to_add is None:
-                print("No more rooms to add. If this state is reached, it may indicate an error.")
-                break
-            # TODO Door order is picked to increase "maziness", possibly refactor to make truely random
-            if RoomUtils.get_neighbor_in_in_direction(to_add, "north", path) is not None:
+                raise Exception("No more rooms to add. If this state is reached, it may indicate an error.")
+
+            def connect_to_north():
                 path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "north", path)
                 to_add.north_door = path_room
                 path_room.south_door = to_add
                 to_add.possible_neighbors.remove(path_room)
                 path_room.possible_neighbors.remove(to_add)
                 path.append(to_add)
-            elif RoomUtils.get_neighbor_in_in_direction(to_add, "east", path) is not None:
+
+            def connect_to_east():
                 path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "east", path)
                 to_add.east_door = path_room
                 path_room.west_door = to_add
                 to_add.possible_neighbors.remove(path_room)
                 path_room.possible_neighbors.remove(to_add)
                 path.append(to_add)
-            elif RoomUtils.get_neighbor_in_in_direction(to_add, "west", path) is not None:
+
+            def connect_to_west():
                 path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "west", path)
                 to_add.west_door = path_room
                 path_room.east_door = to_add
                 to_add.possible_neighbors.remove(path_room)
                 path_room.possible_neighbors.remove(to_add)
                 path.append(to_add)
-            elif RoomUtils.get_neighbor_in_in_direction(to_add, "south", path) is not None:
+
+            def connect_to_south():
                 path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "south", path)
                 to_add.south_door = path_room
                 path_room.north_door = to_add
                 to_add.possible_neighbors.remove(path_room)
                 path_room.possible_neighbors.remove(to_add)
                 path.append(to_add)
-            else:
-                self.rooms = potential_rooms
-                print(self)
-                print("Tile in question: {},{}".format(to_add.x_coord, to_add.y_coord))
-                raise Exception("Selected room has no connection to path. Something bad has happened. {}".format(to_add))
+            connect_fns = {
+                "north": connect_to_north,
+                "east": connect_to_east,
+                "south": connect_to_south,
+                "west": connect_to_west
+            }
+            directions = ["north", "south", "east", "west"]
+            random.shuffle(directions)
+            valid_directions = filter(lambda direction: RoomUtils.get_neighbor_in_in_direction(to_add, direction, path) is not None, directions)
+            connect_fns[next(valid_directions)]()
 
         remaining_doors = (max_doors - min_doors) // difficulty
 
         for i in range(remaining_doors):
+            break  # TODO remove this once the loop body is filled out
             # randomly select a new connection to add to the maze
+            available_rooms = filter(lambda room: len(room.possible_neighbors) > 0, potential_rooms)
+            to_add = random.choice(available_rooms)
+            # find all doors with possible_neighbors with length > 0
+            # randomly select one room
+            # randomly select one connection
+            # add the doors to each room
+            # remove both rooms from each others possible neighbors
             pass
-            # add more missing connections
 
         self.rooms = potential_rooms
 
