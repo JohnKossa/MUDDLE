@@ -2,7 +2,6 @@
 Multi User Discord Death Labyrinth Experience
 
 ## Current road map is:
-1. Maze Generation
 1. Navigate a single player through the maze via Discord commands and feedback
 1. Give the player an "attack" and "defend" option, and populate the maze with a few simple enemies
 1. Allow tracking of multiple players simultaneously
@@ -17,3 +16,6 @@ Multi User Discord Death Labyrinth Experience
 1. Create the "donation box" in the town
 1. Build out the memorial system
 1. Build out the "paragon" system
+
+## Completed Milestones
+~~1. Maze Generation~~
