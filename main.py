@@ -1,5 +1,7 @@
-from game_objects.Maze import Maze
+from Game import Game
+import DiscordConnection
 
-maze = Maze(width=21, height=21, entry_coords=(10, 20), exit_coords=(10, 0))
-maze.generate_maze(difficulty=3)
-print(maze)
+game = Game()
+game.init_maze()
+
+DiscordConnection.run(game)

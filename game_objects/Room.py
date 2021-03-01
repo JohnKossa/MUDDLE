@@ -31,6 +31,29 @@ class Room:
     def is_exit_room(self, maze):
         return self.x_coord == maze.exit_coords[0] and self.y_coord == maze.exit_coords[1]
 
+    def describe_room(self):
+        # TODO link this to the correct room template file and pull the description from there
+        if self.template is None:
+            return "You are in a room. Super interesting."
+        return self.template
+
+    def describe_exits(self):
+        exits = {
+            "North": self.north_door,
+            "East": self.east_door,
+            "South": self.south_door,
+            "West": self.west_door
+        }
+        valid_exits = [*filter(lambda x: exits[x] is not None, exits.keys())]
+        exit_count = len(valid_exits)
+        if exit_count == 1:
+            return "There is one exit to the {}".format(valid_exits[0])
+        elif exit_count == 2:
+            return "Exits are to the {} and {}".format(valid_exits[0], valid_exits[1])
+        elif exit_count > 2:
+            formatted_list = (", ".join(valid_exits[:-1]))+(", and {}".format(valid_exits[-1]))
+            return "Exits include {}".format(formatted_list)
+
 
 class RoomUtils:
     @staticmethod

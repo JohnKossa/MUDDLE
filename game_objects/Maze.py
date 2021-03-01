@@ -13,6 +13,8 @@ class Maze:
             self.entry_coords = entry_coords
             self.exit_coords = exit_coords
             self.rooms = []
+            self.entry_room = None
+            self.exit_room = None
 
     @property
     def last_row_index(self):
@@ -124,6 +126,8 @@ class Maze:
             connect_fns[next(valid_directions)]()
 
         self.rooms = potential_rooms
+        self.entry_room = RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1], self.rooms)
+        self.exit_room = RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1], self.rooms)
 
     def __str__(self):
         result = ""
