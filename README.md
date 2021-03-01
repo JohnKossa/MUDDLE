@@ -15,7 +15,10 @@ Multi User Discord Death Labyrinth Experience
 1. Create "classes", each with some minor expansions to the base action system 
 1. Create the "donation box" in the town
 1. Build out the memorial system
-1. Build out the "paragon" system
+1. Build out the "retirement" system
 
 ## Completed Milestones
 ~~1. Maze Generation~~
+
+## Nice-to-haves
+1. Multiple sized rooms in the maze, maybe combining clusters of fully connected rooms into one large room for variety. Slightly breaks caridnal direction exits paradigm
