@@ -18,7 +18,8 @@ Multi User Discord Death Labyrinth Experience
 1. Build out the "retirement" system
 
 ## Completed Milestones
-~~1. Maze Generation~~
+1. ~~Maze Generation~~
+1. ~~Navigate a single player through the maze via Discord commands and feedback~~
 
 ## Nice-to-haves
 1. Multiple sized rooms in the maze, maybe combining clusters of fully connected rooms into one large room for variety. Slightly breaks caridnal direction exits paradigm
