@@ -22,7 +22,7 @@ class Exit(Command):
         direction = params[0]
         target_player = game.players[0]
         room = target_player.current_room
-        door = room.door(direction)
+        door = room.get_door(direction)
         if door is None:
             return "Invalid direction. Room has no {} exit.".format(direction)
         target_player.current_room = door

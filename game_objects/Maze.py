@@ -27,6 +27,13 @@ class Maze:
     def generate_maze(self, difficulty=2):
         potential_rooms = []
 
+        opposite_directions = {
+            "north": "south",
+            "south": "north",
+            "west": "east",
+            "east": "west"
+        }
+
         for x in range(self.width):
             for y in range(self.height):
                 potential_rooms.append(Room(x, y))
@@ -69,44 +76,17 @@ class Maze:
             if to_add is None:
                 raise Exception("No more rooms to add. If this state is reached, it may indicate an error.")
 
-            def connect_to_north():
-                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "north", path)
-                to_add.north_door = path_room
-                path_room.south_door = to_add
+            def connect_to_direction(direction):
+                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, direction, path)
+                to_add.set_door(direction, path_room)
+                path_room.set_door(opposite_directions[direction], to_add)
                 to_add.possible_neighbors.remove(path_room)
                 path_room.possible_neighbors.remove(to_add)
 
-            def connect_to_east():
-                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "east", path)
-                to_add.east_door = path_room
-                path_room.west_door = to_add
-                to_add.possible_neighbors.remove(path_room)
-                path_room.possible_neighbors.remove(to_add)
-
-            def connect_to_west():
-                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "west", path)
-                to_add.west_door = path_room
-                path_room.east_door = to_add
-                to_add.possible_neighbors.remove(path_room)
-                path_room.possible_neighbors.remove(to_add)
-
-            def connect_to_south():
-                path_room = RoomUtils.get_neighbor_in_in_direction(to_add, "south", path)
-                to_add.south_door = path_room
-                path_room.north_door = to_add
-                to_add.possible_neighbors.remove(path_room)
-                path_room.possible_neighbors.remove(to_add)
-
-            connect_fns = {
-                "north": connect_to_north,
-                "east": connect_to_east,
-                "south": connect_to_south,
-                "west": connect_to_west
-            }
             directions = ["north", "south", "east", "west"]
             random.shuffle(directions)
             valid_directions = filter(lambda direction: RoomUtils.get_neighbor_in_in_direction(to_add, direction, path) is not None, directions)
-            connect_fns[next(valid_directions)]()
+            connect_to_direction(next(valid_directions))
             path.append(to_add)
 
         # remaining possible doors = sum up all possible_neighbors from all doors and divide by 2
@@ -123,7 +103,7 @@ class Maze:
             valid_directions = filter(
                 lambda direction: RoomUtils.get_neighbor_in_in_direction(to_add, direction, path) is not None,
                 directions)
-            connect_fns[next(valid_directions)]()
+            connect_to_direction(next(valid_directions))
 
         self.rooms = potential_rooms
         self.entry_room = RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1], self.rooms)

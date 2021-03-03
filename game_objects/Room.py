@@ -25,7 +25,7 @@ class Room:
             result.append(self.west_door)
         return result
 
-    def door(self, direction):
+    def get_door(self, direction):
         doors = {
             "north": self.north_door,
             "east": self.east_door,
@@ -34,6 +34,16 @@ class Room:
         }
         if direction in doors.keys():
             return doors[direction]
+
+    def set_door(self, direction, val):
+        if direction == "north":
+            self.north_door = val
+        elif direction == "east":
+            self.east_door = val
+        elif direction == "south":
+            self.south_door = val
+        elif direction == "west":
+            self.west_door = val
 
     def is_starting_room(self, maze):
         return self.x_coord == maze.entry_coords[0] and self.y_coord == maze.entry_coords[1]
