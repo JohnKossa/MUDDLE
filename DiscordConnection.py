@@ -3,7 +3,7 @@ import re
 
 import discord
 from dotenv import load_dotenv
-from game_objects.Command import Exit
+from game_objects.Command import Exit, RebuildMaze
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -26,14 +26,20 @@ class CustomClient(discord.Client):
         if not content.startswith("!"):
             return
 
-        matches = re.match(r"^!(\w+)(?:\s(\w+))*$", message.content)
-        command, *params = matches.groups()
+        matches = re.match(r"^!(\w+)((?:\s\w+)+)?$", message.content)
+        command = matches.group(1)
+        param_match = matches.group(2)
+        if param_match:
+            params = [m.group(0) for m in re.finditer(r'\w+', param_match)]
+        else:
+            params = []
 
         commands = {
             "sayhello": lambda: "Hello World!",
             "saygoodbye": lambda: "Goodbye World!",
             "showmap": lambda: "```"+str(game.maze)+"```",
-            "exit": lambda: Exit().do_action(game, params)
+            "exit": lambda: Exit().do_action(game, params),
+            "rebuildmaze": lambda: RebuildMaze().do_action(game, params)
         }
 
         if command in commands.keys():

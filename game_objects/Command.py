@@ -29,6 +29,18 @@ class Exit(Command):
         return str(target_player.current_room)
 
 
+class RebuildMaze(Command):
+    def __init__(self):
+        super().__init__()
+
+    def do_action(self, game, params):
+        width = int(params[0])
+        height = int(params[1])
+        difficulty = int(params[2])
+        game.init_maze(width, height, difficulty)
+        return "Maze rebuilt!\n```"+str(game.maze)+"```"
+
+
 class Parameter:
     def __init__(self):
         pass
