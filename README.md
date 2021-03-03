@@ -2,9 +2,9 @@
 Multi User Discord Death Labyrinth Experience
 
 ## Current road map is:
-1. Navigate a single player through the maze via Discord commands and feedback
-1. Give the player an "attack" and "defend" option, and populate the maze with a few simple enemies
+
 1. Allow tracking of multiple players simultaneously
+1. Give the player an "attack" and "defend" option, and populate the maze with a few simple enemies
 1. Give players the ability to swap weapons for things they find in the dungeon and populate the dungeon with a few weapon treasures
 1. Expand inventory system to allow for armor and consumables
 1. Create gold and loot tables for the monster
@@ -19,6 +19,7 @@ Multi User Discord Death Labyrinth Experience
 
 ## Completed Milestones
 ~~1. Maze Generation~~
+~~1. Navigate a single player through the maze via Discord commands and feedback~~
 
 ## Nice-to-haves
 1. Multiple sized rooms in the maze, maybe combining clusters of fully connected rooms into one large room for variety. Slightly breaks caridnal direction exits paradigm
