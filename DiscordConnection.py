@@ -3,6 +3,7 @@ import re
 
 import discord
 from dotenv import load_dotenv
+from game_objects.Command import Exit
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -21,17 +22,22 @@ class CustomClient(discord.Client):
         author = message.author
         content = message.content
         channel = message.channel
-        commands = {
-            "SayHello": lambda: channel.send("Hello World!"),
-            "SayGoodbye": lambda: channel.send("Goodbye World!"),
-            "ShowMap": lambda: channel.send("```"+str(game.maze)+"```")
-        }
+
         if not content.startswith("!"):
             return
 
-        for k, v in commands.items():
-            if re.search("^!" + k, content):
-                await v()
+        matches = re.match(r"^!(\w+)(?:\s(\w+))*$", message.content)
+        command, *params = matches.groups()
+
+        commands = {
+            "sayhello": lambda: "Hello World!",
+            "saygoodbye": lambda: "Goodbye World!",
+            "showmap": lambda: "```"+str(game.maze)+"```",
+            "exit": lambda: Exit().do_action(game, params)
+        }
+
+        if command in commands.keys():
+            await channel.send(commands[command]())
 
     async def on_error(self, event, *args, **kwargs):
         with open('err.log', 'a') as f:

@@ -34,7 +34,7 @@ class Room:
     def describe_room(self):
         # TODO link this to the correct room template file and pull the description from there
         if self.template is None:
-            return "You are in a room. Super interesting."
+            return "You are in a room. Super interesting. {}".format(self.name)
         return self.template
 
     def describe_exits(self):
@@ -53,6 +53,9 @@ class Room:
         elif exit_count > 2:
             formatted_list = (", ".join(valid_exits[:-1]))+(", and {}".format(valid_exits[-1]))
             return "Exits include {}".format(formatted_list)
+
+    def __str__(self):
+        return self.describe_room()+"\n"+self.describe_exits()
 
 
 class RoomUtils:
