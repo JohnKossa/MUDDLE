@@ -1,29 +1,54 @@
-from discord_objects.DiscordUser import DiscordUser, UserUtils
-from game_objects.Player import Player
-
-
 class Command:
-    def __init__(self):
-        self.parameters = []
+    aliases = []
 
+    @classmethod
+    def default_alias(cls):
+        if len(cls.aliases) == 0:
+            return None
+        return cls.aliases[0]
 
-class Exit(Command):
+    @classmethod
+    def command_name(cls):
+        return cls.__name__
+
     @staticmethod
     def do_action(game, params, message):
-        target_user = UserUtils.get_character_by_username(message.author, game.discord_users)
-        if target_user is None or target_user.current_character is None:
-            return "You don't currently have a character. Use the !NewCharacter command to create one."
-        target_player = target_user.current_character
-        room = target_player.current_room
-        direction = params[0]
-        door = room.get_door(direction)
-        if door is None:
-            return "Invalid direction. Room has no {} exit.".format(direction)
-        target_player.current_room = door
-        return str(target_player.current_room)
+        raise Exception("No action implemented for command")
+
+
+class ListCommands(Command):
+    aliases = [
+        "ListCommands"
+    ]
+
+    @staticmethod
+    def do_action(game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        if discord_user is None:
+            return "You are not listed as a user in this game."
+        commands = discord_user.get_commands()
+        command_aliases = [x.default_alias() for x in commands]
+        return "Your commands are:\n{}".format("\n".join(command_aliases))
+
+
+class ShowMap(Command):
+    aliases = [
+        "ShowMap",
+        "Map"
+    ]
+
+    @staticmethod
+    def do_action(game, params, message):
+        return str(game.maze)
 
 
 class RebuildMaze(Command):
+    aliases = [
+        "RebuildMaze",
+        "Rebuild"
+    ]
+
     @staticmethod
     def do_action(game, params, message):
         width = int(params[0])
@@ -31,16 +56,3 @@ class RebuildMaze(Command):
         difficulty = int(params[2])
         game.init_maze(width, height, difficulty)
         return "Maze rebuilt!\n"+str(game.maze)
-
-
-class NewCharacter(Command):
-    @staticmethod
-    def do_action(game, params, message):
-        new_discord_user = DiscordUser()
-        new_player = Player()
-        new_discord_user.username = message.author
-        new_discord_user.current_character = new_player
-        game.register_player(new_player)
-        game.discord_users.append(new_discord_user)
-        new_player.discord_user = new_discord_user
-        return "New character created for {}".format(message.author)
