@@ -32,8 +32,8 @@ class Room:
             "south": self.south_door,
             "west": self.west_door
         }
-        if direction in doors.keys():
-            return doors[direction]
+        if direction.lower() in doors.keys():
+            return doors[direction.lower()]
 
     def set_door(self, direction, val):
         if direction == "north":

@@ -5,6 +5,10 @@ class Player:
         self.zone = "Labrynth"
         self.skills = None
         self.inventory = None
+        self.discord_user = None
+
+    def __str__(self):
+        pass
 
 
 class PlayerInventory:

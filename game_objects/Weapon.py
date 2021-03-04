@@ -2,4 +2,10 @@ from .Item import Item
 
 
 class Weapon(Item):
-    pass
+    def __init__(self):
+        self.hit_bonuses = {
+
+        }
+        self.damage_bonuses = {
+            
+        }

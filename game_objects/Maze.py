@@ -133,4 +133,4 @@ class Maze:
                 grid[y_coord][x_coord+1] = "|"
         for row in grid:
             result += " ".join(row)+"\n"
-        return result
+        return "```"+result+"```"
