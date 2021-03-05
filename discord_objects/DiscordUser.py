@@ -1,4 +1,4 @@
-from game_objects.Command import Command
+from game_objects.Command import RebuildMaze, NewCharacter
 
 
 class DiscordUser:
@@ -14,6 +14,8 @@ class DiscordUser:
             cmd_list = cmd_list + self.current_character.get_commands()
         else:
             cmd_list = cmd_list + [NewCharacter]
+        if self.is_admin:
+            cmd_list = cmd_list + [RebuildMaze]
         return cmd_list
 
     def __str__(self):
@@ -44,24 +46,3 @@ class UserUtils:
         return None
 
 
-class NewCharacter(Command):
-    aliases = [
-        "NewCharacter",
-        "NewChar",
-        "MakeCharacter",
-        "MakeChar"
-    ]
-
-    @staticmethod
-    def do_action(game, params, message):
-        from game_objects.Player import Player
-        new_player = Player()
-        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
-        if discord_user is None:
-            discord_user = DiscordUser(username=str(message.author), current_character=new_player)
-        else:
-            discord_user.current_character = new_player
-        game.register_player(new_player)
-        game.discord_users = game.discord_users + [discord_user]
-        new_player.discord_user = discord_user
-        return "New character created for {}".format(message.author)

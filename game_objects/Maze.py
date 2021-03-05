@@ -1,6 +1,6 @@
 import random
 
-from .Room import Room, RoomUtils
+from game_objects.MazeRoom  import MazeRoom, RoomUtils
 
 
 class Maze:
@@ -36,7 +36,7 @@ class Maze:
 
         for x in range(self.width):
             for y in range(self.height):
-                potential_rooms.append(Room(x, y))
+                potential_rooms.append(MazeRoom(x, y))
         for x in range(self.width):
             for y in range(self.height):
                 room = RoomUtils.get_room_by_coords(x, y, potential_rooms)

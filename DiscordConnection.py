@@ -1,7 +1,7 @@
+import discord
 import os
 import re
 
-import discord
 from dotenv import load_dotenv
 
 from discord_objects.DiscordUser import DiscordUser, UserUtils
@@ -70,24 +70,10 @@ class CustomClient(discord.Client):
             await channel.send(matched_command.do_action(game, params, message))
             return
 
-        # commands = {
-        #     "sayhello": lambda: "Hello World!",
-        #     "showmap": lambda: ShowMap.do_action(game, params, message),
-        #     "exit": lambda: Exit.do_action(game, params, message),
-        #     "rebuildmaze": lambda: RebuildMaze.do_action(game, params, message),
-        #     "newcharacter": lambda: NewCharacter.do_action(game, params, message)
-        # }
-        #
-        # if command.lower() in commands.keys():
-        #     await channel.send(commands[command.lower()]())
-
         if command.lower() == "get" and params[0].lower() == "ye" and params[1].lower() == "flask":
             await channel.send("You can't get ye flask")
 
     async def on_error(self, event, *args, **kwargs):
-        print("Unhandled error:")
-        print(args)
-        print(kwargs)
         with open('err.log', 'a') as f:
             if event == 'on_message':
                 f.write(f'Unhandled message: {args[0]}\n')

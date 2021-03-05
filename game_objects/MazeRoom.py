@@ -1,7 +1,7 @@
-from game_objects.Command import Command
+from game_objects.Command import Exit
 
 
-class Room:
+class MazeRoom:
     def __init__(self, x_coord, y_coord):
         self.name = "{},{}".format(x_coord, y_coord)
         self.template = None
@@ -123,23 +123,3 @@ class RoomUtils:
         return [i for i in rooms if i.x_coord == x]
 
 
-class Exit(Command):
-    aliases = [
-        "Exit",
-        "Go",
-        "Door"
-    ]
-
-    @staticmethod
-    def do_action(game, params, message):
-        from discord_objects.DiscordUser import UserUtils
-        target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
-        if target_player is None:
-            return "You don't currently have a character. Use the !NewCharacter command to create one."
-        room = target_player.current_room
-        direction = params[0]
-        door = room.get_door(direction.lower())
-        if door is None:
-            return "Invalid direction. Room has no {} exit.".format(direction)
-        target_player.current_room = door
-        return str(target_player.current_room)
