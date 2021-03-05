@@ -4,14 +4,12 @@ from game_objects.MazeRoom  import MazeRoom, RoomUtils
 
 
 class Maze:
-    def __init__(self, width=None, height=None, entry_coords=None, exit_coords=None):
+    def __init__(self, width=None, height=None):
         if width is None or height is None:
             raise Exception("Cannot instantiate a maze without a width and height")
         else:
             self.width = width
             self.height = height
-            self.entry_coords = entry_coords
-            self.exit_coords = exit_coords
             self.rooms = []
             self.entry_room = None
             self.exit_room = None
@@ -24,7 +22,7 @@ class Maze:
     def last_col_index(self):
         return self.width-1
 
-    def generate_maze(self, difficulty=2):
+    def generate_maze(self, entry_coords, exit_coords, difficulty=2):
         potential_rooms = []
 
         opposite_directions = {
@@ -55,15 +53,15 @@ class Maze:
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y + 1, potential_rooms))
                     room.possible_neighbors.append(RoomUtils.get_room_by_coords(x, y - 1, potential_rooms))
 
-        start_x = self.entry_coords[0]
-        start_y = self.entry_coords[1]
+        start_x = entry_coords[0]
+        start_y = entry_coords[1]
         start_room = RoomUtils.get_room_by_coords(start_x, start_y, potential_rooms)
         start_room.possible_neighbors = [RoomUtils.get_room_by_coords(start_x, start_y-1, potential_rooms)]
         RoomUtils.get_room_by_coords(start_x - 1, start_y, potential_rooms).possible_neighbors.remove(start_room)
         RoomUtils.get_room_by_coords(start_x + 1, start_y, potential_rooms).possible_neighbors.remove(start_room)
 
-        exit_x = self.exit_coords[0]
-        exit_y = self.exit_coords[1]
+        exit_x = exit_coords[0]
+        exit_y = exit_coords[1]
         end_room = RoomUtils.get_room_by_coords(exit_x, exit_y, potential_rooms)
         end_room.possible_neighbors = [RoomUtils.get_room_by_coords(exit_x, exit_y+1, potential_rooms)]
         RoomUtils.get_room_by_coords(exit_x-1, exit_y, potential_rooms).possible_neighbors.remove(end_room)
@@ -106,8 +104,8 @@ class Maze:
             connect_to_direction(next(valid_directions))
 
         self.rooms = potential_rooms
-        self.entry_room = RoomUtils.get_room_by_coords(self.entry_coords[0], self.entry_coords[1], self.rooms)
-        self.exit_room = RoomUtils.get_room_by_coords(self.exit_coords[0], self.exit_coords[1], self.rooms)
+        self.entry_room = RoomUtils.get_room_by_coords(entry_coords[0], entry_coords[1], self.rooms)
+        self.exit_room = RoomUtils.get_room_by_coords(exit_coords[0], exit_coords[1], self.rooms)
 
     def __str__(self):
         result = ""
@@ -117,9 +115,9 @@ class Maze:
             y_coord = 2*room.y_coord+1
             x_coord = 2*room.x_coord+1
             count += 1
-            if room.x_coord == self.entry_coords[0] and room.y_coord == self.entry_coords[1]:
+            if room == self.entry_room:
                 grid[y_coord][x_coord] = "S"
-            elif room.x_coord == self.exit_coords[0] and room.y_coord == self.exit_coords[1]:
+            elif room == self.exit_room:
                 grid[y_coord][x_coord] = "E"
             else:
                 grid[y_coord][x_coord] = " "

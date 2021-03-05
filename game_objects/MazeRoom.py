@@ -8,6 +8,8 @@ class MazeRoom:
         self.fixtures = []
         self.x_coord = x_coord
         self.y_coord = y_coord
+        self.width = 1
+        self.height = 1
         self.possible_neighbors = []
         self.north_door = None
         self.east_door = None

@@ -65,7 +65,8 @@ class Drop(Command):
 class RebuildMaze(Command):
     aliases = [
         "RebuildMaze",
-        "Rebuild"
+        "Rebuild",
+        "RebuildMap"
     ]
     combat_action_cost = 0
 
@@ -88,9 +89,9 @@ class NewCharacter(Command):
 
     @staticmethod
     def do_action(game, params, message):
-        from game_objects.Player import Player
+        from game_objects.Character import Character
         from discord_objects.DiscordUser import UserUtils, DiscordUser
-        new_player = Player()
+        new_player = Character()
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
             discord_user = DiscordUser(username=str(message.author), current_character=new_player)

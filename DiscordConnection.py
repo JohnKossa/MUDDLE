@@ -44,8 +44,6 @@ class CustomClient(discord.Client):
             print("New user found. Adding...")
             discord_user = DiscordUser(username=str(author))
             game.discord_user.append(discord_user)
-        else:
-            print("Existing user found")
 
         if not content.startswith("!"):
             return
