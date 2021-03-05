@@ -5,6 +5,7 @@ class DiscordUser:
     def __init__(self, username=None, current_character=None):
         self.username = username
         self.current_character = current_character
+        self.is_admin = True if username == "kg959#1350" else False
 
     def get_commands(self):
         from game_objects.Command import ShowMap, ListCommands

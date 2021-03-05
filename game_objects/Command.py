@@ -43,6 +43,20 @@ class ShowMap(Command):
         return str(game.maze)
 
 
+class Drop(Command):
+    aliases = [
+        "Drop"
+        "Discard"
+    ]
+
+    @staticmethod
+    def do_action(game, params, message):
+        # params -1 is item name
+        # params 1 if present is quantity, default 1
+        # remove quantity of the item from the player's inventory
+        # add the item to the floor of the room
+        pass
+
 class RebuildMaze(Command):
     aliases = [
         "RebuildMaze",

@@ -13,6 +13,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 intents = discord.Intents.default()
 intents.members = True
 
+
 class CustomClient(discord.Client):
     def __init__(self, intents=None):
         super().__init__(intents=intents)
@@ -22,7 +23,8 @@ class CustomClient(discord.Client):
         print('Collecting users')
         guild = self.guilds[0]
         async for member in guild.fetch_members():
-            game.discord_users.append(DiscordUser(username=str(member)))
+            if UserUtils.get_user_by_username(str(member), game.discord_users) is None:
+                game.discord_users.append(DiscordUser(username=str(member)))
         print('Users collected. Added {} users.'.format(len(game.discord_users)))
         UserUtils.print_all(game.discord_users)
 
