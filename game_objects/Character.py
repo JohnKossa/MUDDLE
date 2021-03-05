@@ -4,7 +4,7 @@ class Character:
         self.current_room = None
         self.zone = "Labrynth"
         self.skills = None
-        self.inventory = None
+        self.inventory = PlayerInventory()
         self.discord_user = None
         self.max_health = 100
         self.health = 100

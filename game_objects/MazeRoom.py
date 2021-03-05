@@ -1,11 +1,10 @@
 from game_objects.Command import Exit
+from game_objects.Room import Room
 
 
-class MazeRoom:
+class MazeRoom(Room):
     def __init__(self, x_coord, y_coord):
-        self.name = "{},{}".format(x_coord, y_coord)
-        self.template = None
-        self.fixtures = []
+        super(MazeRoom, self).__init__(name="{},{}".format(x_coord, y_coord))
         self.x_coord = x_coord
         self.y_coord = y_coord
         self.width = 1
@@ -80,7 +79,8 @@ class MazeRoom:
             return "Exits include {}".format(formatted_list)
 
     def get_commands(self):
-        return [Exit]
+        to_return = super().get_commands() + [Exit]
+        return to_return
 
     def __str__(self):
         return self.describe_room()+"\n"+self.describe_exits()
