@@ -33,11 +33,44 @@ class Command:
         raise Exception("No action implemented for command")
 
 
+class ShowHelp(Command):
+    aliases = [
+        "ShowHelp",
+        "Help"
+    ]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Gives details about the usage of the named command",
+            "Params:",
+            "    0: Command Name"
+        ])
+
+    @staticmethod
+    def do_action(game, params, message):
+        if len(params) == 0:
+            return ShowHelp.show_help()
+        supplied_alias = params[0].lower()
+        for command in all_commands():
+            lower_aliases = [x.lower() for x in command.aliases]
+            if supplied_alias in lower_aliases:
+                return command.show_help()
+
+
 class ShowAliases(Command):
     aliases = [
         "ShowAliases",
         "Alias"
     ]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Gives details about the usage of the named command",
+            "Params:",
+            "    0: Command Name"
+        ])
 
     @staticmethod
     def do_action(game, params, message):
@@ -56,6 +89,13 @@ class ListCommands(Command):
         "Commands"
     ]
     combat_action_cost = 0
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Lists all commands currently available to you",
+            "Params: None"
+        ])
 
     @staticmethod
     def do_action(game, params, message):
@@ -76,6 +116,13 @@ class ShowMap(Command):
     ]
     combat_action_cost = 0
 
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Debug command: Displays the current map",
+            "Params: None"
+        ])
+
     @staticmethod
     def do_action(game, params, message):
         return str(game.maze)
@@ -87,6 +134,15 @@ class Drop(Command):
         "Discard"
     ]
     combat_action_cost = 0
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Not yet implemented: Will drop a held or stored item on the floor of the current room ",
+            "Params:",
+            "    0: Item Name",
+            "    1: (optional) Quantity"
+        ])
 
     @staticmethod
     def do_action(game, params, message):
@@ -105,6 +161,16 @@ class RebuildMaze(Command):
     ]
     combat_action_cost = 0
 
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Debug Command: Regenerates the current maze and kicks all players back to the start",
+            "Params:",
+            "    0: Width",
+            "    1: Height",
+            "    2. Difficulty"
+        ])
+
     @staticmethod
     def do_action(game, params, message):
         width = int(params[0])
@@ -121,6 +187,13 @@ class NewCharacter(Command):
         "MakeCharacter",
         "MakeChar"
     ]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Creates a new character, associates it with your user, and inserts it in the starting room of the maze",
+            "Params: None"
+        ])
 
     @staticmethod
     def do_action(game, params, message):
@@ -144,6 +217,14 @@ class Exit(Command):
         "Go",
         "Door"
     ]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Moves your character through the named exit",
+            "Params:",
+            "    0: The name of the door to use"
+        ])
 
     @staticmethod
     def do_action(game, params, message):

@@ -8,8 +8,8 @@ class DiscordUser:
         self.is_admin = True if username == "kg959#1350" else False
 
     def get_commands(self):
-        from game_objects.Command import ShowMap, ShowAliases, ListCommands
-        cmd_list = [ListCommands, ShowAliases, ShowMap]
+        from game_objects.Command import ShowMap, ShowAliases, ListCommands, ShowHelp
+        cmd_list = [ListCommands, ShowAliases, ShowMap, ShowHelp]
         if self.current_character is not None:
             cmd_list = cmd_list + self.current_character.get_commands()
         else:
