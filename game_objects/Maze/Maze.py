@@ -1,6 +1,6 @@
 import random
 
-from game_objects.MazeRoom  import MazeRoom, RoomUtils
+from game_objects.Maze.MazeRoom import MazeRoom, RoomUtils
 
 
 class Maze:

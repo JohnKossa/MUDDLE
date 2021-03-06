@@ -1,6 +1,6 @@
 import random
 
-from game_objects.Maze import Maze
+from game_objects.Maze.Maze import Maze
 
 
 class Game:
