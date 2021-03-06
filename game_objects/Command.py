@@ -41,6 +41,8 @@ class ShowAliases(Command):
 
     @staticmethod
     def do_action(game, params, message):
+        if len(params) == 0:
+            return
         supplied_alias = params[0].lower()
         for command in all_commands():
             lower_aliases = [x.lower() for x in command.aliases]
@@ -50,7 +52,8 @@ class ShowAliases(Command):
 
 class ListCommands(Command):
     aliases = [
-        "ListCommands"
+        "ListCommands",
+        "Commands"
     ]
     combat_action_cost = 0
 

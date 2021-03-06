@@ -1,4 +1,4 @@
-from game_objects.Equipment import Equipment
+from game_objects.Items.Equipment import Equipment
 
 
 class Armor(Equipment):
@@ -10,5 +10,4 @@ class Armor(Equipment):
         }
 
     def get_commands(self):
-        # will add "block" command
         return super().get_commands() + []

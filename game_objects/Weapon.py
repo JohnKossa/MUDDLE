@@ -1,4 +1,4 @@
-from game_objects.Equipment import Equipment
+from game_objects.Items.Equipment import Equipment
 
 
 class Weapon(Equipment):

@@ -4,7 +4,7 @@ class Character:
         self.current_room = None
         self.zone = "Labrynth"
         self.skills = None
-        self.inventory = PlayerInventory()
+        self.inventory = CharacterInventory()
         self.discord_user = None
         self.max_health = 100
         self.health = 100
@@ -28,7 +28,7 @@ class Character:
         return self.discord_user.username+" as "+("Unnamed Player" if self.name is None else self.name)
 
 
-class PlayerInventory:
+class CharacterInventory:
     def __init__(self):
         self.equipment = {
             "head": None,
@@ -46,12 +46,12 @@ class PlayerInventory:
         return to_return
 
 
-class PlayerSkills:
+class CharacterSkills:
     def __init__(self):
         pass
 
 
-class PlayerUtils:
+class CharacterUtils:
     @staticmethod
     def print_all(player_list):
         print(" ".join([str(x) for x in player_list]))
