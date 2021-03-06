@@ -1,3 +1,13 @@
+def all_commands():
+    import sys
+    import inspect
+    command_list = []
+    for name, obj in inspect.getmembers(sys.modules[__name__]):
+        if inspect.isclass(obj) and issubclass(obj, Command):
+            command_list = command_list + [obj]
+    return command_list
+
+
 class Command:
     aliases = []
     combat_action_cost = 0
@@ -9,12 +19,33 @@ class Command:
         return cls.aliases[0]
 
     @classmethod
+    def show_help(cls):
+        help_text = "No help text has been set for this command. Known aliases for this command are: "
+        help_text = help_text + " , ".join(cls.aliases)
+        return help_text
+
+    @classmethod
     def command_name(cls):
         return cls.__name__
 
     @staticmethod
     def do_action(game, params, message):
         raise Exception("No action implemented for command")
+
+
+class ShowAliases(Command):
+    aliases = [
+        "ShowAliases",
+        "Alias"
+    ]
+
+    @staticmethod
+    def do_action(game, params, message):
+        supplied_alias = params[0].lower()
+        for command in all_commands():
+            lower_aliases = [x.lower() for x in command.aliases]
+            if supplied_alias in lower_aliases:
+                return "Known aliases for {}:\n".format(command.command_name())+("\n".join(command.aliases))
 
 
 class ListCommands(Command):
@@ -31,6 +62,7 @@ class ListCommands(Command):
             return "You are not listed as a user in this game."
         commands = discord_user.get_commands()
         command_aliases = [x.default_alias() for x in commands]
+        command_aliases.sort()
         return "Your commands are:\n{}".format("\n".join(command_aliases))
 
 
