@@ -5,6 +5,7 @@ import re
 from dotenv import load_dotenv
 
 from discord_objects.DiscordUser import DiscordUser, UserUtils
+from utils.Scheduler import Scheduler, ScheduledTask
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -18,6 +19,7 @@ class CustomClient(discord.Client):
     def __init__(self, intents=None):
         super().__init__(intents=intents)
         self.game_channel = None
+        self.scheduler = Scheduler(self.loop)
 
     async def on_ready(self):
         print(f'{self.user} has connected to Discord!')

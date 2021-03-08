@@ -34,7 +34,8 @@ class CharacterInventory:
             "head": None,
             "body": None,
             "left_hand": None,
-            "right_hand": None
+            "right_hand": None,
+            "belt": None
         }
         self.bag = {}
 
