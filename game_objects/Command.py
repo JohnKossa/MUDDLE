@@ -237,5 +237,9 @@ class Exit(Command):
         door = room.get_door(direction.lower())
         if door is None:
             return "Invalid direction. Room has no {} exit.".format(direction)
+        game.trigger("before_leave_room")
+        game.trigger("before_enter_room")
         target_player.current_room = door
+        game.trigger("after_leave_room")
+        game. trigger("after_enter_room")
         return str(target_player.current_room)

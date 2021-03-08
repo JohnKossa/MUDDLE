@@ -13,8 +13,12 @@ class Scheduler:
         self.looping = True
         while len(self.scheduled_tasks):
             for task in self.scheduled_tasks:
-                if datetime.datetime.now() < task.time:
+                if datetime.datetime.now() > task.time:
                     await task.func(*task.f_args, **task.f_kwargs)
+                    try:
+                        self.scheduled_tasks.remove(task)
+                    except ValueError:
+                        print("scheduled task could not be found")
             await asyncio.sleep(self.resolution)
         self.looping = False
 
@@ -23,7 +27,7 @@ class Scheduler:
         if len(self.scheduled_tasks) == 0:
             need_to_start = True
         self.scheduled_tasks.append(task)
-        if need_to_start:
+        if need_to_start and not self.looping:
             self.async_loop.create_task(self.process_loop())
 
     def unschedule_task(self, task):

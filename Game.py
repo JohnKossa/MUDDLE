@@ -1,6 +1,9 @@
+import asyncio
+import inspect
 import random
 
 from game_objects.Maze.Maze import Maze
+from utils.Scheduler import Scheduler
 
 
 class Game:
@@ -9,6 +12,9 @@ class Game:
         self.players = []
         self.discord_users = []
         self.hooks = {}
+        self.aioloop = asyncio.get_event_loop()
+        self.scheduler = Scheduler(self.aioloop)
+        self.discord_connection = None
 
     def init_maze(self, width=11, height=11, difficulty=6):
         self.maze = Maze(width=width, height=height)
@@ -34,7 +40,10 @@ class Game:
     def trigger(self, event):
         if event in self.hooks:
             for trigger_func in self.hooks[event]:
-                trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs)
+                if inspect.iscoroutine(trigger_func):
+                    self.aioloop.create_task(trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs))
+                else:
+                    trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs)
 
 
 class TriggerFunc:
