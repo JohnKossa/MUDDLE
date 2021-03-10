@@ -44,6 +44,9 @@ class CharacterInventory:
         to_return = []
         if self.bag.keys():
             to_return = to_return + [Drop]
+        for slot in self.equipment.keys():
+            if self.equipment.get(slot, None) is not None:
+                to_return = to_return + self.equipment.get[slot].get_commands()
         return to_return
 
 
