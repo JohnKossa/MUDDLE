@@ -1,9 +1,17 @@
+import names
+
+from utils.Dice import roll
+
+
 class Character:
-    def __init__(self):
-        self.name = None
+    def __init__(self, name=None):
+        if name is None:
+            self.name = names.get_full_name(gender='male')
+        else:
+            self.name = name
         self.current_room = None
         self.zone = "Labrynth"
-        self.skills = None
+        self.skills = CharacterSkills()
         self.inventory = CharacterInventory()
         self.discord_user = None
         self.max_health = 100
@@ -12,6 +20,11 @@ class Character:
         self.stamina = 100
         self.max_mana = 100
         self.mana = 100
+        self.actions = 2
+
+    @property
+    def initiative(self):
+        return roll(1, 20, advantage=1)
 
     def get_commands(self):
         # TODO add a character sheet command
@@ -53,6 +66,9 @@ class CharacterInventory:
 class CharacterSkills:
     def __init__(self):
         pass
+
+    def get_commands(self):
+        return []
 
 
 class CharacterUtils:

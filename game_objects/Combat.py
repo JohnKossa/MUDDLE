@@ -1,9 +1,12 @@
 from utils.Dice import roll
+from utils.AsyncHelpers import async_to_sync
+
 
 class Combat:
     def __init__(self, players=[], enemies=[]):
         self.players = players
         self.enemies = enemies
+        self.orders = {}
 
     def calculate_damage(self, attack, hit_resistances, dmg_resistances):
         matched_hit_resistance = hit_resistances.get(attack.dmg_type, 0)
@@ -11,17 +14,26 @@ class Combat:
         hit_roll = roll(1, 20, advantage=attack.hit_bonus)
         miss_roll = roll(1, 20, advantage=matched_hit_resistance)
         if hit_roll <= miss_roll:
-            print("missed")
+            print("Missed")
             return 0
-        print("We Hit!")
+        print("Hit!")
         damage_roll = roll(attack.dmg_roll[0], attack.dmg_roll[1], advantage=(attack.dmg_bonus - matched_dmg_resistance))
         return damage_roll
 
-
     def process_round(self, game):
-        # for each player who doesn't have all their orders
-        #   fill missing orders with "pass"
-        #   say "Courtesy timer expired. Processing combat"
+        orders_filled = False
+        for player in self.players:
+            # loop through self.orders[player]
+            # count the action_cost of all commands
+            # for each action less than player.actions
+            # add a "pass" command to the actions
+            pass
+
+        if orders_filled:
+            # round filled via timer instead of full orders, notify that timer expired
+            async_to_sync(game.discord_connection.send_game_chat, "Courtesy timer expired. Processing combat.", loop=game.aioloop)
+
+        # look up the initiative property for all players and enemies
         # sort players and enemies by initiative
         # for player or enemy in initiative order
         #   if order not valid
