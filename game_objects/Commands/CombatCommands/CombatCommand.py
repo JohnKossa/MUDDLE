@@ -39,10 +39,8 @@ class AttackCommand(CombatOnlyCommand):
         self.attack_action = attack_action
 
     def do_combat_action(self, game, source_player, params):
-        # look up target from room by name
-        # get resistance from target
         enemies = source_player.current_room.combat.enemies
-        target = enemies[0]
+        target = enemies[0]  # TODO accept enemy name from params instead of hitting first enemy
         hit_resistance = sum_resistances(target.natural_armor.get("hit", {}), target.armor_bonus.get("hit", {}))
         dmg_resistance = sum_resistances(target.natural_armor.get("dmg", {}), target.armor_bonus.get("dmg", {}))
         damage = calculate_damage(self.attack_action, hit_resistance, dmg_resistance)

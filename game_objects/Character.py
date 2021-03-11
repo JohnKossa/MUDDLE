@@ -21,6 +21,7 @@ class Character:
         self.max_mana = 100
         self.mana = 100
         self.actions = 2
+        self.dead = False
 
     @property
     def initiative(self):

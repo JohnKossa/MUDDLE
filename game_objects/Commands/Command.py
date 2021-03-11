@@ -1,3 +1,6 @@
+from game_objects.Commands.CombatCommands.CombatCommand import *
+
+
 def all_commands():
     import sys
     import inspect

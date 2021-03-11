@@ -10,6 +10,7 @@ class Game:
     def __init__(self):
         self.maze = None
         self.players = []
+        self.enemies = []
         self.discord_users = []
         self.hooks = {}
         self.aioloop = asyncio.get_event_loop()

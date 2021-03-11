@@ -11,6 +11,7 @@ class Enemy:
         self.max_health = 50
         self.health = 50
         self.actions = 2
+        self.dead = False
         self.natural_armor = {
             "hit": {},
             "dmg": {}

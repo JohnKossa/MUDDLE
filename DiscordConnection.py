@@ -36,6 +36,9 @@ class CustomClient(discord.Client):
         print(text_channels)
         self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
 
+    def send_game_chat_sync(self, text, tagged_users=[]):
+        self.loop.run_until_complete(self.send_game_chat(text, tagged_users=tagged_users))
+
     async def send_game_chat(self, text, tagged_users=[]):
         if self.game_channel is None:
             print("No game channel set.")

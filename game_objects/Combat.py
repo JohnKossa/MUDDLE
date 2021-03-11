@@ -1,6 +1,7 @@
 import datetime
+import random
 
-from game_objects.Commands.CombatCommands.CombatCommand import PassCommand
+from game_objects.Commands.CombatCommands.CombatCommand import AttackCommand, PassCommand
 from utils.AsyncHelpers import async_to_sync
 from utils.Scheduler import ScheduledTask
 
@@ -11,6 +12,17 @@ class Combat:
         self.enemies = enemies
         self.orders = {}
         self.round_schedule_object = None
+
+    def start(self, game):
+        if len(self.players) == 0:
+            game.discord_connection.send_game_chat_sync("Could not start combat. There are no players in the room.")
+            return
+        if len(self.enemies) == 0:
+            game.discord_connection.send_game_chat_sync("Could not start combat. There are no enemies in the room.")
+            return
+
+        self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
+                                                   self.process_round, game)
 
     def process_round(self, game):
         # loop through all players and fill missing commands with passes
@@ -26,9 +38,19 @@ class Combat:
 
         if orders_filled:
             # round filled via timer instead of full orders, notify that timer expired
-            async_to_sync(game.discord_connection.send_game_chat, "Courtesy timer expired. Processing combat.", loop=game.aioloop)
+            async_to_sync(game.discord_connection.send_game_chat_sync, "Courtesy timer expired. Processing combat.", loop=game.aioloop)
 
-        # TODO fill orders for all enemies
+        for enemy in self.enemies:
+            action_count = self.sum_actions_for_player(enemy)
+            failsafe = 100
+            while action_count < enemy.actions and failsafe > 0:
+                chosen_action = enemy.get_action()
+                if action_count + chosen_action <= enemy.actions:
+                    cmd = AttackCommand(chosen_action)
+                    target_player = random.choice(self.players).name  # TODO randomly targeting players, switch for intelligent decision later
+                    self.orders[enemy] = self.orders.get(enemy, []).append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
+                failsafe = failsafe - 1
+                action_count = self.sum_actions_for_player(enemy)
 
         initiative_list = [(x, x.initiative) for x in self.players + self.enemies]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
@@ -40,22 +62,48 @@ class Combat:
                 action(game, actor, params)
                 # else
                 #   perform pass
-                # perform cleanup such as modifying items or removing dead enemies, etc
-                pass
 
+                # cleanup
+                # check for dead enemies
+                for enemy in self.enemies:
+                    if enemy.health <= 0:
+                        enemy.dead = True
+                        self.enemies.remove(enemy)
+                        game.discord_connection.send_game_chat_sync("{} has was slain".format(enemy.name))
+                        # drop treasure from loot table
+
+                for player in self.players:
+                    if player.health <= 0:
+                        player.dead = True
+                        self.players.remove(player)
+                        game.discord_connection.send_game_chat_sync("{} has fallen in combat".format(player.name))
+                        # drop treasure form player inventory
+
+                # TODO additional cleanup for items
+
+        # post-round actions
+
+        # all players dead or left room, end combat
         if len(self.players) == 0:
-            # all players dead or left room, end combat
+            game.discord_connection.send_game_chat_sync("All players retreated or dead. Ending combat.")
             return
+        # all enemies dead, end combat
         if len(self.enemies) == 0:
-            # all enemies dead, end combat
+            game.discord_connection.send_game_chat_sync("All enemies defeated. Ending combat.")
             return
-        # clear initiative list, reset timer
+
+        # clear orders, reset timer
+        self.orders = {}
+        self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
+                                                   self.process_round, game)
 
     def add_player(self, game, player):
-        # new player enters room
-        # add to end of initiative order
-        # notify player of remaining time on process_round
-        pass
+        self.players.append(player)
+        self.orders[player] = []
+        seconds_in_day = 24*60*60
+        timediff = self.round_schedule_object.time - datetime.datetime.now()
+        remaining_time = divmod(timediff * seconds_in_day + timediff.seconds, 60)
+        game.discord_connection.send_game_chat_sync("Combat will process in {} minutes, and {} seconds".format(remaining_time(0), remaining_time(1)))
 
     def sum_actions_for_player(self, player):
         order_list = self.orders.get(player, [])
@@ -75,7 +123,7 @@ class Combat:
                 all_actions_filled = False
 
         if all_actions_filled:
-            game.discord_connection.send_game_chat("All orders accepted.")
+            game.discord_connection.send_game_chat_sync("All orders accepted.")
             game.scheduler.unschedule_task(self.round_schedule_object)
             self.round_schedule_object = None
             self.process_round(game)
