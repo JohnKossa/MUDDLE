@@ -9,13 +9,13 @@ class DiscordUser:
 
     def get_commands(self):
         from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp
-        cmd_list = [ListCommands, ShowAliases, ShowMap, ShowHelp]
+        cmd_list = [ListCommands(), ShowAliases(), ShowMap(), ShowHelp()]
         if self.current_character is not None:
             cmd_list = cmd_list + self.current_character.get_commands()
         else:
-            cmd_list = cmd_list + [NewCharacter]
+            cmd_list = cmd_list + [NewCharacter()]
         if self.is_admin:
-            cmd_list = cmd_list + [RebuildMaze]
+            cmd_list = cmd_list + [RebuildMaze()]
         return cmd_list
 
     def __str__(self):

@@ -15,11 +15,14 @@ class Command:
     aliases = []
     combat_action_cost = 0
 
-    @classmethod
-    def default_alias(cls):
-        if len(cls.aliases) == 0:
+    def __init__(self):
+        self.combat_action_cost = self.__class__.combat_action_cost
+        self.aliases = self.__class__.aliases
+
+    def default_alias(self):
+        if len(self.aliases) == 0:
             return None
-        return cls.aliases[0]
+        return self.aliases[0]
 
     @classmethod
     def show_help(cls):
@@ -31,9 +34,35 @@ class Command:
     def command_name(cls):
         return cls.__name__
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         raise Exception("No action implemented for command")
+
+
+class PartialCombatCommand(Command):
+    def __init__(self):
+        super().__init__()
+
+    def do_action(self, game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
+        if target_player is None:
+            return "You don't currently have a character. Use the !NewCharacter command to create one."
+        room = target_player.current_room
+        if room.combat is None:
+            return self.do_noncombat(game, params, message)
+        else:
+            return self.enqueue_order(game, target_player, params)
+
+    def do_noncombat(self, game, params, message):
+        return ""
+
+    def do_combat_action(self, game, source_player, params):
+        pass
+
+    def enqueue_order(self, game, target_player, params):
+        room = target_player.current_room
+        room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost)
+        return "Order Accepted"
 
 
 class ShowHelp(Command):
@@ -41,6 +70,9 @@ class ShowHelp(Command):
         "ShowHelp",
         "Help"
     ]
+
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def show_help(cls):
@@ -50,8 +82,7 @@ class ShowHelp(Command):
             "    0: Command Name"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         if len(params) == 0:
             return ShowHelp.show_help()
         supplied_alias = params[0].lower()
@@ -67,6 +98,9 @@ class ShowAliases(Command):
         "Alias"
     ]
 
+    def __init__(self):
+        super().__init__()
+
     @classmethod
     def show_help(cls):
         return "\n".join([
@@ -75,8 +109,7 @@ class ShowAliases(Command):
             "    0: Command Name"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         if len(params) == 0:
             return
         supplied_alias = params[0].lower()
@@ -93,6 +126,9 @@ class ListCommands(Command):
     ]
     combat_action_cost = 0
 
+    def __init__(self):
+        super().__init__()
+
     @classmethod
     def show_help(cls):
         return "\n".join([
@@ -100,8 +136,7 @@ class ListCommands(Command):
             "Params: None"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
@@ -119,6 +154,9 @@ class ShowMap(Command):
     ]
     combat_action_cost = 0
 
+    def __init__(self):
+        super().__init__()
+
     @classmethod
     def show_help(cls):
         return "\n".join([
@@ -126,17 +164,19 @@ class ShowMap(Command):
             "Params: None"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         return str(game.maze)
 
 
-class Drop(Command):
+class Drop(PartialCombatCommand):
     aliases = [
         "Drop"
         "Discard"
     ]
     combat_action_cost = 0
+
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def show_help(cls):
@@ -147,12 +187,10 @@ class Drop(Command):
             "    1: (optional) Quantity"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
-        # params -1 is item name
-        # params 1 if present is quantity, default 1
-        # remove quantity of the item from the player's inventory
-        # add the item to the floor of the room
+    def do_noncombat(self, game, params, message):
+        return ""
+
+    def do_combat_action(self, game, source_player, params):
         pass
 
 
@@ -164,6 +202,9 @@ class RebuildMaze(Command):
     ]
     combat_action_cost = 0
 
+    def __init__(self):
+        super().__init__()
+
     @classmethod
     def show_help(cls):
         return "\n".join([
@@ -174,8 +215,7 @@ class RebuildMaze(Command):
             "    2. Difficulty"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         width = int(params[0])
         height = int(params[1])
         difficulty = int(params[2])
@@ -191,6 +231,9 @@ class NewCharacter(Command):
         "MakeChar"
     ]
 
+    def __init__(self):
+        super().__init__()
+
     @classmethod
     def show_help(cls):
         return "\n".join([
@@ -198,8 +241,7 @@ class NewCharacter(Command):
             "Params: None"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_action(self, game, params, message):
         from game_objects.Character import Character
         from discord_objects.DiscordUser import UserUtils, DiscordUser
         new_player = Character()
@@ -214,13 +256,16 @@ class NewCharacter(Command):
         return "New character created for {}".format(message.author)
 
 
-class Exit(Command):
+class Exit(PartialCombatCommand):
     aliases = [
         "Exit",
         "Go",
         "Door"
     ]
     combat_action_cost = 2
+
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def show_help(cls):
@@ -230,8 +275,7 @@ class Exit(Command):
             "    0: The name of the door to use"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
+    def do_noncombat(self, game, params, message):
         from discord_objects.DiscordUser import UserUtils
         target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         if target_player is None:
@@ -241,25 +285,55 @@ class Exit(Command):
         door = room.get_door(direction.lower())
         if door is None:
             return "Invalid direction. Room has no {} exit.".format(direction)
-        game.trigger("before_leave_room")
-        game.trigger("before_enter_room")
+        old_room = target_player.current_room
+        game.trigger("before_leave_room", target_player, old_room)
+        game.trigger("before_enter_room", target_player, door)
         target_player.current_room = door
-        game.trigger("after_leave_room")
-        game. trigger("after_enter_room")
+        game.trigger("leave_room", target_player, old_room)
+        game.trigger("enter_room", target_player, target_player.current_room)
         return str(target_player.current_room)
 
-    @classmethod
-    def do_combat_action(cls, game, source_player, params):
+    def do_combat_action(self, game, source_player, params):
+        from Game import TriggerFunc
+        # after combat finishes, leave room
+        game.on("round_end", TriggerFunc(self.leave_room, game, source_player, params, do_once=True,))
 
-        # set after combat round finishes, exit room
-        pass
+    def leave_room(self, game, source_player, params):
+        room = source_player.current_room
+        direction = params[0]
+        door = room.get_door(direction.lower())
+        if door is None:
+            game.discord_connection.send_game_chat_sync("Invalid direction. Room has no {} exit.".format(direction), tagged_users=[source_player])
+        old_room = source_player.current_room
+        game.trigger("before_leave_room", source_player, old_room)
+        game.trigger("before_enter_room", source_player, door)
+        source_player.current_room = door
+        game.trigger("leave_room", source_player, old_room)
+        game.trigger("enter_room", source_player, source_player.current_room)
+        return game.discord_connection.send_game_chat_sync(str(source_player.current_room), tagged_users=[source_player])
 
 
-class UseItem(Command):
+class UseItem(PartialCombatCommand):
+    # check if in combat
+    # if in combat:
+    #   check equipped items for one patching params[0]
+    #   if exists:
+    #       call the use function on the item
+    #   else:
+    #       return "Item not found in currently equipped items."
+    # else:
+    #   check bagged items and then equipped items for one matching params[0]
+    #   if exits:
+    #       call the use function on the item
+    #   else:
+    #       return "Item not found in bag or equipped items
     aliases = [
         "UseItem",
         "Use",
     ]
+
+    def __init__(self):
+        super().__init__()
 
     @classmethod
     def show_help(cls):
@@ -271,43 +345,8 @@ class UseItem(Command):
             "    0: The name of the item to use"
         ])
 
-    @staticmethod
-    def do_action(game, params, message):
-        # check if in combat
-        # if in combat:
-        #   check equipped items for one patching params[0]
-        #   if exists:
-        #       call the use function on the item
-        #   else:
-        #       return "Item not found in currently equipped items."
-        # else:
-        #   check bagged items and then equipped items for one matching params[0]
-        #   if exits:
-        #       call the use function on the item
-        #   else:
-        #       return "Item not found in bag or equipped items
-        pass
+    def do_noncombat(self, game, params, message):
+        return ""
 
-
-class Attack(Command):
-    aliases = [
-        "Attack",
-        "Atk"
-    ]
-
-    @classmethod
-    def show_help(cls):
-        return "\n".join([
-            "Performs the default attack for the weapon against the specified target.",
-            "If no target is specified, the attack will target the first valid enemy",
-            "Params:",
-            "   0: Name of the enemy to attack (optional)"
-        ])
-
-    @staticmethod
-    def do_action(game, params, message):
-        # look up room
-        # if params[0] in room.combat.enemies.name
-        # look up default attack
-        # add default attack to room.combat.commands
+    def do_combat_action(self, game, source_player, params):
         pass

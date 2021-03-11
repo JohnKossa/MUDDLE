@@ -77,7 +77,7 @@ class CustomClient(discord.Client):
         for possible_command in command_list:
             lower_aliases = [x.lower() for x in possible_command.aliases]
             if command.lower() in lower_aliases:
-                print("Matched input {} to {}".format(command, possible_command.command_name()))
+                print("Matched input {} to {}".format(command, type(possible_command).command_name()))
                 matched_command = possible_command
 
         if matched_command is not None:

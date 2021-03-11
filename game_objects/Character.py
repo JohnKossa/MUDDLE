@@ -1,5 +1,6 @@
 import names
 
+from game_objects.Items.Weapon import Sword
 from utils.Dice import roll
 
 
@@ -48,7 +49,7 @@ class CharacterInventory:
             "head": None,
             "body": None,
             "left_hand": None,
-            "right_hand": None,
+            "right_hand": Sword(),
             "belt": None
         }
         self.bag = {}
@@ -57,7 +58,7 @@ class CharacterInventory:
         from game_objects.Commands.Command import Drop
         to_return = []
         if self.bag.keys():
-            to_return = to_return + [Drop]
+            to_return = to_return + [Drop()]
         for slot in self.equipment.keys():
             if self.equipment.get(slot, None) is not None:
                 to_return = to_return + self.equipment.get[slot].get_commands()

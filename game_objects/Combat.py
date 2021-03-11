@@ -7,11 +7,12 @@ from utils.Scheduler import ScheduledTask
 
 
 class Combat:
-    def __init__(self, players=[], enemies=[]):
+    def __init__(self, players=[], enemies=[], room=None):
         self.players = players
         self.enemies = enemies
         self.orders = {}
         self.round_schedule_object = None
+        self.room = room
 
     def start(self, game):
         if len(self.players) == 0:
@@ -86,10 +87,12 @@ class Combat:
         # all players dead or left room, end combat
         if len(self.players) == 0:
             game.discord_connection.send_game_chat_sync("All players retreated or dead. Ending combat.")
+            self.room.end_combat()
             return
         # all enemies dead, end combat
         if len(self.enemies) == 0:
             game.discord_connection.send_game_chat_sync("All enemies defeated. Ending combat.")
+            self.room.end_combat()
             return
 
         # clear orders, reset timer

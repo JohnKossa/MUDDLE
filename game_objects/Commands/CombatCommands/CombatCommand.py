@@ -33,10 +33,34 @@ class PassCommand(CombatOnlyCommand):
 
 
 class AttackCommand(CombatOnlyCommand):
-    def __init__(self, attack_action):
+    aliases = [
+        "Attack",
+        "Atk"
+    ]
+
+    def __init__(self, attack_action, aliases=None):
         super().__init__()
         self.combat_action_cost = attack_action.action_cost
         self.attack_action = attack_action
+        if aliases is not None:
+            self.aliases = aliases
+
+    @classmethod
+    def show_help(cls):
+        # TODO Correct this
+        return "\n".join([
+            "Performs the default attack for the weapon against the specified target.",
+            "If no target is specified, the attack will target the first valid enemy",
+            "Params:",
+            "   0: Name of the enemy to attack (optional)"
+        ])
+
+    def do_action(self, game, params, message):
+        # look up room
+        # if params[0] in room.combat.enemies.name
+        # look up default attack
+        # add default attack to room.combat.commands
+        pass
 
     def do_combat_action(self, game, source_player, params):
         enemies = source_player.current_room.combat.enemies

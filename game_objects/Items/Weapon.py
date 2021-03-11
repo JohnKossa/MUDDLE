@@ -1,16 +1,23 @@
 from game_objects.Items.Equipment import Equipment
 from game_objects.Combat import AttackAction
+from game_objects.Commands.CombatCommands.CombatCommand import AttackCommand
 
 
 class Weapon(Equipment):
     def __init__(self):
         super().__init__()
         self.slot = "Hand"
+        self.attacks = []
         self.default_attack = None
 
     def get_commands(self):
-        # will add "attack" command
-        return super().get_commands() + []
+        to_add = []
+        for attack in self.attacks:
+            if attack.name == self.default_attack:
+                to_add.append(AttackCommand(attack, aliases=["Attack", "Atk", attack.name]))
+            else:
+                to_add.append(AttackCommand(attack, aliases=[attack.name]))
+        return super().get_commands() + to_add
 
 
 class Sword(Weapon):
@@ -24,5 +31,4 @@ class Sword(Weapon):
         self.default_attack = "slash"
 
     def get_commands(self):
-        # will add slash, and stab commands
         return super().get_commands() + []

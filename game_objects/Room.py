@@ -16,8 +16,12 @@ class Room:
         return to_return
 
     def start_combat(self, game):
-        self.combat = Combat(players=self.get_players(game), enemies=self.get_enemies(game))
+        self.combat = Combat(players=self.get_players(game), enemies=self.get_enemies(game), room=self)
         self.combat.start(game)
+
+    def end_combat(self):
+        del self.combat
+        self.combat = None
 
     def get_enemies(self, game):
         return [x for x in game.enemies if x.room == self]

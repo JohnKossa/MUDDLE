@@ -46,10 +46,13 @@ class Game:
                     self.aioloop.create_task(trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs))
                 else:
                     trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs)
+                if trigger_func.remove_after_run:
+                    self.off(event, trigger_func)
 
 
 class TriggerFunc:
-    def __init__(self, func, *f_args, **f_kwargs):
+    def __init__(self, func, do_once=False, *f_args, **f_kwargs):
         self.func = func
         self.f_args = f_args
         self.f_kwargs = f_kwargs
+        self.do_once = do_once
