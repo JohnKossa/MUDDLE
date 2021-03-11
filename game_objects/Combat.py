@@ -8,18 +8,6 @@ class Combat:
         self.enemies = enemies
         self.orders = {}
 
-    def calculate_damage(self, attack, hit_resistances, dmg_resistances):
-        matched_hit_resistance = hit_resistances.get(attack.dmg_type, 0)
-        matched_dmg_resistance = dmg_resistances.get(attack.dmg_type, 0)
-        hit_roll = roll(1, 20, advantage=attack.hit_bonus)
-        miss_roll = roll(1, 20, advantage=matched_hit_resistance)
-        if hit_roll <= miss_roll:
-            print("Missed")
-            return 0
-        print("Hit!")
-        damage_roll = roll(attack.dmg_roll[0], attack.dmg_roll[1], advantage=(attack.dmg_bonus - matched_dmg_resistance))
-        return damage_roll
-
     def process_round(self, game):
         orders_filled = False
         for player in self.players:
@@ -33,14 +21,17 @@ class Combat:
             # round filled via timer instead of full orders, notify that timer expired
             async_to_sync(game.discord_connection.send_game_chat, "Courtesy timer expired. Processing combat.", loop=game.aioloop)
 
-        # look up the initiative property for all players and enemies
-        # sort players and enemies by initiative
-        # for player or enemy in initiative order
-        #   if order not valid
-        #       perform "pass" order
-        #   if order still valid
-        #       perform order
-        #   perform cleanup such as modifying items or removing dead enemies, etc
+        initiative_list = [(x, x.initiative) for x in self.players + self.enemies]
+        sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
+        for actor in sorted_initiative_list:
+            # get orders for actor
+            # if order not valid
+            #   perform pass order
+            # else
+            #   perform order
+            # perform cleanup such as modifying items or removing dead enemies, etc
+            pass
+
         if len(self.players) == 0:
             # all players dead or left room, end combat
             return
@@ -55,11 +46,18 @@ class Combat:
         # notify player of remaining time on process_round
         pass
 
-    def accept_player_order(self, game):
-        # if player orders valid
-        #   add player order to orders queue
-        # else
-        #   respond with order error
+    def sum_actions_for_player(self, player):
+        order_list = self.orders.get(player, [])
+        if len(order_list) == 0:
+            return 0
+        return sum(x[2] for x in order_list)
+
+    def accept_player_order(self, game, source_player, action, params, cost):
+        # TODO check if player order is valid?
+        current_action_costs = self.sum_actions_for_player(source_player)
+        if current_action_costs + cost <= source_player.actions:
+            self.orders[source_player] = self.orders.get(source_player, []).append((action, params, cost))
+
         # if all player orders filled
         #   say "All Orders Accepted"
         #   cancel scheduled process_round

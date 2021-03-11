@@ -1,4 +1,4 @@
-from game_objects.Command import Exit
+from game_objects.Commands.Command import Exit
 from game_objects.Room import Room
 
 

@@ -11,7 +11,14 @@ class Enemy:
         self.max_health = 50
         self.health = 50
         self.actions = 2
-        self.armor_bonus = {}
+        self.natural_armor = {
+            "hit": {},
+            "dmg": {}
+        }
+        self.armor_bonus = {
+            "hit": {},
+            "dmg": {}
+        }
         self.actions = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0))
         ]

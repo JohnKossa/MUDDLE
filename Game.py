@@ -37,7 +37,8 @@ class Game:
             return True
         return False
 
-    def trigger(self, event):
+    def trigger(self, event, *args, **kwargs):
+        # TODO join args with f_args and kwargs with f_kwargs before passing
         if event in self.hooks:
             for trigger_func in self.hooks[event]:
                 if inspect.iscoroutine(trigger_func):

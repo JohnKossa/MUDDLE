@@ -53,7 +53,7 @@ class CharacterInventory:
         self.bag = {}
 
     def get_commands(self):
-        from game_objects.Command import Drop
+        from game_objects.Commands.Command import Drop
         to_return = []
         if self.bag.keys():
             to_return = to_return + [Drop]

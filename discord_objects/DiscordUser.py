@@ -1,4 +1,4 @@
-from game_objects.Command import RebuildMaze, NewCharacter
+from game_objects.Commands.Command import RebuildMaze, NewCharacter
 
 
 class DiscordUser:
@@ -8,7 +8,7 @@ class DiscordUser:
         self.is_admin = True if username == "kg959#1350" else False
 
     def get_commands(self):
-        from game_objects.Command import ShowMap, ShowAliases, ListCommands, ShowHelp
+        from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp
         cmd_list = [ListCommands, ShowAliases, ShowMap, ShowHelp]
         if self.current_character is not None:
             cmd_list = cmd_list + self.current_character.get_commands()

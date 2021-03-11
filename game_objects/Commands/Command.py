@@ -217,6 +217,7 @@ class Exit(Command):
         "Go",
         "Door"
     ]
+    combat_action_cost = 2
 
     @classmethod
     def show_help(cls):
@@ -243,6 +244,12 @@ class Exit(Command):
         game.trigger("after_leave_room")
         game. trigger("after_enter_room")
         return str(target_player.current_room)
+
+    @classmethod
+    def do_combat_action(cls, game, source_player, params):
+
+        # set after combat round finishes, exit room
+        pass
 
 
 class UseItem(Command):
