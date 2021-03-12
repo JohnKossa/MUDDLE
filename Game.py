@@ -3,6 +3,7 @@ import inspect
 import math
 import random
 
+from discord_objects.DiscordUser import DiscordUser, UserUtils
 from game_objects.Enemy import Enemy
 from game_objects.Maze.Maze import Maze
 from game_objects.Maze.MazeRoom import RoomUtils
@@ -38,6 +39,14 @@ class Game:
             return
         if len(room.get_enemies(self)) > 0 and len(room.get_players(self)) > 0:
             room.start_combat(self)
+
+    def check_final_room(self, room=None, source_player=None):
+        if room == self.maze.exit_room:
+            UserUtils.get_user_by_character_name(source_player, self.discord_users)
+            self.discord_connection.send_game_chat_sync("You're Winner!", [source_player])
+            self.discord_connection.send_game_chat_sync("Rebuilding maze")
+            self.init_maze()
+        pass
 
     def init_maze(self, width=11, height=11, difficulty=6):
         self.maze = Maze(width=width, height=height)
