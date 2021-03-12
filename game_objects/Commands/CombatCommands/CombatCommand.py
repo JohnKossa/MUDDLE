@@ -33,17 +33,17 @@ class PassCommand(CombatOnlyCommand):
 
 
 class AttackCommand(CombatOnlyCommand):
-    aliases = [
-        "Attack",
-        "Atk"
-    ]
-
     def __init__(self, attack_action, aliases=None):
         super().__init__()
         self.combat_action_cost = attack_action.action_cost
         self.attack_action = attack_action
         if aliases is not None:
             self.aliases = aliases
+        else:
+            self.aliases = [
+                "Attack",
+                "Atk"
+            ]
 
     @classmethod
     def show_help(cls):

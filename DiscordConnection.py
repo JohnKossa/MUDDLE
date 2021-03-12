@@ -17,7 +17,7 @@ intents.members = True
 
 class CustomClient(discord.Client):
     def __init__(self, intents=None):
-        super().__init__(intents=intents)
+        super().__init__(intents=intents, allowed_mentions=discord.AllowedMentions(users=True))
         self.game_channel = None
         self.game = None
 
@@ -37,13 +37,17 @@ class CustomClient(discord.Client):
         self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
 
     def send_game_chat_sync(self, text, tagged_users=[]):
-        self.loop.run_until_complete(self.send_game_chat(text, tagged_users=tagged_users))
+        self.loop.create_task(self.send_game_chat(text, tagged_users=tagged_users))
 
     async def send_game_chat(self, text, tagged_users=[]):
         if self.game_channel is None:
             print("No game channel set.")
             return
-        await self.game_channel.send(text)
+        guild = self.guilds[0]
+        mentions = ""
+        if len(tagged_users) > 0:
+            mentions = "".join(map(lambda x: "<@"+str(guild.get_member_named(x).id)+">", tagged_users))+"\n"
+        await self.game_channel.send(mentions+text)
 
     async def on_message(self, message):
         user = self.user
@@ -90,9 +94,9 @@ class CustomClient(discord.Client):
     async def on_error(self, event, *args, **kwargs):
         with open('err.log', 'a') as f:
             if event == 'on_message':
+                print("\n".join([str(x) for x in args]))
                 f.write(f'Unhandled message: {args[0]}\n')
-            else:
-                raise
+        raise
 
 
 client = CustomClient(intents=intents)

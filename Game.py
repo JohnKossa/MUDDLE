@@ -17,6 +17,13 @@ class Game:
         self.scheduler = Scheduler(self.aioloop)
         self.discord_connection = None
 
+    def setup_hooks(self):
+        self.on("enter_room", TriggerFunc(self.start_combat))
+
+    def start_combat(self, room=None, **kwargs):
+        if room is not None and len(room.get_enemies(self)) > 0 and len(room.get_players(self) > 0):
+            room.start_combat(self)
+
     def init_maze(self, width=11, height=11, difficulty=6):
         self.maze = Maze(width=width, height=height)
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
@@ -39,14 +46,17 @@ class Game:
         return False
 
     def trigger(self, event, *args, **kwargs):
-        # TODO join args with f_args and kwargs with f_kwargs before passing
         if event in self.hooks:
             for trigger_func in self.hooks[event]:
                 if inspect.iscoroutine(trigger_func):
-                    self.aioloop.create_task(trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs))
+                    passed_kwargs = trigger_func.f_kwargs
+                    passed_kwargs.update(kwargs)
+                    self.aioloop.create_task(trigger_func.func(*trigger_func.f_args, **passed_kwargs))
                 else:
-                    trigger_func.func(*trigger_func.f_args, **trigger_func.f_kwargs)
-                if trigger_func.remove_after_run:
+                    passed_kwargs = trigger_func.f_kwargs
+                    passed_kwargs.update(kwargs)
+                    trigger_func.func(*trigger_func.f_args, **passed_kwargs)
+                if trigger_func.do_once:
                     self.off(event, trigger_func)
 
 

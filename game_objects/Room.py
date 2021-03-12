@@ -16,6 +16,8 @@ class Room:
         return to_return
 
     def start_combat(self, game):
+        if self.combat is not None:
+            return
         self.combat = Combat(players=self.get_players(game), enemies=self.get_enemies(game), room=self)
         self.combat.start(game)
 

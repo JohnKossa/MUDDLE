@@ -79,7 +79,7 @@ class MazeRoom(Room):
             return "Exits include {}".format(formatted_list)
 
     def get_commands(self):
-        to_return = super().get_commands() + [Exit]
+        to_return = super().get_commands() + [Exit()]
         return to_return
 
     def __str__(self):

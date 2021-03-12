@@ -22,6 +22,7 @@ class Combat:
             game.discord_connection.send_game_chat_sync("Could not start combat. There are no enemies in the room.")
             return
 
+        game.discord_connection.send_game_chat_sync("Started combat in room {}.".format(self.room.name))
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
                                                    self.process_round, game)
 

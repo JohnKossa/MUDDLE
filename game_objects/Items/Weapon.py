@@ -14,7 +14,7 @@ class Weapon(Equipment):
         to_add = []
         for attack in self.attacks:
             if attack.name == self.default_attack:
-                to_add.append(AttackCommand(attack, aliases=["Attack", "Atk", attack.name]))
+                to_add.append(AttackCommand(attack, aliases=[attack.name, "Attack", "Atk"]))
             else:
                 to_add.append(AttackCommand(attack, aliases=[attack.name]))
         return super().get_commands() + to_add

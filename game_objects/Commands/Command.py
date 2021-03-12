@@ -1,6 +1,3 @@
-from game_objects.Commands.CombatCommands.CombatCommand import *
-
-
 def all_commands():
     import sys
     import inspect
@@ -12,12 +9,9 @@ def all_commands():
 
 
 class Command:
-    aliases = []
-    combat_action_cost = 0
-
     def __init__(self):
-        self.combat_action_cost = self.__class__.combat_action_cost
-        self.aliases = self.__class__.aliases
+        self.combat_action_cost = 0
+        self.aliases = []
 
     def default_alias(self):
         if len(self.aliases) == 0:
@@ -66,13 +60,12 @@ class PartialCombatCommand(Command):
 
 
 class ShowHelp(Command):
-    aliases = [
-        "ShowHelp",
-        "Help"
-    ]
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "ShowHelp",
+            "Help"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -93,13 +86,12 @@ class ShowHelp(Command):
 
 
 class ShowAliases(Command):
-    aliases = [
-        "ShowAliases",
-        "Alias"
-    ]
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "ShowAliases",
+            "Alias"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -120,14 +112,12 @@ class ShowAliases(Command):
 
 
 class ListCommands(Command):
-    aliases = [
-        "ListCommands",
-        "Commands"
-    ]
-    combat_action_cost = 0
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "ListCommands",
+            "Commands"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -148,14 +138,12 @@ class ListCommands(Command):
 
 
 class ShowMap(Command):
-    aliases = [
-        "ShowMap",
-        "Map"
-    ]
-    combat_action_cost = 0
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "ShowMap",
+            "Map"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -169,14 +157,13 @@ class ShowMap(Command):
 
 
 class Drop(PartialCombatCommand):
-    aliases = [
-        "Drop"
-        "Discard"
-    ]
-    combat_action_cost = 0
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "Drop"
+            "Discard"
+        ]
+        self.combat_action_cost = 0
 
     @classmethod
     def show_help(cls):
@@ -195,15 +182,13 @@ class Drop(PartialCombatCommand):
 
 
 class RebuildMaze(Command):
-    aliases = [
-        "RebuildMaze",
-        "Rebuild",
-        "RebuildMap"
-    ]
-    combat_action_cost = 0
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "RebuildMaze",
+            "Rebuild",
+            "RebuildMap"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -224,15 +209,14 @@ class RebuildMaze(Command):
 
 
 class NewCharacter(Command):
-    aliases = [
-        "NewCharacter",
-        "NewChar",
-        "MakeCharacter",
-        "MakeChar"
-    ]
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "NewCharacter",
+            "NewChar",
+            "MakeCharacter",
+            "MakeChar"
+        ]
 
     @classmethod
     def show_help(cls):
@@ -257,15 +241,14 @@ class NewCharacter(Command):
 
 
 class Exit(PartialCombatCommand):
-    aliases = [
-        "Exit",
-        "Go",
-        "Door"
-    ]
-    combat_action_cost = 2
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "Exit",
+            "Go",
+            "Door"
+        ]
+        self.combat_action_cost = 2
 
     @classmethod
     def show_help(cls):
@@ -277,21 +260,21 @@ class Exit(PartialCombatCommand):
 
     def do_noncombat(self, game, params, message):
         from discord_objects.DiscordUser import UserUtils
-        target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
-        if target_player is None:
+        source_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
+        if source_player is None:
             return "You don't currently have a character. Use the !NewCharacter command to create one."
-        room = target_player.current_room
+        room = source_player.current_room
         direction = params[0]
         door = room.get_door(direction.lower())
         if door is None:
             return "Invalid direction. Room has no {} exit.".format(direction)
-        old_room = target_player.current_room
-        game.trigger("before_leave_room", target_player, old_room)
-        game.trigger("before_enter_room", target_player, door)
-        target_player.current_room = door
-        game.trigger("leave_room", target_player, old_room)
-        game.trigger("enter_room", target_player, target_player.current_room)
-        return str(target_player.current_room)
+        old_room = source_player.current_room
+        game.trigger("before_leave_room", source_player=source_player, room=old_room)
+        game.trigger("before_enter_room", source_player=source_player, room=door)
+        source_player.current_room = door
+        game.trigger("leave_room", source_player=source_player, room=old_room)
+        game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
+        return str(source_player.current_room)
 
     def do_combat_action(self, game, source_player, params):
         from Game import TriggerFunc
@@ -305,11 +288,11 @@ class Exit(PartialCombatCommand):
         if door is None:
             game.discord_connection.send_game_chat_sync("Invalid direction. Room has no {} exit.".format(direction), tagged_users=[source_player])
         old_room = source_player.current_room
-        game.trigger("before_leave_room", source_player, old_room)
-        game.trigger("before_enter_room", source_player, door)
+        game.trigger("before_leave_room", source_player=source_player, room=old_room)
+        game.trigger("before_enter_room", source_player=source_player, room=door)
         source_player.current_room = door
-        game.trigger("leave_room", source_player, old_room)
-        game.trigger("enter_room", source_player, source_player.current_room)
+        game.trigger("leave_room", source_player=source_player, room=old_room)
+        game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
         return game.discord_connection.send_game_chat_sync(str(source_player.current_room), tagged_users=[source_player])
 
 
@@ -327,13 +310,12 @@ class UseItem(PartialCombatCommand):
     #       call the use function on the item
     #   else:
     #       return "Item not found in bag or equipped items
-    aliases = [
-        "UseItem",
-        "Use",
-    ]
-
     def __init__(self):
         super().__init__()
+        self.aliases = [
+            "UseItem",
+            "Use",
+        ]
 
     @classmethod
     def show_help(cls):
