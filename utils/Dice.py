@@ -16,8 +16,8 @@ def roll(count, faces, advantage=0):
 
 def print_advantage_spread():
     for adv in range(-10, 11):
-        print("advantage {}".format(adv))
+        print(f"advantage {adv}")
         total = 0
         for i in range(1000):
             total = total + roll(1, 20, advantage=adv)
-        print("avg {}".format(total/1000))
+        print(f"avg {total/1000}")

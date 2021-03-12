@@ -4,7 +4,7 @@ from game_objects.Room import Room
 
 class MazeRoom(Room):
     def __init__(self, x_coord, y_coord):
-        super(MazeRoom, self).__init__(name="{},{}".format(x_coord, y_coord))
+        super(MazeRoom, self).__init__(name=f"{x_coord},{y_coord}")
         self.x_coord = x_coord
         self.y_coord = y_coord
         self.width = 1
@@ -58,7 +58,7 @@ class MazeRoom(Room):
     def describe_room(self):
         # TODO link this to the correct room template file and pull the description from there
         if self.template is None:
-            return "You are in a room. Super interesting. {}".format(self.name)
+            return f"You are in a room. Super interesting. {self.name}"
         return self.template
 
     def describe_exits(self):
@@ -71,12 +71,12 @@ class MazeRoom(Room):
         valid_exits = [*filter(lambda x: exits[x] is not None, exits.keys())]
         exit_count = len(valid_exits)
         if exit_count == 1:
-            return "There is one exit to the {}".format(valid_exits[0])
+            return f"There is one exit to the {valid_exits[0]}"
         elif exit_count == 2:
-            return "Exits are to the {} and {}".format(valid_exits[0], valid_exits[1])
+            return f"Exits are to the {valid_exits[0]} and {valid_exits[1]}"
         elif exit_count > 2:
-            formatted_list = (", ".join(valid_exits[:-1]))+(", and {}".format(valid_exits[-1]))
-            return "Exits include {}".format(formatted_list)
+            formatted_list = (", ".join(valid_exits[:-1]))+f", and {valid_exits[-1]}"
+            return f"Exits include {formatted_list}"
 
     def get_commands(self):
         to_return = super().get_commands() + [Exit()]

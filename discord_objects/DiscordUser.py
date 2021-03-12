@@ -2,10 +2,11 @@ from game_objects.Commands.Command import RebuildMaze, NewCharacter
 
 
 class DiscordUser:
-    def __init__(self, username=None, current_character=None):
+    def __init__(self, username=None, current_character=None, discord_obj=None):
         self.username = username
         self.current_character = current_character
         self.is_admin = True if username == "kg959#1350" else False
+        self.discord_obj = discord_obj
 
     def get_commands(self):
         from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp

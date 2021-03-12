@@ -27,13 +27,12 @@ class CustomClient(discord.Client):
         guild = self.guilds[0]
         async for member in guild.fetch_members():
             if UserUtils.get_user_by_username(str(member), self.game.discord_users) is None:
-                self.game.discord_users.append(DiscordUser(username=str(member)))
-        print('Users collected. Added {} users.'.format(len(self.game.discord_users)))
+                self.game.discord_users.append(DiscordUser(username=str(member), discord_obj=member))
+        print(f'Users collected. Added {len(self.game.discord_users)} users.')
         UserUtils.print_all(self.game.discord_users)
 
         guild = self.guilds[0]
         text_channels = guild.text_channels
-        print(text_channels)
         self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
 
     def send_game_chat_sync(self, text, tagged_users=[]):
@@ -43,10 +42,9 @@ class CustomClient(discord.Client):
         if self.game_channel is None:
             print("No game channel set.")
             return
-        guild = self.guilds[0]
         mentions = ""
         if len(tagged_users) > 0:
-            mentions = "".join(map(lambda x: "<@"+str(guild.get_member_named(x).id)+">", tagged_users))+"\n"
+            mentions = "".join(map(lambda x: "<@"+str(x.discord_obj.id)+">", tagged_users))+"\n"
         await self.game_channel.send(mentions+text)
 
     async def on_message(self, message):
@@ -62,7 +60,7 @@ class CustomClient(discord.Client):
         discord_user = UserUtils.get_user_by_username(str(author), self.game.discord_users)
         if discord_user is None:
             print("New user found. Adding...")
-            discord_user = DiscordUser(username=str(author))
+            discord_user = DiscordUser(username=str(author), discord_obj=author)
             self.game.discord_user.append(discord_user)
 
         if not content.startswith("!"):
@@ -81,7 +79,7 @@ class CustomClient(discord.Client):
         for possible_command in command_list:
             lower_aliases = [x.lower() for x in possible_command.aliases]
             if command.lower() in lower_aliases:
-                print("Matched input {} to {}".format(command, type(possible_command).command_name()))
+                print(f"Matched input {command} to {type(possible_command).command_name()}")
                 matched_command = possible_command
 
         if matched_command is not None:

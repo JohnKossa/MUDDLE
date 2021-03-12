@@ -108,7 +108,7 @@ class ShowAliases(Command):
         for command in all_commands():
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
-                return "Known aliases for {}:\n".format(command.command_name())+("\n".join(command.aliases))
+                return f"Known aliases for {command.command_name()}:\n"+("\n".join(command.aliases))
 
 
 class ListCommands(Command):
@@ -231,13 +231,13 @@ class NewCharacter(Command):
         new_player = Character()
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
-            discord_user = DiscordUser(username=str(message.author), current_character=new_player)
+            discord_user = DiscordUser(username=str(message.author), current_character=new_player, discord_obj=message.author)
         else:
             discord_user.current_character = new_player
         game.register_player(new_player)
         game.discord_users = game.discord_users + [discord_user]
         new_player.discord_user = discord_user
-        return "New character created for {}".format(message.author)
+        return f"New character created for {message.author}"
 
 
 class Exit(PartialCombatCommand):
@@ -267,7 +267,7 @@ class Exit(PartialCombatCommand):
         direction = params[0]
         door = room.get_door(direction.lower())
         if door is None:
-            return "Invalid direction. Room has no {} exit.".format(direction)
+            return f"Invalid direction. Room has no {direction} exit."
         old_room = source_player.current_room
         game.trigger("before_leave_room", source_player=source_player, room=old_room)
         game.trigger("before_enter_room", source_player=source_player, room=door)
@@ -286,7 +286,7 @@ class Exit(PartialCombatCommand):
         direction = params[0]
         door = room.get_door(direction.lower())
         if door is None:
-            game.discord_connection.send_game_chat_sync("Invalid direction. Room has no {} exit.".format(direction), tagged_users=[source_player])
+            game.discord_connection.send_game_chat_sync(f"Invalid direction. Room has no {direction} exit.", tagged_users=[source_player])
         old_room = source_player.current_room
         game.trigger("before_leave_room", source_player=source_player, room=old_room)
         game.trigger("before_enter_room", source_player=source_player, room=door)

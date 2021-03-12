@@ -22,7 +22,7 @@ class Combat:
             game.discord_connection.send_game_chat_sync("Could not start combat. There are no enemies in the room.")
             return
 
-        game.discord_connection.send_game_chat_sync("Started combat in room {}.".format(self.room.name))
+        game.discord_connection.send_game_chat_sync(f"Started combat in room {self.room.name}.")
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
                                                    self.process_round, game)
 
@@ -71,14 +71,14 @@ class Combat:
                     if enemy.health <= 0:
                         enemy.dead = True
                         self.enemies.remove(enemy)
-                        game.discord_connection.send_game_chat_sync("{} has was slain".format(enemy.name))
+                        game.discord_connection.send_game_chat_sync(f"{enemy.name} has was slain")
                         # drop treasure from loot table
 
                 for player in self.players:
                     if player.health <= 0:
                         player.dead = True
                         self.players.remove(player)
-                        game.discord_connection.send_game_chat_sync("{} has fallen in combat".format(player.name))
+                        game.discord_connection.send_game_chat_sync(f"{player.name} has fallen in combat")
                         # drop treasure form player inventory
 
                 # TODO additional cleanup for items
@@ -105,9 +105,9 @@ class Combat:
         self.players.append(player)
         self.orders[player] = []
         seconds_in_day = 24*60*60
-        timediff = self.round_schedule_object.time - datetime.datetime.now()
-        remaining_time = divmod(timediff * seconds_in_day + timediff.seconds, 60)
-        game.discord_connection.send_game_chat_sync("Combat will process in {} minutes, and {} seconds".format(remaining_time(0), remaining_time(1)))
+        time_diff = self.round_schedule_object.time - datetime.datetime.now()
+        remaining_time = divmod(time_diff * seconds_in_day + time_diff.seconds, 60)
+        game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
     def sum_actions_for_player(self, player):
         order_list = self.orders.get(player, [])
