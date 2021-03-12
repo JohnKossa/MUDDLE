@@ -1,3 +1,5 @@
+import random
+
 from game_objects.Commands.Command import Command
 from utils.CombatHelpers import calculate_damage, sum_resistances
 
@@ -16,7 +18,8 @@ class CombatOnlyCommand(Command):
         character = user.current_character
         room = character.current_room
         combat = room.combat
-        combat.accept_player_order(game, character, self.do_combat_action, self.combat_action_cost)
+        combat.accept_player_order(game, character, self.do_combat_action, [], self.combat_action_cost)
+        return "Order Accepted"
 
     def do_combat_action(self, game, source_player, params):
         pass
@@ -55,17 +58,30 @@ class AttackCommand(CombatOnlyCommand):
             "   0: Name of the enemy to attack (optional)"
         ])
 
-    def do_action(self, game, params, message):
-        # look up room
-        # if params[0] in room.combat.enemies.name
-        # look up default attack
-        # add default attack to room.combat.commands
-        pass
-
     def do_combat_action(self, game, source_player, params):
+        from game_objects.Enemy import Enemy
         enemies = source_player.current_room.combat.enemies
-        target = enemies[0]  # TODO accept enemy name from params instead of hitting first enemy
-        hit_resistance = sum_resistances(target.natural_armor.get("hit", {}), target.armor_bonus.get("hit", {}))
-        dmg_resistance = sum_resistances(target.natural_armor.get("dmg", {}), target.armor_bonus.get("dmg", {}))
+        players = source_player.current_room.combat.players
+        target = None
+        if len(params):
+            for enemy in enemies:
+                if enemy.name == params[0]:
+                    target = enemy
+            for player in players:
+                if player.name == params[0]:
+                    target = player
+        elif type(source_player).__name__ == "Character":
+            if len(enemies) == 0:
+                return
+            target = random.choice(enemies)
+        elif type(source_player).__name__ == "Enemy" or issubclass(type(source_player), Enemy):
+            if len(players) == 0:
+                return
+            target = random.choice(players)
+        hit_resistance = target.resistances["hit"]
+        dmg_resistance = target.resistances["dmg"]
         damage = calculate_damage(self.attack_action, hit_resistance, dmg_resistance)
+        output = f"{source_player.name} uses {self.attack_action.name}. "
+        output = output + ("It misses." if damage == 0 else f"{target.name} takes {damage} damage.")
+        game.discord_connection.send_game_chat_sync(output)
         target.health = max(0, target.health-damage)

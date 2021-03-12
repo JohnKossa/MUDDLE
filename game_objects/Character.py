@@ -25,6 +25,13 @@ class Character:
         self.dead = False
 
     @property
+    def resistances(self):
+        return {
+            "hit": {},
+            "dmg": {}
+        }
+
+    @property
     def initiative(self):
         return roll(1, 20, advantage=1)
 
@@ -38,6 +45,13 @@ class Character:
         if self.inventory is not None:
             to_return = to_return + self.inventory.get_commands()
         return to_return
+
+    # def __hash__(self):
+    #     import hashlib
+    #     return int(hashlib.sha1(self.name.encode("utf-8")).hexdigest(), 16) % (10 ** 8)
+    #
+    # def __eq__(self, other):
+    #     return self.name == other.name
 
     def __str__(self):
         return self.discord_user.username+" as "+("Unnamed Player" if self.name is None else self.name)

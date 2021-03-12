@@ -20,9 +20,7 @@ class Command:
 
     @classmethod
     def show_help(cls):
-        help_text = "No help text has been set for this command. Known aliases for this command are: "
-        help_text = help_text + " , ".join(cls.aliases)
-        return help_text
+        return "No help text has been set for this command."
 
     @classmethod
     def command_name(cls):
@@ -153,7 +151,7 @@ class ShowMap(Command):
         ])
 
     def do_action(self, game, params, message):
-        return str(game.maze)
+        return game.maze.player_map(game)
 
 
 class Drop(PartialCombatCommand):

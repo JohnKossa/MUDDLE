@@ -107,6 +107,41 @@ class Maze:
         self.entry_room = RoomUtils.get_room_by_coords(entry_coords[0], entry_coords[1], self.rooms)
         self.exit_room = RoomUtils.get_room_by_coords(exit_coords[0], exit_coords[1], self.rooms)
 
+    def player_map(self, game):
+        result = ""
+        grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
+        count = 0
+        players = game.players
+        player_rooms = list(map(lambda x: x.current_room, players))
+        enemies = list(filter(lambda x: x.dead is False, game.enemies))
+        enemy_rooms = list(map(lambda x: x.current_room, enemies))
+        for room in self.rooms:
+            y_coord = 2*room.y_coord+1
+            x_coord = 2*room.x_coord+1
+            count += 1
+            if room == self.entry_room:
+                grid[y_coord][x_coord] = "S"
+            elif room == self.exit_room:
+                grid[y_coord][x_coord] = "E"
+            elif room in player_rooms:
+                replacement = player_rooms.index(room)+1
+                grid[y_coord][x_coord] = str(replacement)
+            elif room in enemy_rooms:
+                grid[y_coord][x_coord] = "e"
+            else:
+                grid[y_coord][x_coord] = " "
+            if room.north_door is not None:
+                grid[y_coord-1][x_coord] = "-"
+            if room.south_door is not None:
+                grid[y_coord+1][x_coord] = "-"
+            if room.west_door is not None:
+                grid[y_coord][x_coord-1] = "|"
+            if room.east_door is not None:
+                grid[y_coord][x_coord+1] = "|"
+        for row in grid:
+            result += " ".join(row)+"\n"
+        return "```"+result+"```"
+
     def __str__(self):
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]

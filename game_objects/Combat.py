@@ -22,6 +22,10 @@ class Combat:
             game.discord_connection.send_game_chat_sync("Could not start combat. There are no enemies in the room.")
             return
 
+        for player in self.players:
+            self.orders[player] = []
+        for enemy in self.enemies:
+            self.orders[enemy] = []
         game.discord_connection.send_game_chat_sync(f"Started combat in room {self.room.name}.")
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
                                                    self.process_round, game)
@@ -47,10 +51,10 @@ class Combat:
             failsafe = 100
             while action_count < enemy.actions and failsafe > 0:
                 chosen_action = enemy.get_action()
-                if action_count + chosen_action <= enemy.actions:
+                if action_count + chosen_action.action_cost <= enemy.actions:
                     cmd = AttackCommand(chosen_action)
                     target_player = random.choice(self.players).name  # TODO randomly targeting players, switch for intelligent decision later
-                    self.orders[enemy] = self.orders.get(enemy, []).append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
+                    self.orders[enemy].append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_player(enemy)
 
@@ -71,7 +75,7 @@ class Combat:
                     if enemy.health <= 0:
                         enemy.dead = True
                         self.enemies.remove(enemy)
-                        game.discord_connection.send_game_chat_sync(f"{enemy.name} has was slain")
+                        game.discord_connection.send_game_chat_sync(f"{enemy.name} was slain")
                         # drop treasure from loot table
 
                 for player in self.players:
@@ -97,7 +101,12 @@ class Combat:
             return
 
         # clear orders, reset timer
+        game.discord_connection.send_game_chat_sync("Round complete. Accepting orders for next round.")
         self.orders = {}
+        for player in self.players:
+            self.orders[player] = []
+        for enemy in self.enemies:
+            self.orders[enemy] = []
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=30),
                                                    self.process_round, game)
 
@@ -110,16 +119,24 @@ class Combat:
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
     def sum_actions_for_player(self, player):
-        order_list = self.orders.get(player, [])
+        if player not in self.orders.keys() and player in self.players:
+            self.orders[player] = []
+        order_list = self.orders[player]
+        if order_list is None:
+            return 0
         if len(order_list) == 0:
             return 0
         return sum(x[2] for x in order_list)
 
     def accept_player_order(self, game, source_player, action, params, cost):
         # TODO check if player order is valid?
+        possible_targets = [x.name for x in self.players + self.enemies]
+
         current_action_costs = self.sum_actions_for_player(source_player)
         if current_action_costs + cost <= source_player.actions:
-            self.orders[source_player] = self.orders.get(source_player, []).append((action, params, cost))
+            if self.orders[source_player] is None:
+                self.orders[source_player] = []
+            self.orders[source_player].append((action, params, cost))
 
         all_actions_filled = True
         for player in self.players:
@@ -127,6 +144,7 @@ class Combat:
                 all_actions_filled = False
 
         if all_actions_filled:
+            print("All actions filled")
             game.discord_connection.send_game_chat_sync("All orders accepted.")
             game.scheduler.unschedule_task(self.round_schedule_object)
             self.round_schedule_object = None

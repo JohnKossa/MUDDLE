@@ -1,8 +1,11 @@
 import asyncio
 import inspect
+import math
 import random
 
+from game_objects.Enemy import Enemy
 from game_objects.Maze.Maze import Maze
+from game_objects.Maze.MazeRoom import RoomUtils
 from utils.Scheduler import Scheduler
 
 
@@ -20,8 +23,20 @@ class Game:
     def setup_hooks(self):
         self.on("enter_room", TriggerFunc(self.start_combat))
 
+    def seed_enemies(self):
+        num_enemies = math.isqrt(self.maze.width * self.maze.height)
+        viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
+        chosen_rooms = random.choices(viable_rooms, k=num_enemies)
+        for room in chosen_rooms:
+            new_enemy = Enemy()
+            new_enemy.current_room = room
+            new_enemy.name = "Goblin"
+            self.enemies.append(new_enemy)
+
     def start_combat(self, room=None, **kwargs):
-        if room is not None and len(room.get_enemies(self)) > 0 and len(room.get_players(self) > 0):
+        if room is None:
+            return
+        if len(room.get_enemies(self)) > 0 and len(room.get_players(self)) > 0:
             room.start_combat(self)
 
     def init_maze(self, width=11, height=11, difficulty=6):
