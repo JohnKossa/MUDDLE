@@ -235,7 +235,7 @@ class NewCharacter(Command):
         game.register_player(new_player)
         game.discord_users = game.discord_users + [discord_user]
         new_player.discord_user = discord_user
-        return f"New character created for {message.author}"
+        return f"New character {new_player.name} created for {message.author}"
 
 
 class Exit(PartialCombatCommand):
@@ -277,21 +277,24 @@ class Exit(PartialCombatCommand):
     def do_combat_action(self, game, source_player, params):
         from Game import TriggerFunc
         # after combat finishes, leave room
-        game.on("round_end", TriggerFunc(self.leave_room, game, source_player, params, do_once=True,))
+        game.discord_connection.send_game_chat_sync(f"{source_player.name} runs for the door.")
+        game.once("round_end", TriggerFunc(self.leave_room, game, source_player, params))
 
-    def leave_room(self, game, source_player, params):
+    def leave_room(self, game, source_player, params, **kwargs):
+        discord_user = source_player.discord_user
         room = source_player.current_room
         direction = params[0]
         door = room.get_door(direction.lower())
         if door is None:
-            game.discord_connection.send_game_chat_sync(f"Invalid direction. Room has no {direction} exit.", tagged_users=[source_player])
+            game.discord_connection.send_game_chat_sync(f"Invalid direction. Room has no {direction} exit.", tagged_users=[discord_user])
+            return
         old_room = source_player.current_room
         game.trigger("before_leave_room", source_player=source_player, room=old_room)
         game.trigger("before_enter_room", source_player=source_player, room=door)
         source_player.current_room = door
         game.trigger("leave_room", source_player=source_player, room=old_room)
         game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
-        return game.discord_connection.send_game_chat_sync(str(source_player.current_room), tagged_users=[source_player])
+        return game.discord_connection.send_game_chat_sync(str(source_player.current_room), tagged_users=[discord_user])
 
 
 class UseItem(PartialCombatCommand):

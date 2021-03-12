@@ -1,6 +1,6 @@
 from game_objects.Items.Equipment import Equipment
 from game_objects.Combat import AttackAction
-from game_objects.Commands.CombatCommands.CombatCommand import AttackCommand
+from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
 
 
 class Weapon(Equipment):
@@ -32,3 +32,12 @@ class Sword(Weapon):
 
     def get_commands(self):
         return super().get_commands() + []
+
+
+class Torch(Weapon):
+    def __init__(self):
+        super().__init__()
+        self.attacks = [
+            AttackAction(name="poke", hit_bonus=3, dmg_type="fire", dmg_roll=(1,6), dmg_bonus=0)
+        ]
+        self.default_attack = "poke"

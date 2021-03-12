@@ -40,6 +40,17 @@ class Scheduler:
         return False
 
 
+def time_until_event(scheduled_task):
+    """Returns the amount of time until the specified scheduled task will fire.
+        :returns a tuple of (minutes,seconds)
+    """
+    import datetime
+    seconds_in_day = 24 * 60 * 60
+    time_diff = scheduled_task.time - datetime.datetime.now()
+    remaining_time = divmod(time_diff.total_seconds(), 60)
+    return remaining_time
+
+
 class ScheduledTask:
     def __init__(self, wake_up_time, func, *f_args, **f_kwargs):
         self.time = wake_up_time

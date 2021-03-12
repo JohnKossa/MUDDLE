@@ -3,10 +3,8 @@ import inspect
 import math
 import random
 
-from discord_objects.DiscordUser import DiscordUser, UserUtils
 from game_objects.Enemy import Enemy
 from game_objects.Maze.Maze import Maze
-from game_objects.Maze.MazeRoom import RoomUtils
 from utils.Scheduler import Scheduler
 
 
@@ -23,6 +21,7 @@ class Game:
 
     def setup_hooks(self):
         self.on("enter_room", TriggerFunc(self.start_combat))
+        self.on("enter_room", TriggerFunc(self.check_final_room))
 
     def seed_enemies(self):
         num_enemies = math.isqrt(self.maze.width * self.maze.height)
@@ -40,19 +39,22 @@ class Game:
         if len(room.get_enemies(self)) > 0 and len(room.get_players(self)) > 0:
             room.start_combat(self)
 
-    def check_final_room(self, room=None, source_player=None):
+    def check_final_room(self, room=None, source_player=None, **kwargs):
         if room == self.maze.exit_room:
-            UserUtils.get_user_by_character_name(source_player, self.discord_users)
-            self.discord_connection.send_game_chat_sync("You're Winner!", [source_player])
+            self.discord_connection.send_game_chat_sync("You're Winner!", [source_player.discord_user])
             self.discord_connection.send_game_chat_sync("Rebuilding maze")
             self.init_maze()
-        pass
+            self.return_players_to_start()
 
     def init_maze(self, width=11, height=11, difficulty=6):
         self.maze = Maze(width=width, height=height)
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
         self.seed_enemies()
 
+    def return_players_to_start(self):
+        for player in self.players:
+            player.current_room = self.maze.entry_room
+            self.seed_enemies()
     def register_player(self, new_player):
         new_player.current_room = self.maze.entry_room
         self.players.append(new_player)
@@ -70,6 +72,12 @@ class Game:
             return True
         return False
 
+    def once(self, event, trigger_func):
+        if event not in self.hooks:
+            self.hooks[event] = []
+        trigger_func.do_once = True
+        self.hooks[event].append(trigger_func)
+
     def trigger(self, event, *args, **kwargs):
         if event in self.hooks:
             for trigger_func in self.hooks[event]:
@@ -86,8 +94,8 @@ class Game:
 
 
 class TriggerFunc:
-    def __init__(self, func, do_once=False, *f_args, **f_kwargs):
+    def __init__(self, func, *f_args, **f_kwargs):
         self.func = func
         self.f_args = f_args
         self.f_kwargs = f_kwargs
-        self.do_once = do_once
+        self.do_once = False

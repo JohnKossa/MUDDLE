@@ -12,7 +12,7 @@ class Equipment(Item):
 
         }
 
-    def use_effect(self, game, source_player, target_player):
+    def use_effect(self, game, source_player, params):
         # equips the item
         pass
 

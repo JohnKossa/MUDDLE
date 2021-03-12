@@ -1,5 +1,7 @@
 import names
 
+from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
+from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from game_objects.Items.Weapon import Sword
 from utils.Dice import roll
 
@@ -37,21 +39,17 @@ class Character:
 
     def get_commands(self):
         # TODO add a character sheet command
-        to_return = []
+        to_return = [PassCommand()]
         if self.current_room is not None:
             to_return = to_return + self.current_room.get_commands()
         if self.skills is not None:
             to_return = to_return + self.skills.get_commands()
         if self.inventory is not None:
             to_return = to_return + self.inventory.get_commands()
+        # if player not in combat, remove all combat only commands
+        if self.current_room.combat is None:
+            to_return = list(filter(lambda x: not issubclass(type(x), CombatOnlyCommand), to_return))
         return to_return
-
-    # def __hash__(self):
-    #     import hashlib
-    #     return int(hashlib.sha1(self.name.encode("utf-8")).hexdigest(), 16) % (10 ** 8)
-    #
-    # def __eq__(self, other):
-    #     return self.name == other.name
 
     def __str__(self):
         return self.discord_user.username+" as "+("Unnamed Player" if self.name is None else self.name)
