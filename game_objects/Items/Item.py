@@ -1,7 +1,7 @@
 class Item:
     def __init__(self):
-        self.quantity = 0
-        self.max_stack_size = 0
+        self.quantity = 1
+        self.max_stack_size = 1
         self.weight = 0
         self.name = "Item"
         self.template = None

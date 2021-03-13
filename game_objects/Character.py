@@ -1,8 +1,9 @@
 import names
 
+from game_objects.Commands.Command import Take
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from game_objects.Commands.CombatCommands.PassCommand import PassCommand
-from game_objects.Items.Weapon import Sword
+from game_objects.Items.Weapon import Sword, Torch
 from utils.Dice import roll
 
 
@@ -39,7 +40,7 @@ class Character:
 
     def get_commands(self):
         # TODO add a character sheet command
-        to_return = [PassCommand()]
+        to_return = [PassCommand(), Take()]
         if self.current_room is not None:
             to_return = to_return + self.current_room.get_commands()
         if self.skills is not None:
@@ -60,7 +61,7 @@ class CharacterInventory:
         self.equipment = {
             "head": None,
             "body": None,
-            "left_hand": None,
+            "left_hand": Torch(),
             "right_hand": Sword(),
             "belt": None
         }
