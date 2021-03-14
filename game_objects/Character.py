@@ -1,6 +1,5 @@
 import names
 
-from game_objects.Commands.Command import Take
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from game_objects.Items.Weapon import Sword, Torch
@@ -40,13 +39,13 @@ class Character:
 
     def get_commands(self):
         # TODO add a character sheet command
-        to_return = [PassCommand(), Take()]
+        to_return = [PassCommand()]
         if self.current_room is not None:
-            to_return = to_return + self.current_room.get_commands()
+            to_return.extend(self.current_room.get_commands())
         if self.skills is not None:
-            to_return = to_return + self.skills.get_commands()
+            to_return.extend(self.skills.get_commands())
         if self.inventory is not None:
-            to_return = to_return + self.inventory.get_commands()
+            to_return.extend(self.inventory.get_commands())
         # if player not in combat, remove all combat only commands
         if self.current_room.combat is None:
             to_return = list(filter(lambda x: not issubclass(type(x), CombatOnlyCommand), to_return))
@@ -68,13 +67,13 @@ class CharacterInventory:
         self.bag = {}
 
     def get_commands(self):
-        from game_objects.Commands.Command import Drop
+        from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
         to_return = []
         if self.bag.keys():
-            to_return = to_return + [Drop()]
+            to_return.append(Drop())
         for slot in self.equipment.keys():
             if self.equipment.get(slot, None) is not None:
-                to_return = to_return + self.equipment.get(slot).get_commands()
+                to_return.extend(self.equipment.get(slot).get_commands())
         return to_return
 
 

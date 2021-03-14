@@ -7,8 +7,9 @@ class Item:
         self.template = None
 
     def describe(self):
+        # TODO lookup item from template
         if self.template is None:
-            return "This item has no template description"
+            return f"a {self.name}"
         else:
             return "This needs to look up the description from the template"
 

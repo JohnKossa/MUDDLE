@@ -1,4 +1,4 @@
-from game_objects.Commands.Command import Exit
+from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Room import Room
 
 
@@ -58,7 +58,7 @@ class MazeRoom(Room):
     def describe_room(self):
         # TODO link this to the correct room template file and pull the description from there
         if self.template is None:
-            return f"You are in a room. Super interesting. {self.name}"
+            return f"You are in a room. It's super interesting. {self.name}"
         return self.template
 
     def describe_exits(self):
@@ -78,12 +78,39 @@ class MazeRoom(Room):
             formatted_list = (", ".join(valid_exits[:-1]))+f", and {valid_exits[-1]}"
             return f"Exits include {formatted_list}"
 
+    def describe_fixtures(self):
+        for fixture in self.fixtures:
+            # get display text from template
+            return ""
+        # join them all together with newlines
+        return None
+
+    def describe_items(self):
+        if self.items is None or len(self.items) == 0:
+            return None
+        item_count = len(self.items)
+        if item_count == 1:
+            return f"On the floor you see {self.items[0].describe()}."
+        if item_count == 2:
+            return f"On the floor you see {self.items[0].describe()} and {self.items[1].describe()}"
+        else:
+            return f"A large assortment of items is strewn about the floor."
+
     def get_commands(self):
         to_return = super().get_commands() + [Exit()]
         return to_return
 
     def __str__(self):
-        return self.describe_room()+"\n"+self.describe_exits()
+        to_return = self.describe_room()
+        fixtures = self.describe_fixtures()
+        items = self.describe_items()
+        exits = self.describe_exits()
+        if fixtures is not None:
+            to_return = to_return+"\n"+fixtures
+        if items is not None:
+            to_return = to_return+"\n"+items
+        to_return = to_return+"\n"+exits
+        return to_return
 
 
 class RoomUtils:

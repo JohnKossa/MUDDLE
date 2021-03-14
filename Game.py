@@ -3,6 +3,7 @@ import inspect
 import math
 import random
 
+from game_objects.Items.Item import Item
 from game_objects.Enemy import Enemy
 from game_objects.Maze.Maze import Maze
 from utils.Scheduler import Scheduler
@@ -33,6 +34,15 @@ class Game:
             new_enemy.name = "Goblin"
             self.enemies.append(new_enemy)
 
+    def seed_loot_stashes(self):
+        # num_stashes = 200
+        # viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
+        # chosen_rooms = random.choices(viable_rooms, k=num_stashes)
+        # for room in chosen_rooms:
+        #     room.items.append(Item())
+        #self.maze.entry_room.north_door.items.appen(Item())
+        pass
+
     def start_combat(self, room=None, **kwargs):
         if room is None:
             return
@@ -55,6 +65,7 @@ class Game:
         for player in self.players:
             player.current_room = self.maze.entry_room
             self.seed_enemies()
+
     def register_player(self, new_player):
         new_player.current_room = self.maze.entry_room
         self.players.append(new_player)
