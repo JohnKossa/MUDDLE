@@ -60,17 +60,49 @@ class CharacterInventory:
         self.equipment = {
             "head": None,
             "body": None,
-            "left_hand": Torch(),
-            "right_hand": Sword(),
+            "offhand": Torch(),
+            "mainhand": Sword(),
             "belt": None
         }
-        self.bag = {}
+        self.bag = []
+
+    def get_item_by_name(self, item_name):
+        matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.bag), None)
+        return matched_item
+
+    def equip_item(self, item, slot_name):
+        # TODO check if the specified item is an equipment
+        # TODO check if specified item can be equipped to the named slot
+        if item.quantity > 1:
+            to_equip = item.take_count_from_stack(1)
+        else:
+            to_equip = self.bag.pop(item)
+        self.unequip_item(slot_name)
+        self.equipment[slot_name] = to_equip
+
+    def unequip_item(self, slot_name):
+        if self.equipment[slot_name] is not None:
+            to_add_to_bag = self.equipment[slot_name]
+            self.add_item_to_bag(to_add_to_bag)
+
+    def add_item_to_bag(self, to_add):
+        for item in self.bag:
+            if item.able_to_join(to_add):
+                item.quantity += to_add.quantity
+                return
+        self.bag.append(to_add)
 
     def get_commands(self):
+        from game_objects.Commands.Command import Equip, Unequip
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
+        from game_objects.Items.Equipment import Equipment
         to_return = []
-        if self.bag.keys():
+        if len(self.bag) > 0:
             to_return.append(Drop())
+        if any(x is not None for x in self.equipment.values()):
+            to_return.append(Unequip())
+        if any(issubclass(type(x, Equipment)) or (type(x) is Equipment) for x in self.bag):
+            to_return.append(Equip())
         for slot in self.equipment.keys():
             if self.equipment.get(slot, None) is not None:
                 to_return.extend(self.equipment.get(slot).get_commands())

@@ -10,6 +10,7 @@ class Take(PartialCombatCommand):
         ]
         self.combat_action_cost = 1
 
+    @classmethod
     def show_help(cls):
         return "\n".join([
             "Picks up an item in the current room and adds it to your bag.",
@@ -24,10 +25,10 @@ class Take(PartialCombatCommand):
         target_item = params[0]
         room = player.current_room
         items = room.items
-        matched_item = next(filter(lambda  x: x.name.lower() == target_item.lower(), items), None)
+        matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
         if matched_item is None:
             return "Item not found"
-        player.inventory.bag[matched_item] = matched_item.quantity
+        player.inventory.add_item_to_bag(matched_item)
         room.items.remove(matched_item)
         return f"Picked up {matched_item.quantity} {matched_item.name}"
 
@@ -35,10 +36,10 @@ class Take(PartialCombatCommand):
         target_item = params[0]
         room = source_player.current_room
         items = room.items
-        matched_item = next(filter(lambda  x: x.name.lower() == target_item.lower(), items), None)
+        matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
         if matched_item is None:
             game.discord_connection.send_game_chat_sync(f"{source_player.name} attempted to pick up a picked up  a {target_item} but could not find any.")
             return
-        source_player.inventory.bag[matched_item] = matched_item.quantity
+        source_player.inventory.add_item_to_bag(matched_item)
         room.items.remove(matched_item)
         game.discord_connection.send_game_chat_sync(f"{source_player.name} picked up {matched_item.quantity} {matched_item.name}")

@@ -190,3 +190,50 @@ class NewCharacter(Command):
         return f"New character {new_player.name} created for {message.author}"
 
 
+class Equip(Command):
+    def __init__(self):
+        super().__init__()
+        self.aliases = ["Equip"]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Equips the named item from your bag in the named equipment slot",
+            "Params:",
+            "    0: Item Name",
+            "    1: Slot Name"
+        ])
+
+    def do_action(self, game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        player = discord_user.current_character
+        item_name = params[0]
+        slot = params[1]
+        matched_item = player.inventory.get_item_by_name(item_name)
+        if matched_item is None:
+            return "Item not found"
+        player.inventory.equip_item(matched_item, slot)
+        return "Item equipped"
+
+
+class Unequip(Command):
+    def __init__(self):
+        super().__init__()
+        self.aliases = ["Unequip"]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Unequips an equipped item from the named slot and adds it back to your bag",
+            "Params:",
+            "    0: Slot Name"
+        ])
+
+    def do_action(self, game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        player = discord_user.current_character
+        slot = params[0]
+        player.inventory.unequip_item(slot)
+        return f"Unequipped item from {slot}"
