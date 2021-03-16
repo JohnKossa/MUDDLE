@@ -43,5 +43,3 @@ class Item:
     def get_commands(self):
         # will add the use and drop commands
         return []
-
-

@@ -8,9 +8,7 @@ class BlockCommand(CombatOnlyCommand):
         if aliases is not None:
             self.aliases = aliases
         else:
-            self.aliases = [
-                "Block"
-            ]
+            self.aliases = ["Block"]
 
     @classmethod
     def show_help(cls):
@@ -26,4 +24,3 @@ class BlockCommand(CombatOnlyCommand):
         # add a "blocking" status to the player
         # add a trigger to remove the blocking status from the player at their next combat
         # modify combat cycle to have an "assign damage" step that allows for hooks to redirect damage
-        pass

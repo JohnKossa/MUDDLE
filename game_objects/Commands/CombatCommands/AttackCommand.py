@@ -28,6 +28,7 @@ class AttackCommand(CombatOnlyCommand):
         ])
 
     def do_combat_action(self, game, source_player, params):
+        from game_objects.Character import Character
         from game_objects.Enemy import Enemy
         enemies = source_player.current_room.combat.enemies
         players = source_player.current_room.combat.players
@@ -39,11 +40,11 @@ class AttackCommand(CombatOnlyCommand):
             for player in players:
                 if player.name == params[0]:
                     target = player
-        elif type(source_player).__name__ == "Character":
+        elif type(source_player) is Character:
             if len(enemies) == 0:
                 return
             target = random.choice(enemies)
-        elif type(source_player).__name__ == "Enemy" or issubclass(type(source_player), Enemy):
+        elif type(source_player) is Enemy or issubclass(type(source_player), Enemy):
             if len(players) == 0:
                 return
             target = random.choice(players)

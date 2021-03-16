@@ -18,6 +18,4 @@ class CombatOnlyCommand(Command):
         return "Order Accepted"
 
     def do_combat_action(self, game, source_player, params):
-        pass
-
-
+        raise Exception("Not yet implemented")
