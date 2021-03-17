@@ -213,8 +213,10 @@ class Equip(Command):
         matched_item = player.inventory.get_item_by_name(item_name)
         if matched_item is None:
             return "Item not found"
-        player.inventory.equip_item(matched_item, slot)
-        return "Item equipped"
+        success, err_reason = player.inventory.equip_item(matched_item, slot)
+        if success:
+            return "Item equipped"
+        return err_reason
 
 
 class Unequip(Command):

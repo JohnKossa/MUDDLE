@@ -71,18 +71,34 @@ class CharacterInventory:
         return matched_item
 
     def equip_item(self, item, slot_name):
-        # TODO check if the specified item is an equipment
+        slot_name = slot_name.lower()
+        if slot_name not in self.equipment.keys():
+            return (False, "Invalid Slot Name")
+        from game_objects.Items.Equipment import Equipment
+        if type(item) is not Equipment and not issubclass(type(item), Equipment):
+            return (False, "Item is not an equipment")
+        if item.slot == "hand" and slot_name not in ["offhand", "mainhand"]:
+            return (False, "Equipment cannot go in that slot")
+        if item.slot == "head" and slot_name != "head":
+            return (False, "Equipment cannot go in that slot")
+        if item.slot == "body" and slot_name != "body":
+            return (False, "Equipment cannot go in that slot")
         # TODO check if specified item can be equipped to the named slot
         if item.quantity > 1:
             to_equip = item.take_count_from_stack(1)
         else:
-            to_equip = self.bag.pop(item)
+            to_equip = item
+            self.bag.remove(item)
         self.unequip_item(slot_name)
         self.equipment[slot_name] = to_equip
 
     def unequip_item(self, slot_name):
+        slot_name = slot_name.lower()
+        if slot_name not in self.equipment.keys():
+            return (False, "Invalid Slot Name")
         if self.equipment[slot_name] is not None:
             to_add_to_bag = self.equipment[slot_name]
+            self.equipment[slot_name] = None
             self.add_item_to_bag(to_add_to_bag)
 
     def add_item_to_bag(self, to_add):
@@ -101,7 +117,7 @@ class CharacterInventory:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):
             to_return.append(Unequip())
-        if any(issubclass(type(x, Equipment)) or (type(x) is Equipment) for x in self.bag):
+        if any(issubclass(type(x), Equipment) or (type(x) is Equipment) for x in self.bag):
             to_return.append(Equip())
         for slot in self.equipment.keys():
             if self.equipment.get(slot, None) is not None:
