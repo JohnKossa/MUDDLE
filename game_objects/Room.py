@@ -8,7 +8,7 @@ class Room:
         self.name = name
         self.template = None
         self.fixtures = []
-        self.items = [Item()]
+        self.items = []
         self.combat = None
 
     def get_commands(self):

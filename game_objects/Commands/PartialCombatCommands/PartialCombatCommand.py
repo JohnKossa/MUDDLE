@@ -25,4 +25,10 @@ class PartialCombatCommand(Command):
     def enqueue_order(self, game, target_player, params):
         room = target_player.current_room
         room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost)
-        return "Order Accepted"
+        to_return = "Order Accepted."
+        if room.combat is not None:
+            action_count = room.combat.sum_actions_for_player(target_player)
+            remaining_actions = target_player.actions - action_count
+            if 0 < remaining_actions < target_player.actions:
+                to_return = to_return + f"You have {remaining_actions} action points remaining."
+        return to_return

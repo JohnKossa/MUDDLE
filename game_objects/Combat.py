@@ -153,7 +153,6 @@ class Combat:
                 all_actions_filled = False
 
         if all_actions_filled:
-            print("All actions filled")
             game.discord_connection.send_game_chat_sync("All orders accepted.")
             game.scheduler.unschedule_task(self.round_schedule_object)
             self.round_schedule_object = None

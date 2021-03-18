@@ -45,7 +45,6 @@ def time_until_event(scheduled_task):
         :returns a tuple of (minutes,seconds)
     """
     import datetime
-    seconds_in_day = 24 * 60 * 60
     time_diff = scheduled_task.time - datetime.datetime.now()
     remaining_time = divmod(time_diff.total_seconds(), 60)
     return remaining_time

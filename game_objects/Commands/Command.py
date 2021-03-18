@@ -239,3 +239,57 @@ class Unequip(Command):
         slot = params[0]
         player.inventory.unequip_item(slot)
         return f"Unequipped item from {slot}"
+
+
+class CharacterCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.aliases = ["Character", "Char", "Status"]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Shows relevant stats about your current character",
+            "Params: None"
+        ])
+
+    def do_action(self, game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        player = discord_user.current_character
+        to_return = "\n".join([
+            f"{player.name}",
+            f"HP: {player.health}/{player.max_health}",
+            f"PP: {player.stamina}/{player.max_stamina}",
+            f"MP {player.mana}/{player.max_mana}"
+        ])
+        return to_return
+
+
+class InventoryCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.aliases = ["Inventory", "Items", "Bag"]
+
+    @classmethod
+    def show_help(cls):
+        return "\n".join([
+            "Lists your equipped items and the contents of your bags.",
+            "Params: None"
+        ])
+
+    def do_action(self, game, params, message):
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        player = discord_user.current_character
+        to_return = ""
+        if len(player.inventory.equipment.values()) > 0:
+            to_return = to_return + "Equipment:\n"
+        for k, v in player.inventory.equipment.items():
+            if v is not None:
+                to_return = to_return + k.capitalize()+": "+v.name+"\n"
+        if len(player.inventory.bag) > 0:
+            to_return = to_return + "Bag:\n"
+        for item_stack in player.inventory.bag:
+            to_return = to_return + f"{item_stack.quantity}x {item_stack.name}"
+        return to_return

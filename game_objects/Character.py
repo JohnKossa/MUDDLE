@@ -38,8 +38,9 @@ class Character:
         return roll(1, 20, advantage=1)
 
     def get_commands(self):
+        from game_objects.Commands.Command import CharacterCommand
         # TODO add a character sheet command
-        to_return = [PassCommand()]
+        to_return = [CharacterCommand(), PassCommand()]
         if self.current_room is not None:
             to_return.extend(self.current_room.get_commands())
         if self.skills is not None:
@@ -109,10 +110,10 @@ class CharacterInventory:
         self.bag.append(to_add)
 
     def get_commands(self):
-        from game_objects.Commands.Command import Equip, Unequip
+        from game_objects.Commands.Command import Equip, Unequip, InventoryCommand
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
         from game_objects.Items.Equipment import Equipment
-        to_return = []
+        to_return = [InventoryCommand()]
         if len(self.bag) > 0:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):
