@@ -1,15 +1,3 @@
-def all_commands():
-    # TODO Broken because of moving commands into their own directories
-    # TODO fixing this will fix both alias and help
-    import sys
-    import inspect
-    command_list = []
-    for name, obj in inspect.getmembers(sys.modules[__name__]):
-        if inspect.isclass(obj) and issubclass(obj, Command):
-            command_list = command_list + [obj]
-    return command_list
-
-
 class Command:
     def __init__(self):
         self.combat_action_cost = 0
@@ -52,8 +40,12 @@ class ShowHelp(Command):
     def do_action(self, game, params, message):
         if len(params) == 0:
             return ShowHelp.show_help()
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        if discord_user is None:
+            return "You are not listed as a user in this game."
         supplied_alias = params[0].lower()
-        for command in all_commands():
+        for command in discord_user.get_commands():
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
                 return command.show_help()
@@ -79,8 +71,12 @@ class ShowAliases(Command):
     def do_action(self, game, params, message):
         if len(params) == 0:
             return
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        if discord_user is None:
+            return "You are not listed as a user in this game."
         supplied_alias = params[0].lower()
-        for command in all_commands():
+        for command in discord_user.get_commands():
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
                 return f"Known aliases for {command.command_name()}:\n"+("\n".join(command.aliases))
@@ -237,8 +233,11 @@ class Unequip(Command):
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
         slot = params[0]
-        player.inventory.unequip_item(slot)
-        return f"Unequipped item from {slot}"
+        worked, response = player.inventory.unequip_item(slot)
+        if worked:
+            return f"Unequipped item from {slot}"
+        else:
+            return response
 
 
 class CharacterCommand(Command):
@@ -289,7 +288,7 @@ class InventoryCommand(Command):
             if v is not None:
                 to_return = to_return + k.capitalize()+": "+v.name+"\n"
         if len(player.inventory.bag) > 0:
-            to_return = to_return + "Bag:\n"
+            to_return = to_return + "Bag:"
         for item_stack in player.inventory.bag:
-            to_return = to_return + f"{item_stack.quantity}x {item_stack.name}"
+            to_return = to_return + f"\n{item_stack.quantity}x {item_stack.name}"
         return to_return

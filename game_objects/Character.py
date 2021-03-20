@@ -3,6 +3,8 @@ import names
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from game_objects.Items.Weapon import Sword, Torch
+from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor
+from utils.CombatHelpers import sum_resistances
 from utils.Dice import roll
 
 
@@ -25,13 +27,19 @@ class Character:
         self.mana = 100
         self.actions = 2
         self.dead = False
-
-    @property
-    def resistances(self):
-        return {
+        self.base_resistances = {
             "hit": {},
             "dmg": {}
         }
+
+    @property
+    def resistances(self):
+        to_return = self.base_resistances.copy()
+        equipment = filter(lambda x: issubclass(type(x), Armor) or type(x) == Armor, self.inventory.equipment.values())
+        for item in equipment:
+            to_return["hit"] = sum_resistances(to_return["hit"], item.hit_resistances)
+            to_return["dmg"] = sum_resistances(to_return["dmg"], item.damage_resistances)
+        return to_return
 
     @property
     def initiative(self):
@@ -60,12 +68,12 @@ class CharacterInventory:
     def __init__(self):
         self.equipment = {
             "head": None,
-            "body": None,
-            "offhand": Torch(),
+            "body": PlateArmor(),
+            "offhand": None,
             "mainhand": Sword(),
             "belt": None
         }
-        self.bag = []
+        self.bag = [ChainArmor(), Torch()]
 
     def get_item_by_name(self, item_name):
         matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.bag), None)
@@ -74,16 +82,16 @@ class CharacterInventory:
     def equip_item(self, item, slot_name):
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
-            return (False, "Invalid Slot Name")
+            return False, "Invalid Slot Name"
         from game_objects.Items.Equipment import Equipment
         if type(item) is not Equipment and not issubclass(type(item), Equipment):
-            return (False, "Item is not an equipment")
+            return False, "Item is not an equipment"
         if item.slot == "hand" and slot_name not in ["offhand", "mainhand"]:
-            return (False, "Equipment cannot go in that slot")
+            return False, "Equipment cannot go in that slot"
         if item.slot == "head" and slot_name != "head":
-            return (False, "Equipment cannot go in that slot")
+            return False, "Equipment cannot go in that slot"
         if item.slot == "body" and slot_name != "body":
-            return (False, "Equipment cannot go in that slot")
+            return False, "Equipment cannot go in that slot"
         # TODO check if specified item can be equipped to the named slot
         if item.quantity > 1:
             to_equip = item.take_count_from_stack(1)
@@ -92,15 +100,18 @@ class CharacterInventory:
             self.bag.remove(item)
         self.unequip_item(slot_name)
         self.equipment[slot_name] = to_equip
+        return True, None
 
     def unequip_item(self, slot_name):
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
-            return (False, "Invalid Slot Name")
-        if self.equipment[slot_name] is not None:
-            to_add_to_bag = self.equipment[slot_name]
-            self.equipment[slot_name] = None
-            self.add_item_to_bag(to_add_to_bag)
+            return False, "Invalid Slot Name"
+        if self.equipment[slot_name] is None:
+            return False, "Slot is already empty."
+        to_add_to_bag = self.equipment[slot_name]
+        self.equipment[slot_name] = None
+        self.add_item_to_bag(to_add_to_bag)
+        return True, None
 
     def add_item_to_bag(self, to_add):
         for item in self.bag:
