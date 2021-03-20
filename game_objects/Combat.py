@@ -11,6 +11,7 @@ class Combat:
         self.players = players
         self.enemies = enemies
         self.orders = {}
+        self.initiatives = {}
         self.round_schedule_object = None
         self.room = room
 
@@ -59,7 +60,11 @@ class Combat:
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_player(enemy)
 
-        initiative_list = [(x, x.initiative) for x in self.players + self.enemies]
+        for entity in self.players + self.enemies:
+            if entity not in self.initiatives:
+                self.initiatives[entity] = entity.initiative
+
+        initiative_list = [(x, self.initiatives[x]) for x in self.players + self.enemies]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
         for actor in sorted_initiative_list:
             for order in self.orders[actor]:
@@ -93,6 +98,12 @@ class Combat:
 
         self.players = list(filter(lambda x: not x.dead, self.room.get_players(game)))
         self.enemies = list(filter(lambda x: not x.dead, self.room.get_enemies(game)))
+
+        initiative_keys = list(self.initiatives.keys())
+        for k in initiative_keys:
+            if k not in self.players + self.enemies:
+                self.initiatives.pop(k)
+
         # all players dead or left room, end combat
         if len(self.players) == 0:
             game.discord_connection.send_game_chat_sync("All players retreated or dead. Ending combat.")

@@ -25,8 +25,8 @@ class PlateArmor(Armor):
             "electricity": -5
         }
         self.hit_resistances = {
-            "slash": 3,
-            "stab": 2,
+            "slash": 2,
+            "stab": 1,
             "bludgeon": 0,
             "electricity": -1
         }
@@ -43,7 +43,7 @@ class ChainArmor(Armor):
         self.damage_resistances = {
             "slash": 2,
             "stab": 1,
-            "bludgeon": 2,
+            "bludgeon": 1,
             "electricity": -3
         }
         self.hit_resistances = {
