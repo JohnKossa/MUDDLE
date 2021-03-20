@@ -32,24 +32,29 @@ class Combat:
                                                    self.process_round, game)
         game.scheduler.schedule_task(self.round_schedule_object)
 
+    def fill_unused_player_orders(self, player):
+        pass_cmd = PassCommand()
+        action_count = self.sum_actions_for_entity(player)
+        if action_count < player.actions:
+            actions_to_fill = player.actions - action_count
+            for count in range(actions_to_fill):
+                self.orders[player].append((pass_cmd.do_combat_action, [], pass_cmd.combat_action_cost))
+            return True
+        return False
+
     def process_round(self, game):
         # loop through all players and fill missing commands with passes
-        pass_cmd = PassCommand()
-        orders_filled = False
+        filled_orders_for_player = False
         for player in self.players:
-            action_count = self.sum_actions_for_player(player)
-            if action_count < player.actions:
-                orders_filled = True
-                actions_to_fill = player.actions - action_count
-                for count in range(actions_to_fill):
-                    self.orders[player].append((pass_cmd.do_combat_action, [], pass_cmd.combat_action_cost))
+            filled_orders_for_player = filled_orders_for_player or self.fill_unused_player_orders(player)
 
-        if orders_filled:
+        if filled_orders_for_player:
             # round filled via timer instead of full orders, notify that timer expired
             game.discord_connection.send_game_chat_sync("Courtesy timer expired. Processing combat.")
 
+        # determine enemy actions
         for enemy in self.enemies:
-            action_count = self.sum_actions_for_player(enemy)
+            action_count = self.sum_actions_for_entity(enemy)
             failsafe = 100
             while action_count < enemy.actions and failsafe > 0:
                 chosen_action = enemy.get_action()
@@ -58,7 +63,7 @@ class Combat:
                     target_player = random.choice(self.players).name  # TODO randomly targeting players, switch for intelligent decision later
                     self.orders[enemy].append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
                 failsafe = failsafe - 1
-                action_count = self.sum_actions_for_player(enemy)
+                action_count = self.sum_actions_for_entity(enemy)
 
         for entity in self.players + self.enemies:
             if entity not in self.initiatives:
@@ -84,6 +89,7 @@ class Combat:
                         game.discord_connection.send_game_chat_sync(f"{enemy.name} was slain")
                         # drop treasure from loot table
 
+                # check for dead players
                 for player in self.players:
                     if player.health <= 0:
                         player.dead = True
@@ -134,7 +140,7 @@ class Combat:
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
-    def sum_actions_for_player(self, player):
+    def sum_actions_for_entity(self, player):
         if player not in self.orders.keys() and player in self.players:
             self.orders[player] = []
         order_list = self.orders[player]
@@ -149,7 +155,7 @@ class Combat:
         # TODO probably bounce that check back to a function on the action itself
         possible_targets = [x.name for x in self.players + self.enemies]
 
-        current_action_costs = self.sum_actions_for_player(source_player)
+        current_action_costs = self.sum_actions_for_entity(source_player)
         if current_action_costs + cost <= source_player.actions:
             if self.orders[source_player] is None:
                 self.orders[source_player] = []
@@ -160,7 +166,7 @@ class Combat:
 
         all_actions_filled = True
         for player in self.players:
-            if self.sum_actions_for_player(player) < player.actions:
+            if self.sum_actions_for_entity(player) < player.actions:
                 all_actions_filled = False
 
         if all_actions_filled:

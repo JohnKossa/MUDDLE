@@ -27,7 +27,7 @@ class PartialCombatCommand(Command):
         room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost)
         to_return = "Order Accepted."
         if room.combat is not None:
-            action_count = room.combat.sum_actions_for_player(target_player)
+            action_count = room.combat.sum_actions_for_entity(target_player)
             remaining_actions = target_player.actions - action_count
             if 0 < remaining_actions < target_player.actions:
                 to_return = to_return + f"You have {remaining_actions} action points remaining."

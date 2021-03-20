@@ -24,3 +24,4 @@ Multi User Discord Death Labyrinth Experience
 
 ## Nice-to-haves
 1. Multiple sized rooms in the maze, maybe combining clusters of fully connected rooms into one large room for variety. Slightly breaks caridnal direction exits paradigm
+1. Check validity of combat commands and reject invalid ones instead of using up action points
