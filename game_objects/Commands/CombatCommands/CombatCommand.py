@@ -1,12 +1,18 @@
+from __future__ import annotations
+import discord
+from typing import Any, List
+
+import Game
+from game_objects.Character import Character
 from game_objects.Commands.Command import Command
 
 
 class CombatOnlyCommand(Command):
     def __init__(self):
         super().__init__()
-        self.combat_action_cost = 1
+        self.combat_action_cost: int = 1
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         character = user.current_character
@@ -17,5 +23,5 @@ class CombatOnlyCommand(Command):
         remaining_actions = character.actions - action_count
         return "Order Accepted." + (f"You have {remaining_actions} action points remaining." if 0 < remaining_actions < character.actions else "")
 
-    def do_combat_action(self, game, source_player, params):
+    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         raise Exception("Not yet implemented")

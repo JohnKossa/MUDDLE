@@ -1,28 +1,31 @@
+from __future__ import annotations
 import random
+from typing import List, Optional
 
+import Game
 from game_objects.Maze.MazeRoom import MazeRoom, RoomUtils
 
 
 class Maze:
-    def __init__(self, width=None, height=None):
+    def __init__(self, width: int = None, height: int = None):
         if width is None or height is None:
             raise Exception("Cannot instantiate a maze without a width and height")
         else:
-            self.width = width
-            self.height = height
-            self.rooms = []
-            self.entry_room = None
-            self.exit_room = None
+            self.width: int = width
+            self.height: int = height
+            self.rooms: List[MazeRoom] = []
+            self.entry_room: Optional[MazeRoom] = None
+            self.exit_room: Optional[MazeRoom] = None
 
     @property
-    def last_row_index(self):
+    def last_row_index(self) -> int:
         return self.height-1
 
     @property
-    def last_col_index(self):
+    def last_col_index(self) -> int:
         return self.width-1
 
-    def generate_maze(self, entry_coords, exit_coords, difficulty=2):
+    def generate_maze(self, entry_coords: (int, int), exit_coords: (int, int), difficulty: int = 2) -> None:
         potential_rooms = []
 
         opposite_directions = {
@@ -107,7 +110,7 @@ class Maze:
         self.entry_room = RoomUtils.get_room_by_coords(entry_coords[0], entry_coords[1], self.rooms)
         self.exit_room = RoomUtils.get_room_by_coords(exit_coords[0], exit_coords[1], self.rooms)
 
-    def player_map(self, game):
+    def player_map(self, game: Game) -> str:
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
         count = 0

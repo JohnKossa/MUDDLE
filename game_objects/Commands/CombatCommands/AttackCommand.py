@@ -1,24 +1,33 @@
+from __future__ import annotations
+
 import random
+from typing import Any, List
+
+import Game
 
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from utils.CombatHelpers import calculate_damage
 
 
 class AttackCommand(CombatOnlyCommand):
-    def __init__(self, attack_action, aliases=None):
+    from game_objects.Character import Character
+    from game_objects.AttackAction import AttackAction
+
+    def __init__(self, attack_action: AttackAction, aliases: List[str] = None):
+        from game_objects.AttackAction import AttackAction
         super().__init__()
-        self.combat_action_cost = attack_action.action_cost
-        self.attack_action = attack_action
+        self.combat_action_cost: int = attack_action.action_cost
+        self.attack_action: AttackAction = attack_action
         if aliases is not None:
-            self.aliases = aliases
+            self.aliases: List[str] = aliases
         else:
-            self.aliases = [
+            self.aliases: List[str] = [
                 "Attack",
                 "Atk"
             ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         # TODO Correct this
         return "\n".join([
             "Performs the default attack for the weapon against the specified target.",
@@ -27,7 +36,7 @@ class AttackCommand(CombatOnlyCommand):
             "   0: Name of the enemy to attack (optional)"
         ])
 
-    def do_combat_action(self, game, source_player, params):
+    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         from game_objects.Character import Character
         from game_objects.Enemy import Enemy
         enemies = source_player.current_room.combat.enemies
@@ -44,7 +53,7 @@ class AttackCommand(CombatOnlyCommand):
             if len(enemies) == 0:
                 return
             target = random.choice(enemies)
-        elif type(source_player) is Enemy or issubclass(type(source_player), Enemy):
+        elif type(source_player) is type(Enemy) or issubclass(type(source_player), type(Enemy)):
             if len(players) == 0:
                 return
             target = random.choice(players)

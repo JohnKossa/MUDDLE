@@ -1,24 +1,30 @@
+from __future__ import annotations
+import discord
+from typing import Any, List
+
+import Game
+from game_objects.Character import Character
 from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import PartialCombatCommand
 
 
 class Take(PartialCombatCommand):
     def __init__(self):
         super().__init__()
-        self.aliases = [
+        self.aliases: List[str] = [
             "Take",
             "Pickup"
         ]
-        self.combat_action_cost = 1
+        self.combat_action_cost: int = 1
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Picks up an item in the current room and adds it to your bag.",
             "Params:",
             "    0: Item Name",
         ])
 
-    def do_noncombat(self, game, params, message):
+    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -32,7 +38,7 @@ class Take(PartialCombatCommand):
         room.items.remove(matched_item)
         return f"Picked up {matched_item.quantity} {matched_item.name}"
 
-    def do_combat_action(self, game, source_player, params):
+    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]):
         target_item = params[0]
         room = source_player.current_room
         items = room.items

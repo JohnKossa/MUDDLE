@@ -1,7 +1,11 @@
+from __future__ import annotations
+from typing import Dict
+
+from game_objects.AttackAction import AttackAction
 from utils.Dice import roll
 
 
-def calculate_damage(attack, hit_resistances, dmg_resistances):
+def calculate_damage(attack: AttackAction, hit_resistances: Dict[str, int], dmg_resistances: Dict[str, int]) -> int:
     matched_hit_resistance = hit_resistances.get(attack.dmg_type, 0)
     matched_dmg_resistance = dmg_resistances.get(attack.dmg_type, 0)
     hit_roll = roll(1, 20, advantage=attack.hit_bonus)
@@ -12,7 +16,7 @@ def calculate_damage(attack, hit_resistances, dmg_resistances):
     return damage_roll
 
 
-def sum_resistances(set1, set2):
+def sum_resistances(set1:Dict[str, int], set2: Dict[str, int]) -> Dict[str, int]:
     to_return = {}
     known_keys = list(set(set1.keys()) | set(set2.keys()))
     for k in known_keys:

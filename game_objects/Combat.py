@@ -1,21 +1,29 @@
+from __future__ import annotations
 import datetime
 import random
+from typing import Any, Callable, List, NewType, Optional, Union
 
+import Game
+from game_objects.Character import Character
+from game_objects.Enemy import Enemy
 from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
 from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from utils.Scheduler import ScheduledTask, time_until_event
 
+Entity = NewType('Entity', Union[type(Character), type(Enemy)])
+
 
 class Combat:
     def __init__(self, players=[], enemies=[], room=None):
-        self.players = players
-        self.enemies = enemies
-        self.orders = {}
-        self.initiatives = {}
-        self.round_schedule_object = None
-        self.room = room
+        from game_objects.Room import Room
+        self.players: List[Character] = players
+        self.enemies: List[Enemy] = enemies
+        self.orders: dict = {}
+        self.initiatives: dict = {}
+        self.round_schedule_object: Optional[ScheduledTask] = None
+        self.room: Room = room
 
-    def start(self, game):
+    def start(self, game: Game) -> None:
         if len(self.players) == 0:
             game.discord_connection.send_game_chat_sync("Could not start combat. There are no players in the room.")
             return
@@ -32,7 +40,7 @@ class Combat:
                                                    self.process_round, game)
         game.scheduler.schedule_task(self.round_schedule_object)
 
-    def fill_unused_player_orders(self, player):
+    def fill_unused_player_orders(self, player: Character) -> bool:
         pass_cmd = PassCommand()
         action_count = self.sum_actions_for_entity(player)
         if action_count < player.actions:
@@ -42,7 +50,7 @@ class Combat:
             return True
         return False
 
-    def process_round(self, game):
+    def process_round(self, game: Game) -> None:
         # loop through all players and fill missing commands with passes
         filled_orders_for_player = False
         for player in self.players:
@@ -134,13 +142,13 @@ class Combat:
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Accepting orders for next round in {remaining_time[0]} minutes and {remaining_time[1]} seconds")
 
-    def add_player(self, game, player):
+    def add_player(self, game: Game, player: Character) -> None:
         self.players.append(player)
         self.orders[player] = []
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
-    def sum_actions_for_entity(self, player):
+    def sum_actions_for_entity(self, player: Character) -> int:
         if player not in self.orders.keys() and player in self.players:
             self.orders[player] = []
         order_list = self.orders[player]
@@ -150,7 +158,7 @@ class Combat:
             return 0
         return sum(x[2] for x in order_list)
 
-    def accept_player_order(self, game, source_player, action, params, cost):
+    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int):
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
         possible_targets = [x.name for x in self.players + self.enemies]
@@ -177,13 +185,3 @@ class Combat:
         elif self.round_schedule_object is None:
             self.round_schedule_object = ScheduledTask(datetime.datetime.now()+datetime.timedelta(minutes=10), self.process_round, game)
             game.scheduler.schedule_task(self.round_schedule_object)
-
-
-class AttackAction:
-    def __init__(self, name="attack", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0, action_cost=1):
-        self.name = name
-        self.hit_bonus = hit_bonus
-        self.dmg_type = dmg_type
-        self.dmg_roll = dmg_roll
-        self.dmg_bonus = dmg_bonus
-        self.action_cost = action_cost

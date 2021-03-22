@@ -1,3 +1,9 @@
+from __future__ import annotations
+import discord
+from typing import Any, List
+
+import Game
+from game_objects.Character import Character
 from game_objects.Commands.Command import Command
 
 
@@ -5,7 +11,7 @@ class PartialCombatCommand(Command):
     def __init__(self):
         super().__init__()
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         if target_player is None:
@@ -16,13 +22,13 @@ class PartialCombatCommand(Command):
         else:
             return self.enqueue_order(game, target_player, params)
 
-    def do_noncombat(self, game, params, message):
+    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         return ""
 
-    def do_combat_action(self, game, source_player, params):
+    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         pass
 
-    def enqueue_order(self, game, target_player, params):
+    def enqueue_order(self, game: Game, target_player: Character, params: List[Any]) -> str:
         room = target_player.current_room
         room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost)
         to_return = "Order Accepted."

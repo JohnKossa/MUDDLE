@@ -1,16 +1,20 @@
-from game_objects.Items.Equipment import Equipment
-from game_objects.Combat import AttackAction
+from __future__ import annotations
+from typing import List
+
+from game_objects.AttackAction import AttackAction
 from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
+from game_objects.Commands.Command import Command
+from game_objects.Items.Equipment import Equipment
 
 
 class Weapon(Equipment):
     def __init__(self):
         super().__init__()
-        self.slot = "hand"
-        self.attacks = []
-        self.default_attack = None
+        self.slot: str = "hand"
+        self.attacks: List[AttackCommand] = []
+        self.default_attack: str = ""
 
-    def get_commands(self):
+    def get_commands(self) -> List[Command]:
         to_add = []
         for attack in self.attacks:
             if attack.name == self.default_attack:
@@ -23,23 +27,23 @@ class Weapon(Equipment):
 class Sword(Weapon):
     def __init__(self):
         super().__init__()
-        self.name = "Sword"
-        self.attacks = [
+        self.name: str = "Sword"
+        self.attacks: List[AttackAction] = [
             AttackAction(name="slash", hit_bonus=2, dmg_type="slash", dmg_roll=(2, 6), dmg_bonus=1),
             AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=1),
             AttackAction(name="pommelstrike", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0)
         ]
-        self.default_attack = "slash"
+        self.default_attack: str = "slash"
 
-    def get_commands(self):
+    def get_commands(self) -> List[Command]:
         return super().get_commands() + []
 
 
 class Torch(Weapon):
     def __init__(self):
         super().__init__()
-        self.name = "Torch"
-        self.attacks = [
+        self.name: str = "Torch"
+        self.attacks: List[AttackAction] = [
             AttackAction(name="poke", hit_bonus=3, dmg_type="fire", dmg_roll=(1,6), dmg_bonus=0)
         ]
-        self.default_attack = "poke"
+        self.default_attack: str = "poke"

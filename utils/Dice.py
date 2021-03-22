@@ -1,7 +1,8 @@
+from __future__ import annotations
 import random
 
 
-def roll(count, faces, advantage=0):
+def roll(count: int, faces: int, advantage: int = 0) -> int:
     raw_rolls = []
     for i in range(count + abs(advantage)):
         raw_rolls.append(random.randint(1, faces))
@@ -14,7 +15,7 @@ def roll(count, faces, advantage=0):
         return sum(raw_rolls)
 
 
-def print_advantage_spread():
+def print_advantage_spread() -> None:
     for adv in range(-10, 11):
         print(f"advantage {adv}")
         total = 0

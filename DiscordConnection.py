@@ -1,8 +1,10 @@
 import discord
+from discord import Intents
 import os
 import re
 
 from dotenv import load_dotenv
+from typing import List, Optional
 
 from discord_objects.DiscordUser import DiscordUser, UserUtils
 from utils.Scheduler import Scheduler
@@ -11,13 +13,13 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.members = True
 
 
 class CustomClient(discord.Client):
-    def __init__(self, intents=None):
-        super().__init__(intents=intents, allowed_mentions=discord.AllowedMentions(users=True))
+    def __init__(self, intents_contract: Optional[Intents] = None):
+        super().__init__(intents=intents_contract, allowed_mentions=discord.AllowedMentions(users=True))
         self.game_channel = None
         self.game = None
 
@@ -36,10 +38,10 @@ class CustomClient(discord.Client):
         self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
         await self.send_game_chat("Server started.")
 
-    def send_game_chat_sync(self, text, tagged_users=[]):
+    def send_game_chat_sync(self, text: str, tagged_users: List[DiscordUser] = []) -> None:
         self.loop.create_task(self.send_game_chat(text, tagged_users=tagged_users))
 
-    async def send_game_chat(self, text, tagged_users=[]):
+    async def send_game_chat(self, text, tagged_users: List[DiscordUser] = []) -> None:
         if self.game_channel is None:
             print("No game channel set.")
             return
@@ -48,7 +50,7 @@ class CustomClient(discord.Client):
             mentions = "".join(map(lambda x: "<@"+str(x.discord_obj.id)+">", tagged_users))+"\n"
         await self.game_channel.send(mentions+text)
 
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message) -> None:
         user = self.user
         author = message.author
         content = message.content
@@ -98,7 +100,7 @@ class CustomClient(discord.Client):
         raise
 
 
-client = CustomClient(intents=intents)
+client = CustomClient(intents_contract=intents)
 
 
 def run(game_ref):

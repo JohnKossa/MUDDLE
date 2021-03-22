@@ -1,15 +1,16 @@
+from __future__ import annotations
 import datetime
 import asyncio
 
 
 class Scheduler:
-    def __init__(self, async_loop, resolution=60):
+    def __init__(self, async_loop, resolution: int = 60):
         self.scheduled_tasks = []
         self.async_loop = async_loop
         self.resolution = resolution
         self.looping = False
 
-    async def process_loop(self):
+    async def process_loop(self) -> None:
         self.looping = True
         while len(self.scheduled_tasks):
             for task in self.scheduled_tasks:
@@ -22,7 +23,7 @@ class Scheduler:
             await asyncio.sleep(self.resolution)
         self.looping = False
 
-    def schedule_task(self, task):
+    def schedule_task(self, task: ScheduledTask) -> None:
         need_to_start = False
         if len(self.scheduled_tasks) == 0:
             need_to_start = True
@@ -30,7 +31,7 @@ class Scheduler:
         if need_to_start and not self.looping:
             self.async_loop.create_task(self.process_loop())
 
-    def unschedule_task(self, task):
+    def unschedule_task(self, task: ScheduledTask) -> bool:
         try:
             if task in self.scheduled_tasks:
                 self.scheduled_tasks.remove(task)
@@ -40,7 +41,7 @@ class Scheduler:
         return False
 
 
-def time_until_event(scheduled_task):
+def time_until_event(scheduled_task: ScheduledTask) -> (int, int):
     """Returns the amount of time until the specified scheduled task will fire.
         :returns a tuple of (minutes,seconds)
     """

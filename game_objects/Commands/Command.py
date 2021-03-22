@@ -1,22 +1,29 @@
+from __future__ import annotations
+from typing import List, Optional
+import discord
+
+import Game
+
+
 class Command:
     def __init__(self):
-        self.combat_action_cost = 0
-        self.aliases = []
+        self.combat_action_cost: int = 0
+        self.aliases: List[str] = []
 
-    def default_alias(self):
+    def default_alias(self) -> Optional[str]:
         if len(self.aliases) == 0:
             return None
         return self.aliases[0]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "No help text has been set for this command."
 
     @classmethod
     def command_name(cls):
         return cls.__name__
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         raise Exception("No action implemented for command")
 
 
@@ -30,14 +37,14 @@ class ShowHelp(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Gives details about the usage of the named command",
             "Params:",
             "    0: Command Name"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         if len(params) == 0:
             return ShowHelp.show_help()
         from discord_objects.DiscordUser import UserUtils
@@ -61,16 +68,16 @@ class ShowAliases(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Gives details about the usage of the named command",
             "Params:",
             "    0: Command Name"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         if len(params) == 0:
-            return
+            return ""
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
@@ -91,13 +98,13 @@ class ListCommands(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Lists all commands currently available to you",
             "Params: None"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
@@ -117,13 +124,13 @@ class ShowMap(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Debug command: Displays the current map",
             "Params: None"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         return game.maze.player_map(game)
 
 
@@ -137,7 +144,7 @@ class RebuildMaze(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Debug Command: Regenerates the current maze and kicks all players back to the start",
             "Params:",
@@ -146,7 +153,7 @@ class RebuildMaze(Command):
             "    2. Difficulty"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         width = int(params[0])
         height = int(params[1])
         difficulty = int(params[2])
@@ -165,13 +172,13 @@ class NewCharacter(Command):
         ]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Creates a new character, associates it with your user, and inserts it in the starting room of the maze",
             "Params: None"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from game_objects.Character import Character
         from discord_objects.DiscordUser import UserUtils, DiscordUser
         new_player = Character()
@@ -192,7 +199,7 @@ class Equip(Command):
         self.aliases = ["Equip"]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Equips the named item from your bag in the named equipment slot",
             "Params:",
@@ -200,7 +207,7 @@ class Equip(Command):
             "    1: Slot Name"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -221,14 +228,14 @@ class Unequip(Command):
         self.aliases = ["Unequip"]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Unequips an equipped item from the named slot and adds it back to your bag",
             "Params:",
             "    0: Slot Name"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -246,14 +253,14 @@ class CharacterCommand(Command):
         self.aliases = ["Character", "Char", "Player", "Status"]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Shows relevant stats about your current character.",
             "Params:",
             "    0: Stats(optional)"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -283,13 +290,13 @@ class InventoryCommand(Command):
         self.aliases = ["Inventory", "Items", "Bag"]
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Lists your equipped items and the contents of your bags.",
             "Params: None"
         ])
 
-    def do_action(self, game, params, message):
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character

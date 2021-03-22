@@ -1,25 +1,31 @@
+from __future__ import annotations
+import discord
+from typing import Any, List
+
+import Game
+from game_objects.Character import Character
 from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import PartialCombatCommand
 
 
 class Exit(PartialCombatCommand):
     def __init__(self):
         super().__init__()
-        self.aliases = [
+        self.aliases: List[str] = [
             "Exit",
             "Go",
             "Door"
         ]
-        self.combat_action_cost = 2
+        self.combat_action_cost: int = 2
 
     @classmethod
-    def show_help(cls):
+    def show_help(cls) -> str:
         return "\n".join([
             "Moves your character through the named exit",
             "Params:",
             "    0: The name of the door to use"
         ])
 
-    def do_noncombat(self, game, params, message):
+    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         source_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         if source_player is None:
@@ -37,13 +43,13 @@ class Exit(PartialCombatCommand):
         game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
         return str(source_player.current_room)
 
-    def do_combat_action(self, game, source_player, params):
+    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         from Game import TriggerFunc
         # after combat finishes, leave room
         game.discord_connection.send_game_chat_sync(f"{source_player.name} runs for the door.")
         game.once("round_end", TriggerFunc(self.leave_room, game, source_player, params))
 
-    def leave_room(self, game, source_player, params, **kwargs):
+    def leave_room(self, game: Game, source_player: Character, params: List[Any], **kwargs) -> None:
         discord_user = source_player.discord_user
         room = source_player.current_room
         direction = params[0]

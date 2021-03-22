@@ -1,23 +1,28 @@
+from __future__ import annotations
+from typing import List, Optional
+
+from game_objects.Commands.Command import Command
 from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
+from game_objects.Maze import Maze
 from game_objects.Room import Room
 
 
 class MazeRoom(Room):
-    def __init__(self, x_coord, y_coord):
+    def __init__(self, x_coord: int, y_coord: int):
         super(MazeRoom, self).__init__(name=f"{x_coord},{y_coord}")
-        self.x_coord = x_coord
-        self.y_coord = y_coord
-        self.width = 1
-        self.height = 1
-        self.possible_neighbors = []
-        self.north_door = None
-        self.east_door = None
-        self.south_door = None
-        self.west_door = None
+        self.x_coord: int = x_coord
+        self.y_coord: int = y_coord
+        self.width: int = 1
+        self.height: int = 1
+        self.possible_neighbors: MazeRoom = []
+        self.north_door: Optional[MazeRoom] = None
+        self.east_door: Optional[MazeRoom] = None
+        self.south_door: Optional[MazeRoom] = None
+        self.west_door: Optional[MazeRoom] = None
         self.description_template = None
 
     @property
-    def connected_neighbors(self):
+    def connected_neighbors(self) -> List[Room]:
         result = []
         if self.north_door is not None:
             result.append(self.north_door)
@@ -29,7 +34,7 @@ class MazeRoom(Room):
             result.append(self.west_door)
         return result
 
-    def get_door(self, direction):
+    def get_door(self, direction: str) -> List[Room]:
         doors = {
             "north": self.north_door,
             "east": self.east_door,
@@ -39,7 +44,7 @@ class MazeRoom(Room):
         if direction.lower() in doors.keys():
             return doors[direction.lower()]
 
-    def set_door(self, direction, val):
+    def set_door(self, direction: str, val: Room) -> None:
         if direction == "north":
             self.north_door = val
         elif direction == "east":
@@ -49,19 +54,19 @@ class MazeRoom(Room):
         elif direction == "west":
             self.west_door = val
 
-    def is_starting_room(self, maze):
-        return self.x_coord == maze.entry_coords[0] and self.y_coord == maze.entry_coords[1]
+    def is_starting_room(self, maze: Maze) -> bool:
+        return self == maze.entry_room
 
-    def is_exit_room(self, maze):
-        return self.x_coord == maze.exit_coords[0] and self.y_coord == maze.exit_coords[1]
+    def is_exit_room(self, maze: Maze) -> bool:
+        return self == maze.exit_room
 
-    def describe_room(self):
+    def describe_room(self) -> str:
         # TODO link this to the correct room template file and pull the description from there
         if self.template is None:
             return f"You are in a room. It's super interesting. {self.name}"
         return self.template
 
-    def describe_exits(self):
+    def describe_exits(self) -> str:
         exits = {
             "North": self.north_door,
             "East": self.east_door,
@@ -78,16 +83,16 @@ class MazeRoom(Room):
             formatted_list = (", ".join(valid_exits[:-1]))+f", and {valid_exits[-1]}"
             return f"Exits include {formatted_list}"
 
-    def describe_fixtures(self):
+    def describe_fixtures(self) -> str:
         for fixture in self.fixtures:
             # get display text from template
             return ""
         # join them all together with newlines
-        return None
+        return ""
 
-    def describe_items(self):
+    def describe_items(self) -> str:
         if self.items is None or len(self.items) == 0:
-            return None
+            return ""
         item_count = len(self.items)
         if item_count == 1:
             return f"On the floor you see {self.items[0].describe()}."
@@ -96,7 +101,7 @@ class MazeRoom(Room):
         else:
             return f"A large assortment of items is strewn about the floor."
 
-    def get_commands(self):
+    def get_commands(self) -> List[Command]:
         to_return = super().get_commands() + [Exit()]
         return to_return
 
@@ -115,7 +120,7 @@ class MazeRoom(Room):
 
 class RoomUtils:
     @staticmethod
-    def get_all_neighbors(rooms):
+    def get_all_neighbors(rooms: List[MazeRoom]) -> List[MazeRoom]:
         neighbors = []
         for room in rooms:
             if room is not None:
@@ -125,11 +130,11 @@ class RoomUtils:
         return neighbors
 
     @staticmethod
-    def get_room_by_coords(x, y, rooms):
+    def get_room_by_coords(x: int, y: int, rooms: List[Room]) -> Optional[Room]:
         return next(iter(filter(lambda i: i.x_coord == x and i.y_coord == y, rooms)), None)
 
     @staticmethod
-    def get_neighbor_in_in_direction(room, direction, rooms):
+    def get_neighbor_in_in_direction(room: MazeRoom, direction: str, rooms: List[MazeRoom]) -> Optional[MazeRoom]:
         if room is None:
             return None
         offsets = {
@@ -144,11 +149,11 @@ class RoomUtils:
         return None
 
     @staticmethod
-    def get_row(y, rooms):
+    def get_row(y: int, rooms: List[MazeRoom]) -> List[MazeRoom]:
         return [i for i in rooms if i.y_coord == y]
 
     @staticmethod
-    def get_col(x, rooms):
+    def get_col(x: int, rooms: List[MazeRoom]) -> List[MazeRoom]:
         return [i for i in rooms if i.x_coord == x]
 
 
