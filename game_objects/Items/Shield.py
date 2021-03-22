@@ -9,6 +9,7 @@ from game_objects.Items.Equipment import Equipment
 class Shield(Equipment):
     def __init__(self):
         super().__init__()
+        self.name: str = "IronRoundShield"
         self.slot: str = "hand"
 
     def get_commands(self) -> List[Command]:

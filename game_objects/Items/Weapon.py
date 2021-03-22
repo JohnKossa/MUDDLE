@@ -11,7 +11,7 @@ class Weapon(Equipment):
     def __init__(self):
         super().__init__()
         self.slot: str = "hand"
-        self.attacks: List[AttackCommand] = []
+        self.attacks: List[AttackAction] = []
         self.default_attack: str = ""
 
     def get_commands(self) -> List[Command]:
@@ -30,7 +30,7 @@ class Sword(Weapon):
         self.name: str = "Sword"
         self.attacks: List[AttackAction] = [
             AttackAction(name="slash", hit_bonus=2, dmg_type="slash", dmg_roll=(2, 6), dmg_bonus=1),
-            AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=1),
+            AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 12), dmg_bonus=1),
             AttackAction(name="pommelstrike", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0)
         ]
         self.default_attack: str = "slash"
@@ -44,6 +44,6 @@ class Torch(Weapon):
         super().__init__()
         self.name: str = "Torch"
         self.attacks: List[AttackAction] = [
-            AttackAction(name="poke", hit_bonus=3, dmg_type="fire", dmg_roll=(1,6), dmg_bonus=0)
+            AttackAction(name="firepoke", hit_bonus=3, dmg_type="fire", dmg_roll=(1,6), dmg_bonus=0)
         ]
-        self.default_attack: str = "poke"
+        self.default_attack: str = "firepoke"
