@@ -70,7 +70,7 @@ class Game:
             self.init_maze()
             self.return_players_to_start()
 
-    def init_maze(self, width:int = 11, height: int = 11, difficulty: int = 6) -> None:
+    def init_maze(self, width: int = 11, height: int = 11, difficulty: int = 6) -> None:
         self.maze = Maze(width=width, height=height)
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
         self.seed_enemies()

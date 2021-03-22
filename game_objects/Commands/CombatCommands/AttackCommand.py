@@ -6,7 +6,7 @@ from typing import Any, List
 import Game
 
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
-from utils.CombatHelpers import calculate_damage
+from utils.CombatHelpers import calculate_hit, calculate_damage
 
 
 class AttackCommand(CombatOnlyCommand):
@@ -49,18 +49,21 @@ class AttackCommand(CombatOnlyCommand):
             for player in players:
                 if player.name == params[0]:
                     target = player
-        elif type(source_player) is Character:
+        elif isinstance(source_player, Character):
             if len(enemies) == 0:
                 return
             target = random.choice(enemies)
-        elif type(source_player) is type(Enemy) or issubclass(type(source_player), type(Enemy)):
+        elif isinstance(source_player, Enemy):
             if len(players) == 0:
                 return
             target = random.choice(players)
         hit_resistance = target.resistances["hit"]
         dmg_resistance = target.resistances["dmg"]
-        damage = calculate_damage(self.attack_action, hit_resistance, dmg_resistance)
-        output = f"{source_player.name} uses {self.attack_action.name}. "
-        output = output + ("It misses." if damage == 0 else f"{target.name} takes {damage} damage.")
-        game.discord_connection.send_game_chat_sync(output)
-        target.health = max(0, target.health-damage)
+        attack_hits = calculate_hit(self.attack_action, hit_resistance)
+        if not attack_hits:
+            game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {self.attack_action.name}. It misses.")
+            return
+        damage_to_assign = calculate_damage(self.attack_action, dmg_resistance)
+        assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
+        game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {self.attack_action.name}. "+assign_damage_response)
+        game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)

@@ -80,6 +80,8 @@ class Combat:
         initiative_list = [(x, self.initiatives[x]) for x in self.players + self.enemies]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
         for actor in sorted_initiative_list:
+            if type(actor) is Character:
+                game.trigger("before_player_combat", source_player=actor, room=self.room)
             for order in self.orders[actor]:
                 # if order is still valid
                 action = order[0]
@@ -106,6 +108,8 @@ class Combat:
                         # drop treasure form player inventory
 
                 # TODO additional cleanup for items
+            if type(actor) is Character:
+                game.trigger("after_player_combat", source_player=actor)
 
         # post-round actions
         game.trigger("round_end", room=self.room)
@@ -148,10 +152,10 @@ class Combat:
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
-    def sum_actions_for_entity(self, player: Character) -> int:
-        if player not in self.orders.keys() and player in self.players:
-            self.orders[player] = []
-        order_list = self.orders[player]
+    def sum_actions_for_entity(self, actor: Entity) -> int:
+        if actor not in self.orders.keys() and actor in self.players:
+            self.orders[actor] = []
+        order_list = self.orders[actor]
         if order_list is None:
             return 0
         if len(order_list) == 0:

@@ -3,7 +3,7 @@ from typing import List, Optional
 import random
 from game_objects.AttackAction import AttackAction
 from utils.Dice import roll
-from utils.CombatHelpers import sum_resistances
+from utils.CombatHelpers import sum_resistances, assign_damage
 
 
 class Enemy:
@@ -27,6 +27,7 @@ class Enemy:
         self.possible_actions: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0))
         ]
+        self.assign_damage = assign_damage
 
     @property
     def resistances(self) -> dict:  # TODO create a type for this

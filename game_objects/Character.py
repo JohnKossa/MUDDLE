@@ -4,7 +4,7 @@ from typing import Optional, List
 
 
 from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor
-from utils.CombatHelpers import sum_resistances
+from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
 
@@ -35,11 +35,12 @@ class Character:
             "hit": {},
             "dmg": {}
         }
+        self.assign_damage = assign_damage
 
     @property
     def resistances(self) -> dict:  # TODO Define a type for this
         to_return = self.base_resistances.copy()
-        equipment = filter(lambda x: issubclass(type(x), Armor) or type(x) == Armor, self.inventory.equipment.values())
+        equipment = filter(lambda x: isinstance(x, Armor), self.inventory.equipment.values())
         for item in equipment:
             to_return["hit"] = sum_resistances(to_return["hit"], item.hit_resistances)
             to_return["dmg"] = sum_resistances(to_return["dmg"], item.damage_resistances)
@@ -63,7 +64,7 @@ class Character:
             to_return.extend(self.inventory.get_commands())
         # if player not in combat, remove all combat only commands
         if self.current_room.combat is None:
-            to_return = list(filter(lambda x: not issubclass(type(x), CombatOnlyCommand), to_return))
+            to_return = list(filter(lambda x: not isinstance(x, CombatOnlyCommand), to_return))
         return to_return
 
     def __str__(self):
@@ -77,10 +78,11 @@ class CharacterInventory:
 
     def __init__(self):
         from game_objects.Items.Weapon import Sword, Torch
+        from game_objects.Items.Shield import Shield
         self.equipment = {
             "head": None,
             "body": PlateArmor(),
-            "offhand": None,
+            "offhand": Shield(),
             "mainhand": Sword(),
             "belt": None
         }
@@ -95,7 +97,7 @@ class CharacterInventory:
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
             return False, "Invalid Slot Name"
-        if type(item) is not Equipment and not issubclass(type(item), Equipment):
+        if not isinstance(item, Equipment):
             return False, "Item is not an equipment"
         if item.slot == "hand" and slot_name not in ["offhand", "mainhand"]:
             return False, "Equipment cannot go in that slot"
@@ -140,7 +142,7 @@ class CharacterInventory:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):
             to_return.append(Unequip())
-        if any(issubclass(type(x), Equipment) or (type(x) is Equipment) for x in self.bag):
+        if any(isinstance(x, Equipment) for x in self.bag):
             to_return.append(Equip())
         for slot in self.equipment.keys():
             if self.equipment.get(slot, None) is not None:

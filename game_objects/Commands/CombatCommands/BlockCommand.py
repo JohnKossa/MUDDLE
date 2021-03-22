@@ -3,8 +3,8 @@ from typing import Any, List
 
 from Game import Game
 from game_objects.Character import Character
-
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
+from utils.CombatHelpers import assign_damage as default_damage_assignment
 
 
 class BlockCommand(CombatOnlyCommand):
@@ -25,8 +25,22 @@ class BlockCommand(CombatOnlyCommand):
         ])
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+        from Game import TriggerFunc
         game.discord_connection.send_game_chat_sync(f"{source_player.name} raises their shield.")
-        # TODO Implementation
-        # add a "blocking" status to the player
-        # add a trigger to remove the blocking status from the player at their next combat
-        # modify combat cycle to have an "assign damage" step that allows for hooks to redirect damage
+        source_player.assign_damage = BlockCommand.assign_damage
+        game.once("before_player_combat", TriggerFunc(BlockCommand.detach_damage_replacement))
+
+    @staticmethod
+    def detach_damage_replacement(source_player=None, **kwargs):
+        source_player.assign_damage = default_damage_assignment
+
+    @staticmethod
+    def assign_damage(game, source, target, damage):
+        stamina_damage = min(damage, target.stamina)
+        target.stamina = max(0, target.stamina - stamina_damage)
+        remaining_damage = damage - stamina_damage
+        target.health = max(0, target.health - remaining_damage)
+        to_return = f"{target.name}'s shield absorbs {stamina_damage} damage."
+        if remaining_damage > 0:
+            to_return = to_return + f"{target.name} takes {remaining_damage} damage."
+        return to_return
