@@ -50,6 +50,10 @@ class Character:
     def initiative(self) -> int:
         return roll(1, 20, advantage=1)
 
+    @property
+    def combat_name(self) -> str:
+        return self.name
+
     def get_commands(self) -> List[Command]:
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
         from game_objects.Commands.Command import CharacterCommand

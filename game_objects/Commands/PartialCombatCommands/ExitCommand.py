@@ -46,7 +46,7 @@ class Exit(PartialCombatCommand):
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         from Game import TriggerFunc
         # after combat finishes, leave room
-        game.discord_connection.send_game_chat_sync(f"{source_player.name} runs for the door.")
+        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} runs for the door.")
         game.once("round_end", TriggerFunc(self.leave_room, game, source_player, params))
 
     def leave_room(self, game: Game, source_player: Character, params: List[Any], **kwargs) -> None:

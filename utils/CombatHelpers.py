@@ -30,4 +30,4 @@ def sum_resistances(set1: Dict[str, int], set2: Dict[str, int]) -> Dict[str, int
 
 def assign_damage(game, source, target, damage):
     target.health = max(0, target.health-damage)
-    return f"{target.name} takes {damage} damage."
+    return f"{target.combat_name} takes {damage} damage."

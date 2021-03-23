@@ -44,10 +44,10 @@ class AttackCommand(CombatOnlyCommand):
         target = None
         if len(params):
             for enemy in enemies:
-                if enemy.name == params[0]:
+                if enemy.combat_name == params[0]:
                     target = enemy
             for player in players:
-                if player.name == params[0]:
+                if player.combat_name == params[0]:
                     target = player
         elif isinstance(source_player, Character):
             if len(enemies) == 0:
@@ -61,9 +61,9 @@ class AttackCommand(CombatOnlyCommand):
         dmg_resistance = target.resistances["dmg"]
         attack_hits = calculate_hit(self.attack_action, hit_resistance)
         if not attack_hits:
-            game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {self.attack_action.name}. It misses.")
+            game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. It misses.")
             return
         damage_to_assign = calculate_damage(self.attack_action, dmg_resistance)
         assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
-        game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {self.attack_action.name}. "+assign_damage_response)
+        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. "+assign_damage_response)
         game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)

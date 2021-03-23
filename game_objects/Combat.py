@@ -1,7 +1,7 @@
 from __future__ import annotations
 import datetime
 import random
-from typing import Any, Callable, List, NewType, Optional, Union
+from typing import Any, Callable, Dict, List, NewType, Optional, Union
 
 import Game
 from game_objects.Character import Character
@@ -35,10 +35,26 @@ class Combat:
             self.orders[player] = []
         for enemy in self.enemies:
             self.orders[enemy] = []
+        self.disambiguate_enemies()
         game.discord_connection.send_game_chat_sync(f"Started combat in room {self.room.name}.")
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=10),
                                                    self.process_round, game)
         game.scheduler.schedule_task(self.round_schedule_object)
+
+    def disambiguate_enemies(self) -> None:
+        all_enemies_in_room: List[Enemy] = self.enemies.copy()
+        all_names: Dict[str, List[Enemy]] = {}
+        while len(all_enemies_in_room) > 0:
+            current_enemy = all_enemies_in_room[0]
+            all_names[current_enemy.name] = list(filter(lambda x: x.name == current_enemy.name, all_enemies_in_room))
+            for enemy in all_names[current_enemy.name]:
+                all_enemies_in_room.remove(enemy)
+        for name, lst in all_names.items():
+            if len(lst) == 1:
+                lst[0].disambiguation_num = 0
+                continue
+            for i in range(len(lst)):
+                lst[i].disambiguation_num = i + 1
 
     def fill_unused_player_orders(self, player: Character) -> bool:
         pass_cmd = PassCommand()
@@ -68,7 +84,7 @@ class Combat:
                 chosen_action = enemy.get_action()
                 if action_count + chosen_action.action_cost <= enemy.actions:
                     cmd = AttackCommand(chosen_action)
-                    target_player = random.choice(self.players).name  # TODO randomly targeting players, switch for intelligent decision later
+                    target_player = random.choice(self.players).combat_name  # TODO randomly targeting players, switch for intelligent decision later
                     self.orders[enemy].append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_entity(enemy)
@@ -96,7 +112,7 @@ class Combat:
                     if enemy.health <= 0:
                         enemy.dead = True
                         self.enemies.remove(enemy)
-                        game.discord_connection.send_game_chat_sync(f"{enemy.name} was slain")
+                        game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
                         # drop treasure from loot table
 
                 # check for dead players
@@ -104,7 +120,7 @@ class Combat:
                     if player.health <= 0:
                         player.dead = True
                         self.players.remove(player)
-                        game.discord_connection.send_game_chat_sync(f"{player.name} has fallen in combat")
+                        game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
                         # drop treasure form player inventory
 
                 # TODO additional cleanup for items
@@ -165,7 +181,7 @@ class Combat:
     def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int):
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
-        possible_targets = [x.name for x in self.players + self.enemies]
+        possible_targets = [x.combat_name for x in self.players + self.enemies]
 
         current_action_costs = self.sum_actions_for_entity(source_player)
         if current_action_costs + cost <= source_player.actions:

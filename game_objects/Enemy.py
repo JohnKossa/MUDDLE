@@ -11,6 +11,7 @@ class Enemy:
         from game_objects.Room import Room
         self.current_room: Optional[Room] = None
         self.name: str = None
+        self.disambiguation_num: int = 0
         self.description: str = None
         self.max_health: int = 50
         self.health: int = 50
@@ -39,6 +40,12 @@ class Enemy:
     @property
     def initiative(self) -> int:
         return roll(1, 20)
+
+    @property
+    def combat_name(self) -> str:
+        if self.disambiguation_num == 0:
+            return self.name
+        return f"{self.name} {self.disambiguation_num}"
 
     def get_action(self) -> AttackAction:
         weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)

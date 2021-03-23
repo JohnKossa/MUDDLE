@@ -44,8 +44,8 @@ class Take(PartialCombatCommand):
         items = room.items
         matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
         if matched_item is None:
-            game.discord_connection.send_game_chat_sync(f"{source_player.name} attempted to pick up a picked up  a {target_item} but could not find any.")
+            game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} attempted to pick up a picked up  a {target_item} but could not find any.")
             return
         source_player.inventory.add_item_to_bag(matched_item)
         room.items.remove(matched_item)
-        game.discord_connection.send_game_chat_sync(f"{source_player.name} picked up {matched_item.quantity} {matched_item.name}")
+        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} picked up {matched_item.quantity} {matched_item.name}")

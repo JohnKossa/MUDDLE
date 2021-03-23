@@ -57,7 +57,7 @@ class Drop(PartialCombatCommand):
         player_bag = source_player.inventory.bag
         matched_item = source_player.inventory.get_item_by_name(target_item)
         if matched_item is None:
-            game.discord_connection.send_game_chat_sync(f"{source_player.name} attempted to drop an item, but could find a {target_item} in their inventory")
+            game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} attempted to drop an item, but could find a {target_item} in their inventory")
         bag_quantity = player_bag[matched_item]
         try:
             quantity = int(params[1])
@@ -73,4 +73,4 @@ class Drop(PartialCombatCommand):
             player_bag.pop(matched_item)
 
         room.items.append(matched_item)
-        game.discord_connection.send_game_chat_sync(f"{source_player.name} dropped {quantity} {matched_item.name}")
+        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} dropped {quantity} {matched_item.name}")

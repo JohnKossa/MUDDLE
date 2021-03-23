@@ -19,6 +19,12 @@ class Room:
         self.items: List[Item] = []
         self.combat: Optional[Combat] = None
 
+    def get_characters(self, game: Game) -> List[Character]:
+        return list(filter(lambda x: x.current_room == self, game.players))
+
+    def get_enemies(self, game: Game) -> List[Enemy]:
+        return list(filter(lambda x: x.current_room == self, game.enemies))
+
     def get_commands(self) -> List[Command]:
         to_return = []
         if len(self.items) > 0:
