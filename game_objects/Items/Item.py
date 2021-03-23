@@ -14,6 +14,12 @@ class Item:
         self.name: str = "Item"
         self.template: Any = None
 
+    @classmethod
+    def from_template(cls, template_string) -> Item:
+        # TODO fill out
+        import json
+        return Item()
+
     def describe(self) -> str:
         # TODO lookup item from template
         if self.template is None:

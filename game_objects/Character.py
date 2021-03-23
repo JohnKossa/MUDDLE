@@ -3,15 +3,17 @@ import names
 from typing import Optional, List
 
 
+from game_objects.CombatEntity import CombatEntity
 from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor
 from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
 
-class Character:
+class Character(CombatEntity):
     from game_objects.Commands.Command import Command
 
     def __init__(self, name: str = None):
+        super().__init__()
         from game_objects.Room import Room
         from discord_objects.DiscordUser import DiscordUser
         if name is None:
@@ -30,7 +32,6 @@ class Character:
         self.max_mana: int = 100
         self.mana: int = 100
         self.actions: int = 2
-        self.dead: bool = False
         self.base_resistances: dict = {
             "hit": {},
             "dmg": {}

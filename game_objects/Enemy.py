@@ -1,13 +1,15 @@
 from __future__ import annotations
 from typing import List, Optional
 import random
+from game_objects.CombatEntity import CombatEntity
 from game_objects.AttackAction import AttackAction
 from utils.Dice import roll
 from utils.CombatHelpers import sum_resistances, assign_damage
 
 
-class Enemy:
+class Enemy(CombatEntity):
     def __init__(self):
+        super().__init__()
         from game_objects.Room import Room
         self.current_room: Optional[Room] = None
         self.name: str = None
@@ -16,7 +18,6 @@ class Enemy:
         self.max_health: int = 50
         self.health: int = 50
         self.actions: int = 2
-        self.dead: bool = False
         self.natural_armor: dict = {
             "hit": {},
             "dmg": {}
@@ -45,7 +46,7 @@ class Enemy:
     def combat_name(self) -> str:
         if self.disambiguation_num == 0:
             return self.name
-        return f"{self.name} {self.disambiguation_num}"
+        return f"{self.name}{self.disambiguation_num}"
 
     def get_action(self) -> AttackAction:
         weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)

@@ -5,12 +5,12 @@ from typing import Any, List
 
 import Game
 
+from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from utils.CombatHelpers import calculate_hit, calculate_damage
 
 
 class AttackCommand(CombatOnlyCommand):
-    from game_objects.Character import Character
     from game_objects.AttackAction import AttackAction
 
     def __init__(self, attack_action: AttackAction, aliases: List[str] = None):
@@ -36,7 +36,7 @@ class AttackCommand(CombatOnlyCommand):
             "   0: Name of the enemy to attack (optional)"
         ])
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: CombatEntity, params: List[Any]) -> None:
         from game_objects.Character import Character
         from game_objects.Enemy import Enemy
         enemies = source_player.current_room.combat.enemies

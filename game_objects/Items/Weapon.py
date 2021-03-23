@@ -14,6 +14,11 @@ class Weapon(Equipment):
         self.attacks: List[AttackAction] = []
         self.default_attack: str = ""
 
+    @classmethod
+    def from_template(cls, template_string) -> Weapon:
+        import json
+        return Weapon()
+
     def get_commands(self) -> List[Command]:
         to_add = []
         for attack in self.attacks:

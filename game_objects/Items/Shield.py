@@ -12,6 +12,11 @@ class Shield(Equipment):
         self.name: str = "IronRoundShield"
         self.slot: str = "hand"
 
+    @classmethod
+    def from_template(cls, template_string) -> Shield:
+        import json
+        return Shield()
+
     def get_commands(self) -> List[Command]:
         # will add "block" command
         return super().get_commands() + [BlockCommand()]

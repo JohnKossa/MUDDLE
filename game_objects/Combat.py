@@ -1,16 +1,15 @@
 from __future__ import annotations
 import datetime
 import random
-from typing import Any, Callable, Dict, List, NewType, Optional, Union
+from typing import Any, Callable, Dict, List,  Optional
 
 import Game
 from game_objects.Character import Character
 from game_objects.Enemy import Enemy
+from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
 from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from utils.Scheduler import ScheduledTask, time_until_event
-
-Entity = NewType('Entity', Union[type(Character), type(Enemy)])
 
 
 class Combat:
@@ -168,7 +167,7 @@ class Combat:
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 
-    def sum_actions_for_entity(self, actor: Entity) -> int:
+    def sum_actions_for_entity(self, actor: CombatEntity) -> int:
         if actor not in self.orders.keys() and actor in self.players:
             self.orders[actor] = []
         order_list = self.orders[actor]
@@ -181,7 +180,7 @@ class Combat:
     def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int):
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
-        possible_targets = [x.combat_name for x in self.players + self.enemies]
+        possible_targets: List[CombatEntity] = [x.combat_name for x in self.players + self.enemies]
 
         current_action_costs = self.sum_actions_for_entity(source_player)
         if current_action_costs + cost <= source_player.actions:

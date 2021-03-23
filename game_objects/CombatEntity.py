@@ -1,0 +1,26 @@
+from typing import Optional
+from game_objects.Room import Room
+
+
+class CombatEntity:
+    def __init__(self):
+        self.health: int = 0
+        self.max_health: int = 0
+        self.stamina: int = 0
+        self.max_stamina: int = 0
+        self.mana: int = 0
+        self.max_mana: int = 0
+        self.current_room: Optional[Room] = None
+        self.dead: bool = False
+
+    @property
+    def combat_name(self) -> str:
+        raise Exception("Not Implemented")
+
+    @property
+    def resistances(self) -> dict:
+        raise Exception("Not Implemented")
+
+    @property
+    def initiative(self) -> int:
+        raise Exception("Not Implemented")

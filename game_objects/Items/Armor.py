@@ -13,6 +13,11 @@ class Armor(Equipment):
         self.damage_resistances: dict = {}
         self.hit_resistances: dict = {}
 
+    @classmethod
+    def from_template(cls, template_string) -> Armor:
+        import json
+        return Armor()
+
     def get_commands(self) -> List[Command]:
         return super().get_commands() + []
 
