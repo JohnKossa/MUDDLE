@@ -34,7 +34,7 @@ class MazeRoom(Room):
             result.append(self.west_door)
         return result
 
-    def get_door(self, direction: str) -> List[Room]:
+    def get_door(self, direction: str) -> MazeRoom:
         doors = {
             "north": self.north_door,
             "east": self.east_door,
