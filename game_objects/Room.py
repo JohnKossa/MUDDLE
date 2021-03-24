@@ -48,3 +48,40 @@ class Room:
 
     def get_players(self, game) -> List[Character]:
         return [x for x in game.players if x.current_room == self]
+
+    def describe_room(self) -> str:
+        # TODO link this to the correct room template file and pull the description from there
+        if self.template is None:
+            return f"You are in a room. It's super interesting. {self.name}"
+        return self.template
+
+    def describe_fixtures(self) -> Optional[str]:
+        if len(self.fixtures) == 0:
+            return None
+        return "\n".join(str(self.fixtures))
+
+    def describe_items(self) -> Optional[str]:
+        if self.items is None or len(self.items) == 0:
+            return None
+        item_count = len(self.items)
+        if item_count == 1:
+            return f"On the floor you see {self.items[0].describe()}."
+        if item_count == 2:
+            return f"On the floor you see {self.items[0].describe()} and {self.items[1].describe()}"
+        else:
+            return f"A large assortment of items is strewn about the floor."
+
+    def describe_exits(self) -> str:
+        return ""
+
+    def __str__(self):
+        to_return = self.describe_room()
+        fixtures = self.describe_fixtures()
+        items = self.describe_items()
+        exits = self.describe_exits()
+        if fixtures is not None:
+            to_return = to_return+"\n"+fixtures
+        if items is not None:
+            to_return = to_return+"\n"+items
+        to_return = to_return+"\n"+exits
+        return to_return

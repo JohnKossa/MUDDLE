@@ -59,10 +59,10 @@ class Character(CombatEntity):
 
     def get_commands(self) -> List[Command]:
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
-        from game_objects.Commands.Command import CharacterCommand
+        from game_objects.Commands.Command import CharacterCommand, LookCommand
         from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
         # TODO add a character sheet command
-        to_return = [CharacterCommand(), PassCommand()]
+        to_return = [CharacterCommand(), PassCommand(), LookCommand()]
         if self.current_room is not None:
             to_return.extend(self.current_room.get_commands())
         if self.skills is not None:

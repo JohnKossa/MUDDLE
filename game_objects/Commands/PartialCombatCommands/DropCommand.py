@@ -36,19 +36,14 @@ class Drop(PartialCombatCommand):
         matched_item = player.inventory.get_bag_item_by_name(target_item)
         if matched_item is None:
             return "Item not found"
-        bag_quantity = player_bag[matched_item]
-        try:
-            quantity = int(get_by_index(params, 1))
-            if quantity > bag_quantity:
-                quantity = bag_quantity
-        except TypeError:
-            quantity = bag_quantity
-
-        bag_quantity = bag_quantity - quantity
-        if bag_quantity == 0:
-            player_bag.pop(matched_item)
-
-        room.items.append(matched_item)
+        quantity = int(get_by_index(params, 1, "1"))
+        quantity = max(quantity, matched_item.quantity)
+        if quantity >= matched_item.quantity:
+            room.items.append(matched_item)
+            player_bag.remove(matched_item)
+        else:
+            dropped_items = matched_item.take_count_from_stack(quantity)
+            room.items.append(dropped_items)
         return f"Dropped {quantity} {matched_item.name}"
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
@@ -58,19 +53,13 @@ class Drop(PartialCombatCommand):
         matched_item = source_player.inventory.get_bag_item_by_name(target_item)
         if matched_item is None:
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} attempted to drop an item, but could find a {target_item} in their inventory")
-        bag_quantity = player_bag[matched_item]
-        try:
-            quantity = int(params[1])
-            if quantity > bag_quantity:
-                quantity = bag_quantity
-        except IndexError:
-            quantity = bag_quantity
-        except TypeError:
-            quantity = bag_quantity
-
-        bag_quantity = bag_quantity - quantity
-        if bag_quantity == 0:
-            player_bag.pop(matched_item)
-
-        room.items.append(matched_item)
+            return
+        quantity = get_by_index(params, 1, 1)
+        quantity = max(quantity, matched_item.quantity)
+        if quantity >= matched_item.quantity:
+            room.items.append(matched_item)
+            player_bag.remove(matched_item)
+        else:
+            dropped_items = matched_item.take_count_from_stack(quantity)
+            room.items.append(dropped_items)
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} dropped {quantity} {matched_item.name}")

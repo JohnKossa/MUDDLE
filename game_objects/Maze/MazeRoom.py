@@ -14,7 +14,7 @@ class MazeRoom(Room):
         self.y_coord: int = y_coord
         self.width: int = 1
         self.height: int = 1
-        self.possible_neighbors: MazeRoom = []
+        self.possible_neighbors: List[MazeRoom] = []
         self.north_door: Optional[MazeRoom] = None
         self.east_door: Optional[MazeRoom] = None
         self.south_door: Optional[MazeRoom] = None
@@ -60,12 +60,6 @@ class MazeRoom(Room):
     def is_exit_room(self, maze: Maze) -> bool:
         return self == maze.exit_room
 
-    def describe_room(self) -> str:
-        # TODO link this to the correct room template file and pull the description from there
-        if self.template is None:
-            return f"You are in a room. It's super interesting. {self.name}"
-        return self.template
-
     def describe_exits(self) -> str:
         exits = {
             "North": self.north_door,
@@ -82,24 +76,6 @@ class MazeRoom(Room):
         elif exit_count > 2:
             formatted_list = (", ".join(valid_exits[:-1]))+f", and {valid_exits[-1]}"
             return f"Exits include {formatted_list}"
-
-    def describe_fixtures(self) -> str:
-        for fixture in self.fixtures:
-            # get display text from template
-            return ""
-        # join them all together with newlines
-        return ""
-
-    def describe_items(self) -> str:
-        if self.items is None or len(self.items) == 0:
-            return ""
-        item_count = len(self.items)
-        if item_count == 1:
-            return f"On the floor you see {self.items[0].describe()}."
-        if item_count == 2:
-            return f"On the floor you see {self.items[0].describe()} and {self.items[1].describe()}"
-        else:
-            return f"A large assortment of items is strewn about the floor."
 
     def get_commands(self) -> List[Command]:
         to_return = super().get_commands() + [Exit()]

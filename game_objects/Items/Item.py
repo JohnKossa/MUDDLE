@@ -37,9 +37,7 @@ class Item:
         return True
 
     def take_count_from_stack(self, count: int) -> Optional[Item]:
-        if count > self.quantity:
-            return None
-        if count == self.quantity:
+        if count >= self.quantity:
             return self
         self.quantity = self.quantity - count
         new_item = Item()
