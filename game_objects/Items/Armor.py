@@ -64,3 +64,28 @@ class ChainArmor(Armor):
 
     def get_commands(self) -> List[Command]:
         return super().get_commands() + []
+
+
+class Gambeson(Armor):
+    def __init__(self):
+        super().__init__()
+        self.name: str = "Gambeson"
+        self.damage_resistances: dict = {
+            "slash": 1,
+            "stab": 0,
+            "bludgeon": 2,
+            "electricity": 2,
+            "ice": 2,
+            "fire": -1,
+        }
+        self.hit_resistances: dict = {
+            "slash": 1,
+            "stab": 0,
+            "bludgeon": 0,
+            "electricity": 0,
+            "ice": 0,
+            "fire": -1
+        }
+
+    def get_commands(self) -> List[Command]:
+        return super().get_commands() + []

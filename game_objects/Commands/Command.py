@@ -213,7 +213,7 @@ class Equip(Command):
         player = discord_user.current_character
         item_name = params[0]
         slot = params[1]
-        matched_item = player.inventory.get_item_by_name(item_name)
+        matched_item = player.inventory.get_bag_item_by_name(item_name)
         if matched_item is None:
             return "Item not found"
         success, err_reason = player.inventory.equip_item(matched_item, slot)

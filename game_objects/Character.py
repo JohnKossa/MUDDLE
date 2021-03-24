@@ -1,10 +1,12 @@
 from __future__ import annotations
 import names
 from typing import Optional, List
+import random
 
 
 from game_objects.CombatEntity import CombatEntity
-from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor
+from game_objects.Items.Armor import Armor, Gambeson
+from game_objects.LootTable import LootTable
 from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
@@ -82,19 +84,22 @@ class CharacterInventory:
     from game_objects.Items.Equipment import Equipment
 
     def __init__(self):
-        from game_objects.Items.Weapon import Sword, Torch
-        from game_objects.Items.Shield import Shield
+        from game_objects.Items.Weapon import Sword, Dagger, Mace, Spear, Axe, Torch
         self.equipment = {
             "head": None,
-            "body": PlateArmor(),
-            "offhand": Shield(),
-            "mainhand": Sword(),
+            "body": Gambeson(),
+            "offhand": None,
+            "mainhand": random.choice([Sword(), Dagger(), Mace(), Spear(), Axe(), Torch()]),
             "belt": None
         }
-        self.bag = [ChainArmor(), Torch()]
+        self.bag = []
 
-    def get_item_by_name(self, item_name: str) -> Optional[Item]:
+    def get_bag_item_by_name(self, item_name: str) -> Optional[Item]:
         matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.bag), None)
+        return matched_item
+
+    def get_equipment_by_name(self, item_name: str) -> Optional[Equipment]:
+        matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.equipment.values()), None)
         return matched_item
 
     def equip_item(self, item: Equipment, slot_name: str) -> (bool, str):
@@ -153,6 +158,22 @@ class CharacterInventory:
             if self.equipment.get(slot, None) is not None:
                 to_return.extend(self.equipment.get(slot).get_commands())
         return to_return
+
+    def generate_loot_table(self) -> LootTable:
+        all_items = self.bag + list(filter(lambda x: x is not None, self.equipment))
+        item_count = len(all_items)
+        loot_table_items = map(lambda x: (x, 1/item_count), all_items)
+        return LootTable(loot_table_items)
+
+
+class CharacterSpells:
+    from game_objects.Commands.Command import Command
+
+    def __init__(self):
+        self.known_spells = []
+
+    def get_commands(self) -> List[Command]:
+        return []
 
 
 class CharacterSkills:

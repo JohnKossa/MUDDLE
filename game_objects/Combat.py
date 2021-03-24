@@ -114,7 +114,11 @@ class Combat:
                         enemy.dead = True
                         self.enemies.remove(enemy)
                         game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
-                        # drop treasure from loot table
+                        if enemy.loot_table:
+                            dropped_items = enemy.loot_table.roll_drops()
+                            if len(dropped_items):
+                                game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                                self.room.items = self.room.items + dropped_items
 
                 # check for dead players
                 for player in self.players:
@@ -122,7 +126,10 @@ class Combat:
                         player.dead = True
                         self.players.remove(player)
                         game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
-                        # drop treasure form player inventory
+                        dropped_items = player.inventory.generate_loot_table().roll_drops()
+                        if len(dropped_items):
+                            game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                            self.room.items = self.room.items + dropped_items
 
                 # TODO additional cleanup for items
             if type(actor) is Character:
