@@ -5,6 +5,7 @@ from typing import Any, List
 import Game
 from game_objects.Character import Character
 from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import PartialCombatCommand
+from utils.ListHelpers import get_by_index
 
 
 class Take(PartialCombatCommand):
@@ -28,7 +29,7 @@ class Take(PartialCombatCommand):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        target_item = params[0]
+        target_item = get_by_index(params, 0)
         room = player.current_room
         items = room.items
         matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)

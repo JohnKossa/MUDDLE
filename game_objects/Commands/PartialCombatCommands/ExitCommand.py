@@ -5,6 +5,7 @@ from typing import Any, List
 import Game
 from game_objects.Character import Character
 from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import PartialCombatCommand
+from utils.ListHelpers import get_by_index
 
 
 class Exit(PartialCombatCommand):
@@ -31,7 +32,7 @@ class Exit(PartialCombatCommand):
         if source_player is None:
             return "You don't currently have a character. Use the !NewCharacter command to create one."
         room = source_player.current_room
-        direction = params[0]
+        direction = get_by_index(params, 0)
         door = room.get_door(direction.lower())
         if door is None:
             return f"Invalid direction. Room has no {direction} exit."

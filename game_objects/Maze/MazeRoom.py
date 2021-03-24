@@ -106,7 +106,7 @@ class RoomUtils:
         return neighbors
 
     @staticmethod
-    def get_room_by_coords(x: int, y: int, rooms: List[Room]) -> Optional[Room]:
+    def get_room_by_coords(x: int, y: int, rooms: List[Room]) -> Optional[MazeRoom]:
         return next(iter(filter(lambda i: i.x_coord == x and i.y_coord == y, rooms)), None)
 
     @staticmethod

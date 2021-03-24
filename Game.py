@@ -8,7 +8,7 @@ from typing import Callable, List, Optional
 
 from game_objects.Room import Room
 from game_objects.Character import Character
-from game_objects.Enemy import Enemy
+from game_objects.Enemy import Enemy, Goblin, Orc
 from game_objects.Maze.Maze import Maze
 from utils.Scheduler import Scheduler
 
@@ -39,13 +39,18 @@ class Game:
         self.on("enter_room", TriggerFunc(self.check_final_room))
 
     def seed_enemies(self) -> None:
-        num_enemies = math.isqrt(self.maze.width * self.maze.height)
+        num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
-        chosen_rooms = random.choices(viable_rooms, k=num_enemies)
+        chosen_rooms = random.choices(viable_rooms, k=num_small_enemies)
         for room in chosen_rooms:
-            new_enemy = Enemy()
+            new_enemy = Goblin()
             new_enemy.current_room = room
-            new_enemy.name = "Goblin"
+            self.enemies.append(new_enemy)
+        num_big_enemies = math.isqrt(num_small_enemies)
+        chosen_rooms = random.choices(viable_rooms, k=num_big_enemies)
+        for room in chosen_rooms:
+            new_enemy = Orc()
+            new_enemy.current_room = room
             self.enemies.append(new_enemy)
 
     def seed_loot_stashes(self) -> None:

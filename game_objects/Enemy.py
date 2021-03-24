@@ -28,7 +28,7 @@ class Enemy(CombatEntity):
             "dmg": {}
         }
         self.possible_actions: List[(int, AttackAction)] = [
-            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 6), dmg_bonus=0))
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0))
         ]
         self.assign_damage = assign_damage
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
@@ -61,3 +61,46 @@ class Enemy(CombatEntity):
     def get_action(self) -> AttackAction:
         weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)
         return weighted_choices[0] if weighted_choices else None
+
+
+class Goblin(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.name = "Goblin"
+        self.max_health = 25
+        self.possible_actions: List[(int, AttackAction)] = [
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
+            (3, AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=0))
+        ]
+
+
+class Orc(Enemy):
+    def __init__(self):
+        from game_objects.Items.Armor import PlateArmor
+        from game_objects.Items.Weapon import Sword, Spear, Mace, Axe
+        super().__init__()
+        self.name = "Orc"
+        self.max_health = 75
+        self.possible_actions: List[(int, AttackAction)] = [
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=1)),
+            (3, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(1, 16), dmg_bonus=0))
+        ]
+        self.armor_bonus: dict = {
+            "hit": {
+                "slash": 2,
+                "stab": 1,
+                "electrcity": -1
+            },
+            "dmg": {
+                "slash": 2,
+                "bludgeon": 1,
+                "electricity": -5
+            }
+        }
+        self.loot_table = LootTable([
+            (PlateArmor(), .20),
+            (Axe(),        .10),
+            (Sword(),      .08),
+            (Mace(),       .03),
+            (Spear(),      .03)
+        ])

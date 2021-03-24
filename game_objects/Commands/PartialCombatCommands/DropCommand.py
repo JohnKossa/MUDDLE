@@ -30,7 +30,9 @@ class Drop(PartialCombatCommand):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        target_item = params[0]
+        target_item = get_by_index(params, 0)
+        if target_item is None:
+            return Drop.show_help()
         room = player.current_room
         player_bag = player.inventory.bag
         matched_item = player.inventory.get_bag_item_by_name(target_item)

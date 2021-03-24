@@ -4,6 +4,8 @@ import discord
 
 import Game
 
+from utils.ListHelpers import get_by_index
+
 
 class Command:
     def __init__(self):
@@ -51,7 +53,7 @@ class ShowHelp(Command):
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
             return "You are not listed as a user in this game."
-        supplied_alias = params[0].lower()
+        supplied_alias = get_by_index(params, 0).lower()
         for command in discord_user.get_commands():
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
@@ -82,7 +84,7 @@ class ShowAliases(Command):
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
             return "You are not listed as a user in this game."
-        supplied_alias = params[0].lower()
+        supplied_alias = get_by_index(params, 0).lower()
         for command in discord_user.get_commands():
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
@@ -154,9 +156,9 @@ class RebuildMaze(Command):
         ])
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
-        width = int(params[0])
-        height = int(params[1])
-        difficulty = int(params[2])
+        width = int(get_by_index(params, 0, "10"))
+        height = int(get_by_index(params, 1, "10"))
+        difficulty = int(get_by_index(params, 2, "3"))
         game.init_maze(width, height, difficulty)
         return "Maze rebuilt!\n"+str(game.maze)
 
@@ -230,8 +232,12 @@ class Equip(Command):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        item_name = params[0]
-        slot = params[1]
+        item_name = get_by_index(params, 0, None)
+        if item_name is None:
+            return "Item name not specified. Usage is:\n"+Equip.show_help()
+        slot = get_by_index(params, 1, None)
+        if slot is None:
+            return "Slot not specified. Usage is:\n"+Equip.show_help()
         matched_item = player.inventory.get_bag_item_by_name(item_name)
         if matched_item is None:
             return "Item not found"
@@ -258,7 +264,7 @@ class Unequip(Command):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        slot = params[0]
+        slot = get_by_index(params, 0)
         worked, response = player.inventory.unequip_item(slot)
         if worked:
             return f"Unequipped item from {slot}"
@@ -289,7 +295,7 @@ class CharacterCommand(Command):
             f"PP: {player.stamina}/{player.max_stamina}",
             f"MP {player.mana}/{player.max_mana}"
         ])
-        if len(params) > 0 and params[0].lower() == "stats":
+        if get_by_index(params, 0).lower() == "stats":
             to_return = to_return + "\n"
             player_resistances = player.resistances
             if len(player_resistances["hit"].keys()) > 0:
