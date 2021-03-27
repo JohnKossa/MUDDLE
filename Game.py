@@ -10,7 +10,8 @@ from game_objects.Room import Room
 from game_objects.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Orc
 from game_objects.Maze.Maze import Maze
-from utils.Scheduler import Scheduler
+from templates.TemplateLoaders import save_item_template
+from utils.Scheduler import Scheduler, ScheduledTask
 
 
 class TriggerFunc:
@@ -34,9 +35,55 @@ class Game:
         self.scheduler: Scheduler = Scheduler(self.aioloop)
         self.discord_connection: Optional[CustomClient] = None
 
+    def load_players(self):
+        from os import listdir
+        from os.path import isfile, join
+        import json
+        onlyfiles = [f for f in listdir("savefiles/characters") if isfile(join("savefiles/characters", f))]
+        onlyfiles.remove(".gitkeep")
+        for file in onlyfiles:
+            with open("savefiles/characters/"+file, "r") as infile:
+                to_add = Character.from_dict(game=self, source_dict=json.load(infile))
+                to_add.current_room = self.maze.entry_room
+                to_add.discord_user.current_character = to_add
+                self.players.append(to_add)
+                self.discord_connection.send_game_chat_sync(f"Loaded player {to_add.name} for {to_add.discord_user.username}")
+
+    def save_players(self):
+        import datetime
+        import json
+        for player in self.players:
+            with open(f"savefiles/characters/{player.name}.json", "w") as outfile:
+                json.dump(player.to_dict(), outfile)
+        self.scheduler.schedule_task(
+            ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
+
+    def generate_item_templates(self):
+        from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
+        from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
+        to_write = [
+            Armor(),
+            PlateArmor(),
+            ChainArmor(),
+            Gambeson(),
+            Sword(),
+            Torch(),
+            Dagger(),
+            Mace(),
+            Spear(),
+            Axe()
+        ]
+        for item in to_write:
+            save_item_template(item)
+        print("Regenerated Item Templates")
+
     def setup_hooks(self) -> None:
+        import datetime
         self.on("enter_room", TriggerFunc(self.start_combat))
         self.on("enter_room", TriggerFunc(self.check_final_room))
+        self.on("player_defeated", TriggerFunc(self.cleanup_dead_player))
+        self.on("enemy_defeated", TriggerFunc(self.cleanup_dead_enemy))
+        self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
@@ -65,7 +112,7 @@ class Game:
     def start_combat(self, room: Optional[Room] = None, **kwargs) -> None:
         if room is None:
             return
-        if len(room.get_enemies(self)) > 0 and len(room.get_players(self)) > 0:
+        if len(room.get_enemies(self)) > 0 and len(room.get_characters(self)) > 0:
             room.start_combat(self)
 
     def check_final_room(self, room: Optional[Room] = None, source_player: Optional[Character] = None, **kwargs) -> None:
@@ -75,15 +122,24 @@ class Game:
             self.init_maze()
             self.return_players_to_start()
 
+    def cleanup_dead_player(self, source_player: Optional[Character] = None, **kwargs):
+        source_player.cleanup(self)
+
+    def cleanup_dead_enemy(self, source_enemy: Optional[Enemy] = None, **kwargs):
+        source_enemy.cleanup(self)
+
     def init_maze(self, width: int = 11, height: int = 11, difficulty: int = 6) -> None:
         self.maze = Maze(width=width, height=height)
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
+        self.delete_all_enemies()
         self.seed_enemies()
 
     def return_players_to_start(self) -> None:
         for player in self.players:
             player.current_room = self.maze.entry_room
-            self.seed_enemies()
+
+    def delete_all_enemies(self):
+        self.enemies = []
 
     def register_player(self, new_player: Character) -> None:
         new_player.current_room = self.maze.entry_room

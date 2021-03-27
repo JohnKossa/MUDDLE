@@ -1,0 +1,1 @@
+{"constructor": "Armor", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "Item", "slot": "Body", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "damage_resistances": {}, "hit_resistances": {}}

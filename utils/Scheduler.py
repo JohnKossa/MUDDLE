@@ -15,7 +15,10 @@ class Scheduler:
         while len(self.scheduled_tasks):
             for task in self.scheduled_tasks:
                 if datetime.datetime.now() > task.time:
-                    await task.func(*task.f_args, **task.f_kwargs)
+                    if asyncio.iscoroutine(task):
+                        await task.func(*task.f_args, **task.f_kwargs)
+                    else:
+                        task.func(*task.f_args, **task.f_kwargs)
                     try:
                         self.scheduled_tasks.remove(task)
                     except ValueError:

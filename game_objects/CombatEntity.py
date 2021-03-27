@@ -1,9 +1,7 @@
 from typing import Optional
 
 
-
 class CombatEntity:
-
     def __init__(self):
         from game_objects.Room import Room
         self.health: int = 0

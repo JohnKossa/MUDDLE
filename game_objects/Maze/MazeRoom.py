@@ -5,6 +5,7 @@ from game_objects.Commands.Command import Command
 from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Maze import Maze
 from game_objects.Room import Room
+from utils.TextHelpers import enumerate_objects
 
 
 class MazeRoom(Room):
@@ -39,7 +40,11 @@ class MazeRoom(Room):
             "north": self.north_door,
             "east": self.east_door,
             "south": self.south_door,
-            "west": self.west_door
+            "west": self.west_door,
+            "n": self.north_door,
+            "e": self.east_door,
+            "s": self.south_door,
+            "w": self.west_door
         }
         if direction.lower() in doors.keys():
             return doors[direction.lower()]
@@ -74,7 +79,7 @@ class MazeRoom(Room):
         elif exit_count == 2:
             return f"Exits are to the {valid_exits[0]} and {valid_exits[1]}"
         elif exit_count > 2:
-            formatted_list = (", ".join(valid_exits[:-1]))+f", and {valid_exits[-1]}"
+            formatted_list = enumerate_objects(valid_exits)
             return f"Exits include {formatted_list}"
 
     def get_commands(self) -> List[Command]:

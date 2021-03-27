@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import List, Optional
 import random
+import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.AttackAction import AttackAction
 from game_objects.LootTable import LootTable
@@ -57,6 +58,14 @@ class Enemy(CombatEntity):
         if self.disambiguation_num == 0:
             return self.name
         return f"{self.name}{self.disambiguation_num}"
+
+    def cleanup(self, game: Game):
+        # Remove from
+        #   game
+        #   combat
+        game.enemies.remove(self)
+        if self.current_room.combat is not None:
+            self.current_room.combat.enemies.remove(self)
 
     def get_action(self) -> AttackAction:
         weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)

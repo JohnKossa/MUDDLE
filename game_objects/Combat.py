@@ -65,17 +65,7 @@ class Combat:
             return True
         return False
 
-    def process_round(self, game: Game) -> None:
-        # loop through all players and fill missing commands with passes
-        filled_orders_for_player = False
-        for player in self.players:
-            filled_orders_for_player = filled_orders_for_player or self.fill_unused_player_orders(player)
-
-        if filled_orders_for_player:
-            # round filled via timer instead of full orders, notify that timer expired
-            game.discord_connection.send_game_chat_sync("Courtesy timer expired. Processing combat.")
-
-        # determine enemy actions
+    def determine_enemy_actions(self):
         for enemy in self.enemies:
             action_count = self.sum_actions_for_entity(enemy)
             failsafe = 100
@@ -88,11 +78,50 @@ class Combat:
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_entity(enemy)
 
-        for entity in self.players + self.enemies:
+    def cleanup_dead_enemies(self, game: Game):
+        for enemy in self.enemies:
+            if enemy.health <= 0:
+                enemy.dead = True
+                game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
+                if enemy.loot_table:
+                    dropped_items = enemy.loot_table.roll_drops()
+                    if len(dropped_items):
+                        game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                        self.room.items = self.room.items + dropped_items
+                self.enemies.remove(enemy)
+                game.trigger("enemy_defeated", source_enemy=enemy)
+
+    def cleanup_dead_players(self, game: Game):
+        for player in self.players:
+            if player.health <= 0:
+                player.dead = True
+                game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
+                dropped_items = player.inventory.generate_loot_table().roll_drops()
+                if len(dropped_items):
+                    game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                    self.room.items = self.room.items + dropped_items
+                self.players.remove(player)
+                game.trigger("player_defeated", source_player=player)
+
+    def process_round(self, game: Game) -> None:
+        # loop through all players and fill missing commands with passes
+        filled_orders_for_player = False
+        for player in self.players:
+            filled_orders_for_player = filled_orders_for_player or self.fill_unused_player_orders(player)
+
+        if filled_orders_for_player:
+            # round filled via timer instead of full orders, notify that timer expired
+            game.discord_connection.send_game_chat_sync("Courtesy timer expired. Processing combat.")
+
+        self.determine_enemy_actions()
+
+        combat_entities: List[CombatEntity] = self.players + self.enemies
+
+        for entity in combat_entities:
             if entity not in self.initiatives:
                 self.initiatives[entity] = entity.initiative
 
-        initiative_list = [(x, self.initiatives[x]) for x in self.players + self.enemies]
+        initiative_list = [(x, self.initiatives[x]) for x in combat_entities]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
         for actor in sorted_initiative_list:
             if actor.dead:
@@ -108,28 +137,8 @@ class Combat:
                 #   perform pass
 
                 # cleanup
-                # check for dead enemies
-                for enemy in self.enemies:
-                    if enemy.health <= 0:
-                        enemy.dead = True
-                        self.enemies.remove(enemy)
-                        game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
-                        if enemy.loot_table:
-                            dropped_items = enemy.loot_table.roll_drops()
-                            if len(dropped_items):
-                                game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
-                                self.room.items = self.room.items + dropped_items
-
-                # check for dead players
-                for player in self.players:
-                    if player.health <= 0:
-                        player.dead = True
-                        self.players.remove(player)
-                        game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
-                        dropped_items = player.inventory.generate_loot_table().roll_drops()
-                        if len(dropped_items):
-                            game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
-                            self.room.items = self.room.items + dropped_items
+                self.cleanup_dead_enemies(game)
+                self.cleanup_dead_players(game)
 
                 # TODO additional cleanup for items
             if type(actor) is Character:
@@ -138,7 +147,7 @@ class Combat:
         # post-round actions
         game.trigger("round_end", room=self.room)
 
-        self.players = list(filter(lambda x: not x.dead, self.room.get_players(game)))
+        self.players = list(filter(lambda x: not x.dead, self.room.get_characters(game)))
         self.enemies = list(filter(lambda x: not x.dead, self.room.get_enemies(game)))
 
         initiative_keys = list(self.initiatives.keys())
@@ -189,7 +198,7 @@ class Combat:
     def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int):
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
-        possible_targets: List[CombatEntity] = [x.combat_name for x in self.players + self.enemies]
+        possible_targets: List[str] = [x.combat_name for x in self.players + self.enemies]
 
         current_action_costs = self.sum_actions_for_entity(source_player)
         if current_action_costs + cost <= source_player.actions:

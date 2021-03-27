@@ -13,10 +13,22 @@ class Armor(Equipment):
         self.damage_resistances: dict = {}
         self.hit_resistances: dict = {}
 
+    def to_dict(self, full_depth=True) -> dict:
+        to_return = super().to_dict() if full_depth else {}
+        to_add = {
+            "constructor": self.__class__.__name__,
+            "slot": self.slot,
+            "damage_resistances": self.damage_resistances,
+            "hit_resistances": self.hit_resistances
+        }
+        to_return.update(to_add)
+        return to_return
+
     @classmethod
-    def from_template(cls, template_string) -> Armor:
-        import json
-        return Armor()
+    def from_dict(cls, source_dict) -> Armor:
+        to_return = Armor()
+        to_return.__dict__.update(source_dict)
+        return to_return
 
     def get_commands(self) -> List[Command]:
         return super().get_commands() + []

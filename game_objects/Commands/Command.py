@@ -211,7 +211,7 @@ class LookCommand(Command):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        return str(player.current_room)
+        return player.current_room.describe(game)
 
 
 class Equip(Command):
@@ -295,7 +295,7 @@ class CharacterCommand(Command):
             f"PP: {player.stamina}/{player.max_stamina}",
             f"MP {player.mana}/{player.max_mana}"
         ])
-        if get_by_index(params, 0).lower() == "stats":
+        if get_by_index(params, 0, "").lower() == "stats":
             to_return = to_return + "\n"
             player_resistances = player.resistances
             if len(player_resistances["hit"].keys()) > 0:

@@ -110,6 +110,14 @@ class Maze:
         self.entry_room = RoomUtils.get_room_by_coords(entry_coords[0], entry_coords[1], self.rooms)
         self.exit_room = RoomUtils.get_room_by_coords(exit_coords[0], exit_coords[1], self.rooms)
 
+    def cleanup(self):
+        # Remove all door connections so the garbage collector will remove them
+        for room in self.rooms:
+            room.north_door = None
+            room.south_door = None
+            room.east_door = None
+            room.west_door = None
+
     def player_map(self, game: Game) -> str:
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]

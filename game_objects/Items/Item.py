@@ -14,11 +14,20 @@ class Item:
         self.name: str = "Item"
         self.template: Any = None
 
+    def to_dict(self, full_depth=True):
+        return {
+            "constructor": self.__class__.__name__,
+            "quantity": self.quantity,
+            "max_stack_size": self.max_stack_size,
+            "weight": self.weight,
+            "name": self.name,
+        }
+
     @classmethod
-    def from_template(cls, template_string) -> Item:
-        # TODO fill out
-        import json
-        return Item()
+    def from_dict(cls, source_dict):
+        to_return = Item()
+        to_return.__dict__.update(source_dict)
+        return to_return
 
     def describe(self) -> str:
         # TODO lookup item from template
@@ -55,3 +64,4 @@ class Item:
     def get_commands(self) -> List[Command]:
         # will add the use and drop commands
         return []
+

@@ -1,0 +1,1 @@
+{"constructor": "Torch", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "Torch", "slot": "hand", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "attacks": [{"name": "firepoke", "hit_bonus": 3, "dmg_type": "fire", "dmg_roll": [1, 6], "dmg_bonus": 0, "action_cost": 1}], "default_attack": "firepoke"}

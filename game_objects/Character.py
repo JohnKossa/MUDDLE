@@ -3,7 +3,7 @@ import names
 from typing import Optional, List
 import random
 
-
+import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.Items.Armor import Armor, Gambeson
 from game_objects.LootTable import LootTable
@@ -40,6 +40,41 @@ class Character(CombatEntity):
         }
         self.assign_damage = assign_damage
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "zone": self.zone,
+            "skills": self.skills.to_dict(),
+            "inventory": self.inventory.to_dict(),
+            "discord_user": self.discord_user.username,
+            "health": self.health,
+            "max_health": self.max_health,
+            "stamina": self.stamina,
+            "max_stamina": self.max_stamina,
+            "mana": self.mana,
+            "max_mana": self.max_mana,
+            "actions": self.actions,
+            "base_resistances": self.base_resistances
+        }
+
+    @classmethod
+    def from_dict(cls, game, source_dict) -> Character:
+        from discord_objects.DiscordUser import UserUtils
+        new_char = Character(name=source_dict["name"])
+        new_char.zone = source_dict["zone"]
+        new_char.skills = CharacterSkills.from_dict(source_dict["skills"])
+        new_char.inventory = CharacterInventory.from_dict(source_dict["inventory"])
+        new_char.discord_user = UserUtils.get_user_by_username(source_dict["discord_user"], game.discord_users)
+        new_char.health = source_dict["health"]
+        new_char.max_health = source_dict["max_health"]
+        new_char.stamina = source_dict["stamina"]
+        new_char.max_stamina = source_dict["max_stamina"]
+        new_char.mana = source_dict["mana"]
+        new_char.max_mana = source_dict["max_mana"]
+        new_char.actions = source_dict["actions"]
+        new_char.base_resistances = source_dict["base_resistances"]
+        return new_char
+
     @property
     def resistances(self) -> dict:  # TODO Define a type for this
         to_return = self.base_resistances.copy()
@@ -57,7 +92,21 @@ class Character(CombatEntity):
     def combat_name(self) -> str:
         return self.name
 
+    def cleanup(self, game: Game):
+        import os
+        # Remove from
+        #   game
+        #   combat
+        #   discord_user
+        game.players.remove(self)
+        if self.current_room.combat is not None:
+            self.current_room.combat.players.remove(self)
+        self.discord_user.current_character = None
+        os.remove(f"savefiles/characters/{self.name}.json")
+
     def get_commands(self) -> List[Command]:
+        if self.dead:
+            return []
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
         from game_objects.Commands.Command import CharacterCommand, LookCommand
         from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
@@ -93,6 +142,13 @@ class CharacterInventory:
             "belt": None
         }
         self.bag = []
+
+    def to_dict(self):
+        return {}
+
+    @classmethod
+    def from_dict(cls, source_dict):
+        return CharacterInventory()
 
     def get_bag_item_by_name(self, item_name: str) -> Optional[Item]:
         matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.bag), None)
@@ -172,6 +228,9 @@ class CharacterSpells:
     def __init__(self):
         self.known_spells = []
 
+    def to_dict(self):
+        return {}
+
     def get_commands(self) -> List[Command]:
         return []
 
@@ -181,6 +240,13 @@ class CharacterSkills:
 
     def __init__(self):
         pass
+
+    def to_dict(self):
+        return {}
+
+    @classmethod
+    def from_dict(cls, source_dict):
+        return CharacterSkills()
 
     def get_commands(self) -> List[Command]:
         return []

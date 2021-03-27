@@ -17,7 +17,7 @@ class DiscordUser:
     def get_commands(self) -> List[Command]:
         from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp
         cmd_list = [ListCommands(), ShowAliases(), ShowMap(), ShowHelp()]
-        if self.current_character is not None:
+        if self.current_character is not None and not self.current_character.dead:
             cmd_list.extend(self.current_character.get_commands())
         else:
             cmd_list.append(NewCharacter())

@@ -42,7 +42,7 @@ class Exit(PartialCombatCommand):
         source_player.current_room = door
         game.trigger("leave_room", source_player=source_player, room=old_room)
         game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
-        return str(source_player.current_room)
+        return source_player.current_room.describe(game)
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         from Game import TriggerFunc
@@ -64,4 +64,4 @@ class Exit(PartialCombatCommand):
         source_player.current_room = door
         game.trigger("leave_room", source_player=source_player, room=old_room)
         game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
-        return game.discord_connection.send_game_chat_sync(str(source_player.current_room), tagged_users=[discord_user])
+        return game.discord_connection.send_game_chat_sync(source_player.current_room.describe(game), tagged_users=[discord_user])

@@ -6,3 +6,19 @@ class AttackAction:
         self.dmg_roll: (int, int) = dmg_roll
         self.dmg_bonus: int = dmg_bonus
         self.action_cost: int = action_cost
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "hit_bonus": self.hit_bonus,
+            "dmg_type": self.dmg_type,
+            "dmg_roll": self.dmg_roll,
+            "dmg_bonus": self.dmg_bonus,
+            "action_cost": self.action_cost
+        }
+
+    @classmethod
+    def from_dict(cls, source_dict):
+        to_return = AttackAction()
+        to_return.__dict__.update(source_dict)
+        return to_return

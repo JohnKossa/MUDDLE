@@ -1,0 +1,1 @@
+{"constructor": "Axe", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "Axe", "slot": "hand", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "attacks": [{"name": "slash", "hit_bonus": 0, "dmg_type": "slash", "dmg_roll": [1, 16], "dmg_bonus": 0, "action_cost": 1}], "default_attack": "slash"}

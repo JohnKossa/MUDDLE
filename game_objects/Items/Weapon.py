@@ -14,10 +14,22 @@ class Weapon(Equipment):
         self.attacks: List[AttackAction] = []
         self.default_attack: str = ""
 
+    def to_dict(self, full_depth=True) -> dict:
+        to_return = super().to_dict() if full_depth else {}
+        to_return.update({
+            "constructor": self.__class__.__name__,
+            "slot": self.slot,
+            "attacks": [attack.to_dict() for attack in self.attacks],
+            "default_attack": self.default_attack
+        })
+        return to_return
+
     @classmethod
-    def from_template(cls, template_file) -> Weapon:
-        import json
-        return Weapon()
+    def from_dict(cls, source_dict) -> Weapon:
+        to_return = Weapon()
+        to_return.__dict__.update(source_dict)
+        to_return.attacks = [AttackAction.from_dict(x) for x in source_dict["attacks"]]
+        return to_return
 
     def get_commands(self) -> List[Command]:
         to_add = []
