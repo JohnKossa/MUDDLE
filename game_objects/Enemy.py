@@ -2,8 +2,9 @@ from __future__ import annotations
 from typing import List, Optional
 import random
 import Game
-from game_objects.CombatEntity import CombatEntity
 from game_objects.AttackAction import AttackAction
+from game_objects.CombatEntity import CombatEntity
+from game_objects.Items.Item import Coins
 from game_objects.LootTable import LootTable
 from utils.Dice import roll
 from utils.CombatHelpers import sum_resistances, assign_damage
@@ -34,12 +35,13 @@ class Enemy(CombatEntity):
         self.assign_damage = assign_damage
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         self.loot_table = LootTable([
-            (Torch(),  .10),
-            (Dagger(), .10),
-            (Axe(),    .08),
-            (Sword(),  .05),
-            (Mace(),   .03),
-            (Spear(),  .03)
+            (Coins(count=random.randint(0, 10)), .30),
+            (Torch(),                            .10),
+            (Dagger(),                           .10),
+            (Axe(),                              .08),
+            (Sword(),                            .05),
+            (Mace(),                             .03),
+            (Spear(),                            .03)
         ])
 
     @property
