@@ -7,10 +7,10 @@ import random
 from typing import Callable, List, Optional
 
 from game_objects.Room import Room
+from game_objects.RoomFixture import TreasureChest
 from game_objects.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Orc
 from game_objects.Maze.Maze import Maze
-from templates.TemplateLoaders import save_item_template
 from utils.Scheduler import Scheduler, ScheduledTask
 
 
@@ -58,25 +58,6 @@ class Game:
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
-    def generate_item_templates(self):
-        from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
-        from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
-        to_write = [
-            Armor(),
-            PlateArmor(),
-            ChainArmor(),
-            Gambeson(),
-            Sword(),
-            Torch(),
-            Dagger(),
-            Mace(),
-            Spear(),
-            Axe()
-        ]
-        for item in to_write:
-            save_item_template(item)
-        print("Regenerated Item Templates")
-
     def setup_hooks(self) -> None:
         import datetime
         self.on("enter_room", TriggerFunc(self.start_combat))
@@ -101,13 +82,12 @@ class Game:
             self.enemies.append(new_enemy)
 
     def seed_loot_stashes(self) -> None:
-        # num_stashes = 200
-        # viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
-        # chosen_rooms = random.choices(viable_rooms, k=num_stashes)
-        # for room in chosen_rooms:
-        #     room.items.append(Item())
-        #self.maze.entry_room.north_door.items.appen(Item())
-        pass
+        viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
+        loot_stash_count = math.isqrt(len(viable_rooms))
+        viable_rooms.sort(key=lambda x: x.num_neighbors)
+        chosen_rooms = viable_rooms[:loot_stash_count]
+        for room in chosen_rooms:
+            room.fixtures.append(TreasureChest())
 
     def start_combat(self, room: Optional[Room] = None, **kwargs) -> None:
         if room is None:
@@ -129,10 +109,13 @@ class Game:
         source_enemy.cleanup(self)
 
     def init_maze(self, width: int = 11, height: int = 11, difficulty: int = 6) -> None:
+        if self.maze is not None:
+            self.maze.cleanup()
         self.maze = Maze(width=width, height=height)
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
         self.delete_all_enemies()
         self.seed_enemies()
+        self.seed_loot_stashes()
 
     def return_players_to_start(self) -> None:
         for player in self.players:

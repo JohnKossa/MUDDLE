@@ -69,7 +69,7 @@ class Room:
     def describe_fixtures(self) -> Optional[str]:
         if len(self.fixtures) == 0:
             return None
-        return "\n".join(str(self.fixtures))
+        return "\n".join([x.describe() for x in self.fixtures])
 
     def describe_items(self) -> Optional[str]:
         if self.items is None or len(self.items) == 0:

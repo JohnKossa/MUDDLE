@@ -28,6 +28,26 @@ def load_item_from_template(filename):
 
 def save_item_template(item: Item):
     import json
-    print("time to write")
+    print(f"Writing to templates/items/{item.name}")
     with open(f"templates/items/{item.name}", "w") as outfile:
         json.dump(item.to_dict(full_depth=True), outfile)
+
+
+def generate_item_templates():
+    from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
+    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
+    to_write = [
+        Armor(),
+        PlateArmor(),
+        ChainArmor(),
+        Gambeson(),
+        Sword(),
+        Torch(),
+        Dagger(),
+        Mace(),
+        Spear(),
+        Axe()
+    ]
+    for item in to_write:
+        save_item_template(item)
+    print("Regenerated Item Templates")

@@ -12,10 +12,19 @@ class Shield(Equipment):
         self.name: str = "IronRoundShield"
         self.slot: str = "hand"
 
+    def to_dict(self, full_depth=True) -> dict:
+        to_return = super().to_dict() if full_depth else {}
+        to_return.update({
+            "constructor": self.__class__.__name__,
+            "slot": self.slot
+        })
+        return to_return
+
     @classmethod
-    def from_template(cls, template_string) -> Shield:
-        import json
-        return Shield()
+    def from_dict(cls, source_dict) -> Shield:
+        to_return = Shield()
+        to_return.__dict__.update(source_dict)
+        return to_return
 
     def get_commands(self) -> List[Command]:
         # will add "block" command

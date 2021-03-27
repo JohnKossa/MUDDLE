@@ -126,6 +126,7 @@ class Maze:
         player_rooms = list(map(lambda x: x.current_room, players))
         enemies = list(filter(lambda x: x.dead is False, game.enemies))
         enemy_rooms = list(map(lambda x: x.current_room, enemies))
+        treasure_rooms = list(filter(lambda x: len(x.fixtures) > 0, self.rooms))
         for room in self.rooms:
             y_coord = 2*room.y_coord+1
             x_coord = 2*room.x_coord+1
@@ -139,6 +140,8 @@ class Maze:
                 grid[y_coord][x_coord] = str(replacement)
             elif room in enemy_rooms:
                 grid[y_coord][x_coord] = "e"
+            elif room in treasure_rooms:
+                grid[y_coord][x_coord] = "t"
             else:
                 grid[y_coord][x_coord] = " "
             if room.north_door is not None:

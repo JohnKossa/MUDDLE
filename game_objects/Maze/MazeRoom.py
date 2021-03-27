@@ -35,6 +35,19 @@ class MazeRoom(Room):
             result.append(self.west_door)
         return result
 
+    @property
+    def num_neighbors(self) -> int:
+        count = 0
+        if self.north_door is not None:
+            count = count+1
+        if self.east_door is not None:
+            count = count+1
+        if self.south_door is not None:
+            count = count+1
+        if self.west_door is not None:
+            count = count+1
+        return count
+
     def get_door(self, direction: str) -> MazeRoom:
         doors = {
             "north": self.north_door,

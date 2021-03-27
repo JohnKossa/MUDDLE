@@ -65,3 +65,13 @@ class Item:
         # will add the use and drop commands
         return []
 
+
+class Coins(Item):
+    def __init__(self, count=None):
+        import random
+        super().__init__()
+        self.quantity: int = random.randrange(2, 9) if count is None else count
+        self.max_stack_size: int = 1000000000
+        self.weight: int = 0
+        self.name: str = "Gold Coin"
+        self.template: Any = None

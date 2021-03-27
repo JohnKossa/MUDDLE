@@ -110,6 +110,7 @@ class Character(CombatEntity):
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
         from game_objects.Commands.Command import CharacterCommand, LookCommand
         from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
+        from game_objects.Commands.NoncombatCommands.NoncombatCommand import NoncombatCommand
         # TODO add a character sheet command
         to_return = [CharacterCommand(), PassCommand(), LookCommand()]
         if self.current_room is not None:
@@ -121,6 +122,8 @@ class Character(CombatEntity):
         # if player not in combat, remove all combat only commands
         if self.current_room.combat is None:
             to_return = list(filter(lambda x: not isinstance(x, CombatOnlyCommand), to_return))
+        else:
+            to_return = list(filter(lambda x: not isinstance(x, NoncombatCommand), to_return))
         return to_return
 
     def __str__(self):
@@ -200,7 +203,9 @@ class CharacterInventory:
         self.bag.append(to_add)
 
     def get_commands(self) -> List[Command]:
-        from game_objects.Commands.Command import Equip, Unequip, InventoryCommand
+        from game_objects.Commands.Command import InventoryCommand
+        from game_objects.Commands.NoncombatCommands.UnequipCommand import Unequip
+        from game_objects.Commands.NoncombatCommands.EquipCommand import Equip
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
         from game_objects.Items.Equipment import Equipment
         to_return = [InventoryCommand()]
