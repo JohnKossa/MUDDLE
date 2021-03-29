@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, List
 
 from Game import Game
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from utils.CombatHelpers import assign_damage as default_damage_assignment
 

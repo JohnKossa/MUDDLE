@@ -1,7 +1,6 @@
 from typing import List, Optional
-import Game
 import discord
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Items.Item import Item
 
 

@@ -181,7 +181,7 @@ class NewCharacter(Command):
         ])
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
-        from game_objects.Character import Character
+        from game_objects.Character.Character import Character
         from discord_objects.DiscordUser import UserUtils, DiscordUser
         new_player = Character()
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)

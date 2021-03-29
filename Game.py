@@ -8,7 +8,7 @@ from typing import Callable, List, Optional
 
 from game_objects.Room import Room
 from game_objects.RoomFixture import TreasureChest
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Orc
 from game_objects.Maze.Maze import Maze
 from utils.Scheduler import Scheduler, ScheduledTask

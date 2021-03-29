@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List
 
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 
 
 class CharacterUtils:

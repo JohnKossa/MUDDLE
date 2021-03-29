@@ -37,7 +37,7 @@ class AttackCommand(CombatOnlyCommand):
         ])
 
     def do_combat_action(self, game: Game, source_player: CombatEntity, params: List[Any]) -> None:
-        from game_objects.Character import Character
+        from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy
         enemies = source_player.current_room.combat.enemies
         players = source_player.current_room.combat.players

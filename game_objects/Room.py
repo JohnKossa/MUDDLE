@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, List, Optional
 
 import Game
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Combat import Combat
 from game_objects.Commands.Command import Command
 from game_objects.Commands.PartialCombatCommands.TakeCommand import Take

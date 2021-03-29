@@ -3,7 +3,7 @@ import discord
 from typing import Any, List
 
 from Game import Game
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import PartialCombatCommand
 
 

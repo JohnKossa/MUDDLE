@@ -4,7 +4,7 @@ import random
 from typing import Any, Callable, Dict, List,  Optional
 
 import Game
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy
 from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand

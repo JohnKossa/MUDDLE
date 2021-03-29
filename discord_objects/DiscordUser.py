@@ -3,7 +3,7 @@ import discord
 
 from typing import List, Optional
 
-from game_objects.Character import Character
+from game_objects.Character.Character import Character
 from game_objects.Commands.Command import Command, RebuildMaze, NewCharacter
 
 
