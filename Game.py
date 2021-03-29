@@ -55,6 +55,7 @@ class Game:
         for player in self.players:
             with open(f"savefiles/characters/{player.name}.json", "w") as outfile:
                 json.dump(player.to_dict(), outfile)
+        print("Saving players")
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
@@ -116,6 +117,7 @@ class Game:
         self.delete_all_enemies()
         self.seed_enemies()
         self.seed_loot_stashes()
+        self.return_players_to_start()
 
     def return_players_to_start(self) -> None:
         for player in self.players:

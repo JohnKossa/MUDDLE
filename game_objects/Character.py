@@ -100,7 +100,8 @@ class Character(CombatEntity):
         #   discord_user
         game.players.remove(self)
         if self.current_room.combat is not None:
-            self.current_room.combat.players.remove(self)
+            if self in self.current_room.combat.players:
+                self.current_room.combat.players.remove(self)
         self.discord_user.current_character = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
@@ -147,11 +148,37 @@ class CharacterInventory:
         self.bag = []
 
     def to_dict(self):
-        return {}
+        to_return = {
+            "equipment": {},
+            "bag": []
+        }
+        for k, v in self.equipment.items():
+            if v is not None:
+                to_return["equipment"][k] = v.to_dict()
+        for item in self.bag:
+            to_return["bag"].append(item.to_dict())
+        return to_return
 
     @classmethod
     def from_dict(cls, source_dict):
-        return CharacterInventory()
+        from templates.TemplateLoaders import item_mappings
+        constructors = item_mappings()
+
+        to_return = CharacterInventory()
+        to_return.equipment = {
+            "head": None,
+            "body": None,
+            "offhand": None,
+            "mainhand": None,
+            "belt": None
+        }
+        for k, v in source_dict["equipment"].items():
+            constructor_name = v.pop("constructor")
+            to_return.equipment[k] = constructors.get(constructor_name).from_dict(v)
+        for item in source_dict["bag"]:
+            constructor_name = item.pop("constructor")
+            to_return.add_item_to_bag(constructors.get(constructor_name).from_dict(item))
+        return to_return
 
     def get_bag_item_by_name(self, item_name: str) -> Optional[Item]:
         matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.bag), None)

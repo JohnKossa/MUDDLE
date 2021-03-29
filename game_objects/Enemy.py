@@ -67,7 +67,8 @@ class Enemy(CombatEntity):
         #   combat
         game.enemies.remove(self)
         if self.current_room.combat is not None:
-            self.current_room.combat.enemies.remove(self)
+            if self in self.current_room.combat.enemies:
+                self.current_room.combat.enemies.remove(self)
 
     def get_action(self) -> AttackAction:
         weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)

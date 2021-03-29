@@ -88,7 +88,6 @@ class Combat:
                     if len(dropped_items):
                         game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
                         self.room.items = self.room.items + dropped_items
-                self.enemies.remove(enemy)
                 game.trigger("enemy_defeated", source_enemy=enemy)
 
     def cleanup_dead_players(self, game: Game):
@@ -100,10 +99,20 @@ class Combat:
                 if len(dropped_items):
                     game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
                     self.room.items = self.room.items + dropped_items
-                self.players.remove(player)
                 game.trigger("player_defeated", source_player=player)
 
     def process_round(self, game: Game) -> None:
+        # all players dead or left room, end combat
+        if len(self.players) == 0:
+            game.discord_connection.send_game_chat_sync("All players retreated or dead. Ending combat.")
+            self.room.end_combat()
+            return
+        # all enemies dead, end combat
+        if len(self.enemies) == 0:
+            game.discord_connection.send_game_chat_sync("All enemies defeated. Ending combat.")
+            self.room.end_combat()
+            return
+
         # loop through all players and fill missing commands with passes
         filled_orders_for_player = False
         for player in self.players:
