@@ -18,7 +18,7 @@ class CombatOnlyCommand(Command):
         character = user.current_character
         room = character.current_room
         combat = room.combat
-        combat.accept_player_order(game, character, self.do_combat_action, [], self.combat_action_cost)
+        combat.accept_player_order(game, character, self.do_combat_action, params, self.combat_action_cost)
         action_count = combat.sum_actions_for_entity(character)
         remaining_actions = character.actions - action_count
         return "Order Accepted." + (f"You have {remaining_actions} action points remaining." if 0 < remaining_actions < character.actions else "")

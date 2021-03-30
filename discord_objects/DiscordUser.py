@@ -47,5 +47,3 @@ class UserUtils:
             if user.username == username:
                 return user.current_character
         return None
-
-

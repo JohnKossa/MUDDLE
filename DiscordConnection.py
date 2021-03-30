@@ -60,6 +60,9 @@ class CustomClient(discord.Client):
         if author == user:  # ignore own messages
             return
 
+        if channel != self.game_channel:
+            return
+
         # Collect user if not in users
         discord_user = UserUtils.get_user_by_username(str(author), self.game.discord_users)
         if discord_user is None:
@@ -87,7 +90,7 @@ class CustomClient(discord.Client):
                 matched_command = possible_command
 
         if matched_command is not None:
-            await channel.send(matched_command.do_action(self.game, params, message))
+            await self.send_game_chat(matched_command.do_action(self.game, params, message), tagged_users=[discord_user])
             return
 
         if command.lower() == "get" and params[0].lower() == "ye" and params[1].lower() == "flask":

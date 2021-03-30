@@ -4,7 +4,6 @@ import random
 from typing import Any, List
 
 import Game
-
 from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from utils.CombatHelpers import calculate_hit, calculate_damage
@@ -57,6 +56,8 @@ class AttackCommand(CombatOnlyCommand):
             if len(players) == 0:
                 return
             target = random.choice(players)
+        if target is None:
+            return
         hit_resistance = target.resistances["hit"]
         dmg_resistance = target.resistances["dmg"]
         attack_hits = calculate_hit(self.attack_action, hit_resistance)

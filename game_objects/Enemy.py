@@ -4,13 +4,14 @@ import random
 import Game
 from game_objects.AttackAction import AttackAction
 from game_objects.CombatEntity import CombatEntity
+from game_objects.GameEntity import GameEntity
 from game_objects.Items.Item import Coins
 from game_objects.LootTable import LootTable
 from utils.Dice import roll
 from utils.CombatHelpers import sum_resistances, assign_damage
 
 
-class Enemy(CombatEntity):
+class Enemy(CombatEntity, GameEntity):
     def __init__(self):
         super().__init__()
         from game_objects.Room import Room
@@ -66,6 +67,7 @@ class Enemy(CombatEntity):
         #   game
         #   combat
         game.enemies.remove(self)
+        game.enemies_dict.pop(self.guid)
         if self.current_room.combat is not None:
             if self in self.current_room.combat.enemies:
                 self.current_room.combat.enemies.remove(self)
@@ -110,9 +112,9 @@ class Orc(Enemy):
             }
         }
         self.loot_table = LootTable([
-            (PlateArmor(), .20),
-            (Axe(),        .10),
-            (Sword(),      .08),
-            (Mace(),       .03),
-            (Spear(),      .03)
+            (PlateArmor(), .30),
+            (Axe(),        .20),
+            (Sword(),      .10),
+            (Mace(),       .10),
+            (Spear(),      .10)
         ])

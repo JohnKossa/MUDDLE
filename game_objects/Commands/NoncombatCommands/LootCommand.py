@@ -40,4 +40,3 @@ class LootCommand(NoncombatCommand):
         player.inventory.bag = player.inventory.bag + looted_items
         text_described_items = [f"{x.quantity}x {x.name}" for x in looted_items]
         return f"Picked up {enumerate_objects(text_described_items)}"
-

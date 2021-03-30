@@ -3,6 +3,7 @@ from typing import Optional
 
 class CombatEntity:
     def __init__(self):
+        super().__init__()
         from game_objects.Room import Room
         self.health: int = 0
         self.max_health: int = 0

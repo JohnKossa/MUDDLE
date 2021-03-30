@@ -4,10 +4,12 @@ from typing import Any, List, Optional
 import Game
 from game_objects import Character
 from game_objects.Commands.Command import Command
+from game_objects.GameEntity import GameEntity
 
 
-class Item:
+class Item(GameEntity):
     def __init__(self):
+        super().__init__()
         self.quantity: int = 1
         self.max_stack_size: int = 1
         self.weight: int = 0
@@ -75,3 +77,9 @@ class Coins(Item):
         self.weight: int = 0
         self.name: str = "Gold Coin"
         self.template: Any = None
+
+
+class DungeonMap(Item):
+    def __init__(self):
+        super().__init__()
+        self.name: str = "Dungeon Map"

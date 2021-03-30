@@ -6,12 +6,13 @@ import Game
 from game_objects.Character.CharacterInventory import CharacterInventory
 from game_objects.Character.CharacterSkills import CharacterSkills
 from game_objects.CombatEntity import CombatEntity
+from game_objects.GameEntity import GameEntity
 from game_objects.Items.Armor import Armor
 from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
 
-class Character(CombatEntity):
+class Character(CombatEntity, GameEntity):
     from game_objects.Commands.Command import Command
 
     def __init__(self, name: str = None):
@@ -34,6 +35,7 @@ class Character(CombatEntity):
         self.max_mana: int = 100
         self.mana: int = 100
         self.actions: int = 2
+        self.luck: int = 0
         self.base_resistances: dict = {
             "hit": {},
             "dmg": {}
@@ -54,6 +56,7 @@ class Character(CombatEntity):
             "mana": self.mana,
             "max_mana": self.max_mana,
             "actions": self.actions,
+            "luck": self.luck,
             "base_resistances": self.base_resistances
         }
 
@@ -94,11 +97,8 @@ class Character(CombatEntity):
 
     def cleanup(self, game: Game):
         import os
-        # Remove from
-        #   game
-        #   combat
-        #   discord_user
         game.players.remove(self)
+        game.players_dict.pop(self.guid)
         if self.current_room.combat is not None:
             if self in self.current_room.combat.players:
                 self.current_room.combat.players.remove(self)

@@ -149,5 +149,3 @@ class RoomUtils:
     @staticmethod
     def get_col(x: int, rooms: List[MazeRoom]) -> List[MazeRoom]:
         return [i for i in rooms if i.x_coord == x]
-
-

@@ -133,7 +133,12 @@ class ShowMap(Command):
         ])
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
-        return game.maze.player_map(game)
+        from discord_objects.DiscordUser import UserUtils
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        if discord_user.is_admin:
+            return game.maze.admin_map(game)
+        player = discord_user.current_character
+        return game.maze.player_map(game, player)
 
 
 class RebuildMaze(Command):

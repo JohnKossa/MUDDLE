@@ -4,6 +4,7 @@ from typing import List, Optional
 
 import Game
 from game_objects.Maze.MazeRoom import MazeRoom, RoomUtils
+from game_objects.Character.Character import Character
 
 
 class Maze:
@@ -118,7 +119,39 @@ class Maze:
             room.east_door = None
             room.west_door = None
 
-    def player_map(self, game: Game) -> str:
+    def player_map(self, game: Game, character: Character) -> str:
+        result = ""
+        grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
+        count = 0
+        player_rooms = [character.current_room]
+        visited_rooms = self.rooms if any(item.name == "Dungeon Map" for item in character.inventory.bag) else [character.current_room]
+        for room in self.rooms:
+            y_coord = 2*room.y_coord+1
+            x_coord = 2*room.x_coord+1
+            count += 1
+            if room == self.entry_room:
+                grid[y_coord][x_coord] = "S"
+            elif room == self.exit_room:
+                grid[y_coord][x_coord] = "E"
+            elif room in player_rooms:
+                replacement = player_rooms.index(room)+1
+                grid[y_coord][x_coord] = str(replacement)
+            elif room in visited_rooms:
+                grid[y_coord][x_coord] = " "
+            if room == self.entry_room or room == self.exit_room or room in visited_rooms:
+                if room.north_door is not None:
+                    grid[y_coord-1][x_coord] = "-"
+                if room.south_door is not None:
+                    grid[y_coord+1][x_coord] = "-"
+                if room.west_door is not None:
+                    grid[y_coord][x_coord-1] = "|"
+                if room.east_door is not None:
+                    grid[y_coord][x_coord+1] = "|"
+        for row in grid:
+            result += " ".join(row)+"\n"
+        return "```"+result+"```"
+
+    def admin_map(self, game: Game) -> str:
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
         count = 0

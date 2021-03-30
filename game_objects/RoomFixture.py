@@ -3,7 +3,7 @@ from typing import Any, List
 
 from game_objects.Commands.Command import Command
 from game_objects.Commands.NoncombatCommands.LootCommand import LootCommand
-from game_objects.Items.Item import Coins
+from game_objects.Items.Item import Coins, DungeonMap
 from game_objects.LootTable import LootTable
 
 
@@ -29,17 +29,18 @@ class TreasureChest(Fixture):
         super().__init__()
         self.name = "Chest"
         self.items = LootTable(lootable_items or [
-            (Coins(count=random.randint(0, 50)), .50),
-            (Shield(),                           .10),
-            (Torch(),                            .01),
-            (Dagger(),                           .01),
-            (Axe(),                              .01),
-            (Sword(),                            .01),
-            (Mace(),                             .01),
-            (Spear(),                            .01),
-            (PlateArmor(),                       .01),
-            (ChainArmor(),                       .01),
-            (Gambeson(),                         .01)
+            (Coins(count=random.randint(0, 50)), .75),
+            (DungeonMap(),                       .50),
+            (Shield(),                           .15),
+            (Torch(),                            .05),
+            (Dagger(),                           .05),
+            (Axe(),                              .05),
+            (Sword(),                            .05),
+            (Mace(),                             .05),
+            (Spear(),                            .05),
+            (PlateArmor(),                       .05),
+            (ChainArmor(),                       .05),
+            (Gambeson(),                         .05)
         ]).roll_drops()
 
     def describe(self) -> str:

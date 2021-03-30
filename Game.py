@@ -27,6 +27,8 @@ class Game:
         from discord_objects.DiscordUser import DiscordUser
         from DiscordConnection import CustomClient
         self.maze: Maze = None
+        self.players_dict: dict = {}
+        self.enemies_dict: dict = {}
         self.players: List[Character] = []
         self.enemies: List[Enemy] = []
         self.discord_users: List[DiscordUser] = []
@@ -46,6 +48,7 @@ class Game:
                 to_add = Character.from_dict(game=self, source_dict=json.load(infile))
                 to_add.current_room = self.maze.entry_room
                 to_add.discord_user.current_character = to_add
+                self.players_dict[to_add.guid] = to_add
                 self.players.append(to_add)
                 self.discord_connection.send_game_chat_sync(f"Loaded player {to_add.name} for {to_add.discord_user.username}")
 
@@ -66,6 +69,20 @@ class Game:
         self.on("player_defeated", TriggerFunc(self.cleanup_dead_player))
         self.on("enemy_defeated", TriggerFunc(self.cleanup_dead_enemy))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
+        self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.check_lists))
+
+    def check_lists(self):
+        import datetime
+        if set(self.enemies_dict.values()) != set(self.enemies):
+            print("Enemies dictionary desynced")
+            print(self.enemies_dict.values())
+            print(self.enemies)
+        if set(self.players_dict.values()) != set(self.players):
+            print("Players dictionary desynced")
+            print(self.players_dict.values())
+            print(self.players)
+        self.scheduler.schedule_task(
+            ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.check_lists))
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
@@ -75,12 +92,14 @@ class Game:
             new_enemy = Goblin()
             new_enemy.current_room = room
             self.enemies.append(new_enemy)
+            self.enemies_dict[new_enemy.guid] = new_enemy
         num_big_enemies = math.isqrt(num_small_enemies)
         chosen_rooms = random.choices(viable_rooms, k=num_big_enemies)
         for room in chosen_rooms:
             new_enemy = Orc()
             new_enemy.current_room = room
             self.enemies.append(new_enemy)
+            self.enemies_dict[new_enemy.guid] = new_enemy
 
     def seed_loot_stashes(self) -> None:
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
@@ -125,10 +144,12 @@ class Game:
 
     def delete_all_enemies(self):
         self.enemies = []
+        self.enemies_dict = {}
 
     def register_player(self, new_player: Character) -> None:
         new_player.current_room = self.maze.entry_room
         self.players.append(new_player)
+        self.players_dict[new_player.guid] = new_player
 
     def on(self, event: str, trigger_func: TriggerFunc) -> None:
         if event not in self.hooks:
@@ -162,6 +183,3 @@ class Game:
                     trigger_func.func(*trigger_func.f_args, **passed_kwargs)
                 if trigger_func.do_once:
                     self.off(event, trigger_func)
-
-
-
