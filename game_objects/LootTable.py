@@ -1,10 +1,12 @@
+from __future__ import annotations
 from typing import List
 
-from game_objects.Items.Item import Item
 from utils.Dice import get_random
 
 
 class LootTable:
+    from game_objects.Items.Item import Item
+
     def __init__(self, items):
         self.items = items if items else []
 

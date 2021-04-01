@@ -58,6 +58,7 @@ def item_mappings():
 def generate_item_templates():
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
+    from game_objects.Items.Shield import Shield
     to_write = [
         Armor(),
         PlateArmor(),
@@ -68,8 +69,13 @@ def generate_item_templates():
         Dagger(),
         Mace(),
         Spear(),
-        Axe()
+        Axe(),
+        Shield()
     ]
     for item in to_write:
         save_item_template(item)
     print("Regenerated Item Templates")
+
+
+if __name__ == "__main__":
+    generate_item_templates()

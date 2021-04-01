@@ -3,11 +3,10 @@ import names
 from typing import Optional, List
 
 import Game
-from game_objects.Character.CharacterInventory import CharacterInventory
+
 from game_objects.Character.CharacterSkills import CharacterSkills
 from game_objects.CombatEntity import CombatEntity
 from game_objects.GameEntity import GameEntity
-from game_objects.Items.Armor import Armor
 from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
@@ -19,6 +18,7 @@ class Character(CombatEntity, GameEntity):
         super().__init__()
         from game_objects.Room import Room
         from discord_objects.DiscordUser import DiscordUser
+        from game_objects.Character.CharacterInventory import CharacterInventory
         if name is None:
             self.name: str = names.get_full_name(gender='male')
         else:
@@ -63,6 +63,7 @@ class Character(CombatEntity, GameEntity):
     @classmethod
     def from_dict(cls, game, source_dict) -> Character:
         from discord_objects.DiscordUser import UserUtils
+        from game_objects.Character.CharacterInventory import CharacterInventory
         new_char = Character(name=source_dict["name"])
         new_char.zone = source_dict["zone"]
         new_char.skills = CharacterSkills.from_dict(source_dict["skills"])
@@ -80,6 +81,7 @@ class Character(CombatEntity, GameEntity):
 
     @property
     def resistances(self) -> dict:  # TODO Define a type for this
+        from game_objects.Items.Armor import Armor
         to_return = self.base_resistances.copy()
         equipment = filter(lambda x: isinstance(x, Armor), self.inventory.equipment.values())
         for item in equipment:

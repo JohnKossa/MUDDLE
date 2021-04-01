@@ -1,16 +1,15 @@
 import random
 from typing import Optional, List
 
-from game_objects.Items.Armor import Gambeson
-from game_objects.LootTable import LootTable
-
 
 class CharacterInventory:
     from game_objects.Commands.Command import Command
     from game_objects.Items.Item import Item
     from game_objects.Items.Equipment import Equipment
+    from game_objects.LootTable import LootTable
 
     def __init__(self):
+        from game_objects.Items.Armor import Gambeson
         from game_objects.Items.Weapon import Sword, Dagger, Mace, Spear, Axe, Torch
         self.equipment = {
             "head": None,

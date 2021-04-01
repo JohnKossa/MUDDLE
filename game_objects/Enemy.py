@@ -5,8 +5,6 @@ import Game
 from game_objects.AttackAction import AttackAction
 from game_objects.CombatEntity import CombatEntity
 from game_objects.GameEntity import GameEntity
-from game_objects.Items.Item import Coins
-from game_objects.LootTable import LootTable
 from utils.Dice import roll
 from utils.CombatHelpers import sum_resistances, assign_damage
 
@@ -15,6 +13,7 @@ class Enemy(CombatEntity, GameEntity):
     def __init__(self):
         super().__init__()
         from game_objects.Room import Room
+        from game_objects.LootTable import LootTable
         self.current_room: Optional[Room] = None
         self.name: str = None
         self.disambiguation_num: int = 0
@@ -35,6 +34,7 @@ class Enemy(CombatEntity, GameEntity):
         ]
         self.assign_damage = assign_damage
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
+        from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
             (Coins(count=random.randint(0, 10)), .30),
             (Torch(),                            .10),
@@ -80,18 +80,31 @@ class Enemy(CombatEntity, GameEntity):
 class Goblin(Enemy):
     def __init__(self):
         super().__init__()
+        from game_objects.LootTable import LootTable
         self.name = "Goblin"
         self.max_health = 25
         self.possible_actions: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
             (3, AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=0))
         ]
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
+        from game_objects.Items.Item import Coins
+        self.loot_table = LootTable([
+            (Coins(count=random.randint(0, 10)), .30),
+            (Torch(), .10),
+            (Dagger(), .10),
+            (Axe(), .08),
+            (Sword(), .05),
+            (Mace(), .03),
+            (Spear(), .03)
+        ])
 
 
 class Orc(Enemy):
     def __init__(self):
         from game_objects.Items.Armor import PlateArmor
         from game_objects.Items.Weapon import Sword, Spear, Mace, Axe
+        from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Orc"
         self.max_health = 75

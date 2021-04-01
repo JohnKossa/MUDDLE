@@ -3,8 +3,6 @@ from typing import Any, List
 
 from game_objects.Commands.Command import Command
 from game_objects.Commands.NoncombatCommands.LootCommand import LootCommand
-from game_objects.Items.Item import Coins, DungeonMap
-from game_objects.LootTable import LootTable
 
 
 class Fixture:
@@ -26,6 +24,8 @@ class TreasureChest(Fixture):
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Shield import Shield
         from game_objects.Items.Armor import PlateArmor, ChainArmor, Gambeson
+        from game_objects.Items.Item import Coins, DungeonMap
+        from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Chest"
         self.items = LootTable(lootable_items or [
