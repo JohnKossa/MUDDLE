@@ -38,6 +38,8 @@ def save_item_template(item: Item):
 def item_mappings():
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon
+    from game_objects.Items.Shield import Shield
+    from game_objects.Items.Consumable import HealthPotion, StaminaPotion, ManaPotion
     from game_objects.Items.Item import Item, Coins
     return {
         "Armor": Armor,
@@ -52,7 +54,11 @@ def item_mappings():
         "Axe": Axe,
         "Item": Item,
         "Coins": Coins,
-        "Weapon": Weapon
+        "Weapon": Weapon,
+        "Shield": Shield,
+        "HealthPotion": HealthPotion,
+        "StaminaPotion": StaminaPotion,
+        "ManaPotion": ManaPotion
     }
 
 
