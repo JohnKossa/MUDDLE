@@ -25,12 +25,15 @@ class TreasureChest(Fixture):
         from game_objects.Items.Shield import Shield
         from game_objects.Items.Armor import PlateArmor, ChainArmor, Gambeson
         from game_objects.Items.Item import Coins, DungeonMap
+        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Chest"
         self.items = LootTable(lootable_items or [
             (Coins(count=random.randint(0, 50)), .75),
+            (HealthPotion(),                     .60),
             (DungeonMap(),                       .50),
+            (StaminaPotion(),                    .30),
             (Shield(),                           .15),
             (Torch(),                            .05),
             (Dagger(),                           .05),

@@ -59,7 +59,7 @@ class Item(GameEntity):
         new_item.template = self.template
         return new_item
 
-    def use_effect(self, game: Game, source_player: Character, target_player: Character) -> None:
+    def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
         # describes what happens when a player does !use with the item
         pass
 

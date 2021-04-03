@@ -276,10 +276,14 @@ class InventoryCommand(Command):
         if len(player.inventory.equipment.values()) > 0:
             to_return = to_return + "Equipment:\n"
         for k, v in player.inventory.equipment.items():
-            if v is not None:
+            if v is not None and k != "belt":
                 to_return = to_return + k.capitalize()+": "+v.name+"\n"
+            if k == "belt" and len(v) > 0:
+                to_return = to_return + "Belt:"
+                for item_stack in player.inventory.equipment["belt"]:
+                    to_return = to_return + f"\n{item_stack.quantity}x {item_stack.name}"
         if len(player.inventory.bag) > 0:
-            to_return = to_return + "Bag:"
+            to_return = to_return + "\nBag:"
         for item_stack in player.inventory.bag:
             to_return = to_return + f"\n{item_stack.quantity}x {item_stack.name}"
         return to_return

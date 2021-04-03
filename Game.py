@@ -29,13 +29,19 @@ class Game:
         self.maze: Maze = None
         self.players_dict: dict = {}
         self.enemies_dict: dict = {}
-        self.players: List[Character] = []
-        self.enemies: List[Enemy] = []
         self.discord_users: List[DiscordUser] = []
         self.hooks: dict = {}
         self.aioloop = asyncio.get_event_loop()
         self.scheduler: Scheduler = Scheduler(self.aioloop)
         self.discord_connection: Optional[CustomClient] = None
+
+    @property
+    def players(self) -> List[Character]:
+        return list(self.players_dict.values())
+
+    @property
+    def enemies(self) -> List[Enemy]:
+        return list(self.enemies_dict.values())
 
     def load_players(self):
         from os import listdir
@@ -143,7 +149,6 @@ class Game:
             player.current_room = self.maze.entry_room
 
     def delete_all_enemies(self):
-        self.enemies = []
         self.enemies_dict = {}
 
     def register_player(self, new_player: Character) -> None:

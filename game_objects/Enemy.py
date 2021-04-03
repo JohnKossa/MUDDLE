@@ -63,10 +63,6 @@ class Enemy(CombatEntity, GameEntity):
         return f"{self.name}{self.disambiguation_num}"
 
     def cleanup(self, game: Game):
-        # Remove from
-        #   game
-        #   combat
-        game.enemies.remove(self)
         game.enemies_dict.pop(self.guid)
         if self.current_room.combat is not None:
             if self in self.current_room.combat.enemies:
@@ -89,14 +85,17 @@ class Goblin(Enemy):
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
+        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         self.loot_table = LootTable([
             (Coins(count=random.randint(0, 10)), .30),
-            (Torch(), .10),
-            (Dagger(), .10),
-            (Axe(), .08),
-            (Sword(), .05),
-            (Mace(), .03),
-            (Spear(), .03)
+            (HealthPotion(),                     .20),
+            (StaminaPotion(),                    .10),
+            (Torch(),                            .10),
+            (Dagger(),                           .10),
+            (Axe(),                              .08),
+            (Sword(),                            .05),
+            (Mace(),                             .03),
+            (Spear(),                            .03)
         ])
 
 
@@ -124,10 +123,13 @@ class Orc(Enemy):
                 "electricity": -5
             }
         }
+        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         self.loot_table = LootTable([
-            (PlateArmor(), .30),
-            (Axe(),        .20),
-            (Sword(),      .10),
-            (Mace(),       .10),
-            (Spear(),      .10)
+            (PlateArmor(),    .30),
+            (HealthPotion(),  .50),
+            (StaminaPotion(), .20),
+            (Axe(),           .20),
+            (Sword(),         .10),
+            (Mace(),          .10),
+            (Spear(),         .10)
         ])

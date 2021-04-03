@@ -99,7 +99,6 @@ class Character(CombatEntity, GameEntity):
 
     def cleanup(self, game: Game):
         import os
-        game.players.remove(self)
         game.players_dict.pop(self.guid)
         if self.current_room.combat is not None:
             if self in self.current_room.combat.players:

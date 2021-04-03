@@ -10,6 +10,7 @@ def load_item_from_template(filename):
     with open(f"templates/items/{filename}.json", "r") as infile:
         source_dict = json.load(infile)
         constructor = source_dict.pop("constructor")
+        source_dict.pop("guid")
         constructors = {
             "Weapon": Weapon,
             "Sword": Sword,
@@ -59,6 +60,7 @@ def generate_item_templates():
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
     from game_objects.Items.Shield import Shield
+    from game_objects.Items.Consumable import HealthPotion, StaminaPotion, ManaPotion
     to_write = [
         Armor(),
         PlateArmor(),
@@ -70,7 +72,10 @@ def generate_item_templates():
         Mace(),
         Spear(),
         Axe(),
-        Shield()
+        Shield(),
+        HealthPotion(),
+        ManaPotion(),
+        StaminaPotion()
     ]
     for item in to_write:
         save_item_template(item)
