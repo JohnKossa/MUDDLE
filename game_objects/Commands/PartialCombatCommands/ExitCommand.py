@@ -29,10 +29,10 @@ class Exit(PartialCombatCommand):
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         source_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
-        if source_player is None:
-            return "You don't currently have a character. Use the !NewCharacter command to create one."
         room = source_player.current_room
         direction = get_by_index(params, 0)
+        if direction is None:
+            return f"No direciton specified. Proper usage of this command is:\n {Exit.show_help()}"
         door = room.get_door(direction.lower())
         if door is None:
             return f"Invalid direction. Room has no {direction} exit."

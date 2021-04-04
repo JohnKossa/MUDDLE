@@ -32,7 +32,10 @@ class Take(PartialCombatCommand):
         target_item = get_by_index(params, 0)
         room = player.current_room
         items = room.items
-        matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
+        if target_item is None and len(items) == 1:
+            matched_item = items[0]
+        else:
+            matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
         if matched_item is None:
             return "Item not found"
         player.inventory.add_item_to_bag(matched_item)

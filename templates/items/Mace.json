@@ -1,1 +1,48 @@
-{"constructor": "Mace", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "Mace", "slot": "hand", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "attacks": [{"name": "strike", "hit_bonus": 2, "dmg_type": "bludgeon", "dmg_roll": [1, 8], "dmg_bonus": 1, "action_cost": 1}, {"name": "spike", "hit_bonus": 1, "dmg_type": "pierce", "dmg_roll": [1, 6], "dmg_bonus": 0, "action_cost": 1}, {"name": "smash", "hit_bonus": 1, "dmg_type": "bludgeon", "dmg_roll": [1, 16], "dmg_bonus": 2, "action_cost": 2}], "default_attack": "strike"}
+{
+    "constructor": "Mace",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "Mace",
+    "slot": "hand",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {},
+    "attacks": [
+        {
+            "name": "strike",
+            "hit_bonus": 2,
+            "dmg_type": "bludgeon",
+            "dmg_roll": [
+                1,
+                8
+            ],
+            "dmg_bonus": 1,
+            "action_cost": 1
+        },
+        {
+            "name": "spike",
+            "hit_bonus": 1,
+            "dmg_type": "pierce",
+            "dmg_roll": [
+                1,
+                6
+            ],
+            "dmg_bonus": 0,
+            "action_cost": 1
+        },
+        {
+            "name": "smash",
+            "hit_bonus": 1,
+            "dmg_type": "bludgeon",
+            "dmg_roll": [
+                1,
+                16
+            ],
+            "dmg_bonus": 2,
+            "action_cost": 2
+        }
+    ],
+    "default_attack": "strike"
+}

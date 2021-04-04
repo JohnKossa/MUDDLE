@@ -32,7 +32,7 @@ def save_item_template(item: Item):
     import json
     print(f"Writing to templates/items/{item.name}")
     with open(f"templates/items/{item.name}.json", "w") as outfile:
-        json.dump(item.to_dict(full_depth=True), outfile)
+        json.dump(item.to_dict(full_depth=True), outfile, indent=4)
 
 
 def item_mappings():

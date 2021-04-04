@@ -58,13 +58,11 @@ class UseItem(PartialCombatCommand):
         from utils.ListHelpers import get_by_index
         item_name = get_by_index(params, 0, None)
         if item_name is None:
-            game.discord_connection.send_game_chat_sync("Item name not specified. Usage is:\n" + UseItem.show_help(), source_player.discord_user)
-        matched_item = source_player.inventory.get_bag_item_by_name(item_name)
+            game.discord_connection.send_game_chat_sync("Item name not specified. Usage is:\n" + UseItem.show_help(), [source_player.discord_user])
+        matched_item = source_player.inventory.get_belt_item_by_name(item_name)
         if matched_item is None:
-            matched_item = source_player.inventory.get_bag_item_by_name(item_name)
-        if matched_item is None:
-            game.discord_connection.send_game_chat_sync(f"{item_name} was not found on belt", source_player.discord_user)
+            game.discord_connection.send_game_chat_sync(f"{item_name} was not found on belt", [source_player.discord_user])
         matched_item.use_effect(game, source_player, params[1:])
         matched_item.quantity = matched_item.quantity - 1
         if matched_item.quantity == 0:
-            source_player.inventory["belt"].remove(matched_item)
+            source_player.inventory.equipment["belt"].remove(matched_item)

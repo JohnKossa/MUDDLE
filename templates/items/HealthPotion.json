@@ -1,1 +1,7 @@
-{"constructor": "HealthPotion", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "HealthPotion"}
+{
+    "constructor": "HealthPotion",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "HealthPotion"
+}

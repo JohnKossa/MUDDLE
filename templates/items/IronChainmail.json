@@ -1,1 +1,24 @@
-{"constructor": "ChainArmor", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "IronChainmail", "slot": "Body", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "damage_resistances": {"slash": 2, "stab": 1, "bludgeon": 1, "electricity": -3}, "hit_resistances": {"slash": 2, "stab": 1, "bludgeon": 0, "electricity": -1}}
+{
+    "constructor": "ChainArmor",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "IronChainmail",
+    "slot": "Body",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {},
+    "damage_resistances": {
+        "slash": 2,
+        "stab": 1,
+        "bludgeon": 1,
+        "electricity": -3
+    },
+    "hit_resistances": {
+        "slash": 2,
+        "stab": 1,
+        "bludgeon": 0,
+        "electricity": -1
+    }
+}

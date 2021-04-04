@@ -1,1 +1,24 @@
-{"constructor": "PlateArmor", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "IronPlate", "slot": "Body", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}, "damage_resistances": {"slash": 2, "stab": 0, "bludgeon": 1, "electricity": -5}, "hit_resistances": {"slash": 2, "stab": 1, "bludgeon": 0, "electricity": -1}}
+{
+    "constructor": "PlateArmor",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "IronPlate",
+    "slot": "Body",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {},
+    "damage_resistances": {
+        "slash": 2,
+        "stab": 0,
+        "bludgeon": 1,
+        "electricity": -5
+    },
+    "hit_resistances": {
+        "slash": 2,
+        "stab": 1,
+        "bludgeon": 0,
+        "electricity": -1
+    }
+}

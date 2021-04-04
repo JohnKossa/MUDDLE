@@ -12,6 +12,7 @@ class CharacterInventory:
         from game_objects.Items.Armor import Gambeson
         from game_objects.Items.Weapon import Sword, Dagger, Mace, Spear, Axe, Torch
         from game_objects.Items.Consumable import HealthPotion
+        from game_objects.Items.Item import Item
         self.equipment = {
             "head": None,
             "body": Gambeson(),
@@ -19,7 +20,7 @@ class CharacterInventory:
             "mainhand": random.choice([Sword(), Dagger(), Mace(), Spear(), Axe(), Torch()]),
             "belt": [HealthPotion()]
         }
-        self.bag = [HealthPotion()]
+        self.bag: List[Item] = [HealthPotion()]
 
     def to_dict(self):
         to_return = {
@@ -76,6 +77,7 @@ class CharacterInventory:
         return matched_item
 
     def equip_item(self, item: Equipment, slot_name: str) -> (bool, str):
+        # TODO add special case for belt equips
         from game_objects.Items.Equipment import Equipment
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
@@ -117,14 +119,14 @@ class CharacterInventory:
         self.bag.append(to_add)
 
     def get_commands(self) -> List[Command]:
-        from game_objects.Commands.Command import InventoryCommand
+        from game_objects.Commands.Command import Command, InventoryCommand
         from game_objects.Commands.NoncombatCommands.UnequipCommand import Unequip
         from game_objects.Commands.NoncombatCommands.EquipCommand import Equip
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
         from game_objects.Commands.PartialCombatCommands.UseItemCommand import UseItem
         from game_objects.Items.Equipment import Equipment
         from game_objects.Items.Consumable import Consumable
-        to_return = [InventoryCommand()]
+        to_return: List[Command] = [InventoryCommand()]
         if len(self.bag) > 0:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):
@@ -144,7 +146,7 @@ class CharacterInventory:
 
     def generate_loot_table(self) -> LootTable:
         from game_objects.LootTable import LootTable
-        all_items = self.bag + list(filter(lambda x: x is not None, self.equipment))
+        all_items = self.bag + list(filter(lambda x: x is not None, self.equipment.values()))
         item_count = len(all_items)
         loot_table_items = map(lambda x: (x, 1/item_count), all_items)
         return LootTable(loot_table_items)

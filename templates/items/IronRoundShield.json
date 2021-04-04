@@ -1,1 +1,12 @@
-{"constructor": "Shield", "quantity": 1, "max_stack_size": 1, "weight": 0, "name": "IronRoundShield", "slot": "hand", "max_hitpoints": 100, "hit_points": 100, "active_effects": [], "resistances": {}}
+{
+    "constructor": "Shield",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "IronRoundShield",
+    "slot": "hand",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {}
+}
