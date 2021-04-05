@@ -21,26 +21,37 @@ class Take(PartialCombatCommand):
     def show_help(cls) -> str:
         return "\n".join([
             "Picks up an item in the current room and adds it to your bag.",
-            "Params:",
+            "Combat Params:",
             "    0: Item Name",
+            "Noncombat Params:",
+            "    0: Item Name or all (optional)"
         ])
 
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
-        target_item = get_by_index(params, 0)
         room = player.current_room
         items = room.items
-        if target_item is None and len(items) == 1:
-            matched_item = items[0]
+        target_item = get_by_index(params, 0)
+        if target_item is None or target_item.lower() == "all":
+            if len(items) == 0:
+                return "Nothing to pick up."
+            pickup_strings = []
+            for item in items:
+                player.inventory.add_item_to_bag(item)
+                pickup_strings.append(f"Picked up {item.quantity} {item.name}")
+            return "\n".join(pickup_strings)
         else:
-            matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
-        if matched_item is None:
-            return "Item not found"
-        player.inventory.add_item_to_bag(matched_item)
-        room.items.remove(matched_item)
-        return f"Picked up {matched_item.quantity} {matched_item.name}"
+            if target_item is None and len(items) == 1:
+                matched_item = items[0]
+            else:
+                matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
+            if matched_item is None:
+                return "Item not found"
+            player.inventory.add_item_to_bag(matched_item)
+            room.items.remove(matched_item)
+            return f"Picked up {matched_item.quantity} {matched_item.name}"
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]):
         target_item = params[0]

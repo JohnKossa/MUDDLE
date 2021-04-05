@@ -4,16 +4,16 @@ import random
 from typing import Any, Callable, Dict, List,  Optional
 
 import Game
-from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy
 from game_objects.CombatEntity import CombatEntity
-from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
-from game_objects.Commands.CombatCommands.PassCommand import PassCommand
 from utils.Scheduler import ScheduledTask, time_until_event
 
 
 class Combat:
+    from game_objects.Character.Character import Character
+
     def __init__(self, players=[], enemies=[], room=None):
+        from game_objects.Character.Character import Character
         from game_objects.Room import Room
         self.players: List[Character] = players
         self.enemies: List[Enemy] = enemies
@@ -56,6 +56,7 @@ class Combat:
                 lst[i].disambiguation_num = i + 1
 
     def fill_unused_player_orders(self, player: Character) -> bool:
+        from game_objects.Commands.CombatCommands.PassCommand import PassCommand
         pass_cmd = PassCommand()
         action_count = self.sum_actions_for_entity(player)
         if action_count < player.actions:
@@ -66,6 +67,7 @@ class Combat:
         return False
 
     def determine_enemy_actions(self):
+        from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
         for enemy in self.enemies:
             action_count = self.sum_actions_for_entity(enemy)
             failsafe = 100
@@ -102,6 +104,7 @@ class Combat:
                 game.trigger("player_defeated", source_player=player)
 
     def process_round(self, game: Game) -> None:
+        from game_objects.Character.Character import Character
         # all players dead or left room, end combat
         if len(self.players) == 0:
             game.discord_connection.send_game_chat_sync("All players retreated or dead. Ending combat.")

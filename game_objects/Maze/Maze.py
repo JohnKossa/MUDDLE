@@ -123,8 +123,13 @@ class Maze:
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
         count = 0
+        if any(item.name == "Dungeon Map" for item in character.inventory.bag):
+            visited_rooms = self.rooms
+        elif "Cartography" in character.skills.skill_entries and "visited_rooms" in character.skills.skill_entries["Cartography"].data:
+            visited_rooms = character.skills.skill_entries["Cartography"].data["visited_rooms"]
+        else:
+            visited_rooms = [character.current_room]
         player_rooms = [character.current_room]
-        visited_rooms = self.rooms if any(item.name == "Dungeon Map" for item in character.inventory.bag) else [character.current_room]
         for room in self.rooms:
             y_coord = 2*room.y_coord+1
             x_coord = 2*room.x_coord+1

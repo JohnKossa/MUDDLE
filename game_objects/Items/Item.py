@@ -61,10 +61,9 @@ class Item(GameEntity):
 
     def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
         # describes what happens when a player does !use with the item
-        pass
+        raise Exception(f"Use effect not implemented for {self.name}")
 
     def get_commands(self) -> List[Command]:
-        # will add the use and drop commands
         return []
 
 
@@ -75,8 +74,12 @@ class Coins(Item):
         self.quantity: int = random.randrange(2, 9) if count is None else count
         self.max_stack_size: int = 1000000000
         self.weight: int = 0
-        self.name: str = "Gold Coin"
+        self.name: str = "GoldCoin"
         self.template: Any = None
+
+    def describe(self) -> str:
+        # TODO lookup item from template
+        return "a disheveled pile of gold coins"
 
 
 class DungeonMap(Item):

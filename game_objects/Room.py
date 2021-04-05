@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import Any, List, Optional
 
 import Game
-from game_objects.Character.Character import Character
-from game_objects.Combat import Combat
 from game_objects.Commands.Command import Command
 from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
 from game_objects.Enemy import Enemy
@@ -11,7 +9,10 @@ from utils.TextHelpers import enumerate_objects, pluralize
 
 
 class Room:
+    from game_objects.Character.Character import Character
+
     def __init__(self, name: str = ""):
+        from game_objects.Combat import Combat
         from game_objects.RoomFixture import Fixture
         from game_objects.Items.Item import Item
         self.name: str = name
@@ -35,6 +36,7 @@ class Room:
         return to_return
 
     def start_combat(self, game: Game) -> None:
+        from game_objects.Combat import Combat
         if self.combat is not None:
             return
         self.combat = Combat(players=self.get_characters(game), enemies=self.get_enemies(game), room=self)

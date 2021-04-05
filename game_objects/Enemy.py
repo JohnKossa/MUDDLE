@@ -99,6 +99,33 @@ class Goblin(Enemy):
         ])
 
 
+class Kobold(Enemy):
+    def __init__(self):
+        super().__init__()
+        from game_objects.LootTable import LootTable
+        self.name = "Kobold"
+        self.max_health = 15
+        self.possible_actions: List[(int, AttackAction)] = [
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
+            (1, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(2, 4), dmg_bonus=0)),
+            (1, AttackAction(name="stab", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0))
+        ]
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
+        from game_objects.Items.Item import Coins
+        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        self.loot_table = LootTable([
+            (Coins(count=random.randint(0, 10)), .50),
+            (Dagger(), .50),
+            (HealthPotion(),                     .20),
+            (StaminaPotion(),                    .10),
+            (Torch(),                            .10),
+            (Axe(),                              .03),
+            (Sword(),                            .03),
+            (Mace(),                             .03),
+            (Spear(),                            .03)
+        ])
+
+
 class Orc(Enemy):
     def __init__(self):
         from game_objects.Items.Armor import PlateArmor
@@ -124,12 +151,14 @@ class Orc(Enemy):
             }
         }
         from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
-            (PlateArmor(),    .30),
-            (HealthPotion(),  .50),
-            (StaminaPotion(), .20),
-            (Axe(),           .20),
-            (Sword(),         .10),
-            (Mace(),          .10),
-            (Spear(),         .10)
+            (Coins(count=random.randint(0, 100)), .50),
+            (HealthPotion(),                      .50),
+            (PlateArmor(),                        .30),
+            (StaminaPotion(),                     .20),
+            (Axe(),                               .20),
+            (Sword(),                             .10),
+            (Mace(),                              .10),
+            (Spear(),                             .10)
         ])

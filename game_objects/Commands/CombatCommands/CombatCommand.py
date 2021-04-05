@@ -3,11 +3,12 @@ import discord
 from typing import Any, List
 
 import Game
-from game_objects.Character.Character import Character
 from game_objects.Commands.Command import Command
 
 
 class CombatOnlyCommand(Command):
+    from game_objects.Character.Character import Character
+
     def __init__(self):
         super().__init__()
         self.combat_action_cost: int = 1

@@ -2,11 +2,12 @@ from __future__ import annotations
 from typing import Any, List
 
 import Game
-from game_objects import Character
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 
 
 class PassCommand(CombatOnlyCommand):
+    from game_objects import Character
+
     def __init__(self):
         super().__init__()
         self.aliases: List[str] = ["Pass"]

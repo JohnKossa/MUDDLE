@@ -6,10 +6,9 @@ import random
 
 from typing import Callable, List, Optional
 
-from game_objects.Room import Room
 from game_objects.RoomFixture import TreasureChest
 from game_objects.Character.Character import Character
-from game_objects.Enemy import Enemy, Goblin, Orc
+from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
 from game_objects.Maze.Maze import Maze
 from utils.Scheduler import Scheduler, ScheduledTask
 
@@ -23,6 +22,8 @@ class TriggerFunc:
 
 
 class Game:
+    from game_objects.Room import Room
+
     def __init__(self):
         from discord_objects.DiscordUser import DiscordUser
         from DiscordConnection import CustomClient
@@ -56,6 +57,7 @@ class Game:
                 to_add.discord_user.current_character = to_add
                 self.players_dict[to_add.guid] = to_add
                 self.players.append(to_add)
+                to_add.initialize(self)
                 self.discord_connection.send_game_chat_sync(f"Loaded player {to_add.name} for {to_add.discord_user.username}")
 
     def save_players(self):
@@ -63,7 +65,7 @@ class Game:
         import json
         for player in self.players:
             with open(f"savefiles/characters/{player.name}.json", "w") as outfile:
-                json.dump(player.to_dict(), outfile)
+                json.dump(player.to_dict(), outfile, indent=4)
         print("Saving players")
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
@@ -95,7 +97,8 @@ class Game:
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
         chosen_rooms = random.choices(viable_rooms, k=num_small_enemies)
         for room in chosen_rooms:
-            new_enemy = Goblin()
+            small_enemy_types = [Goblin, Kobold]
+            new_enemy = random.choice(small_enemy_types)()
             new_enemy.current_room = room
             self.enemies.append(new_enemy)
             self.enemies_dict[new_enemy.guid] = new_enemy
@@ -155,6 +158,7 @@ class Game:
         new_player.current_room = self.maze.entry_room
         self.players.append(new_player)
         self.players_dict[new_player.guid] = new_player
+        new_player.initialize()
 
     def on(self, event: str, trigger_func: TriggerFunc) -> None:
         if event not in self.hooks:
