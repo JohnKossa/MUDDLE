@@ -25,7 +25,7 @@ class BlockCommand(CombatOnlyCommand):
         ])
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
-        from Game import TriggerFunc
+        from utils.TriggerFunc import TriggerFunc
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} raises their shield.")
         source_player.assign_damage = BlockCommand.assign_damage
         game.once("before_player_combat", TriggerFunc(BlockCommand.detach_damage_replacement))

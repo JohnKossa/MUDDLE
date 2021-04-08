@@ -181,9 +181,9 @@ class RebuildMaze(Command):
         ])
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
-        width = int(get_by_index(params, 0, "10"))
-        height = int(get_by_index(params, 1, "10"))
-        difficulty = int(get_by_index(params, 2, "3"))
+        width = int(get_by_index(params, 0, "11"))
+        height = int(get_by_index(params, 1, "11"))
+        difficulty = int(get_by_index(params, 2, "6"))
         game.init_maze(width, height, difficulty)
         return "Maze rebuilt!\n"+str(game.maze)
 

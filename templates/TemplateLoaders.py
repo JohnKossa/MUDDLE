@@ -40,7 +40,7 @@ def item_mappings():
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon
     from game_objects.Items.Shield import Shield
     from game_objects.Items.Consumable import HealthPotion, StaminaPotion, ManaPotion
-    from game_objects.Items.Item import Item, Coins
+    from game_objects.Items.Item import Item, Coins, DungeonMap
     return {
         "Armor": Armor,
         "PlateArmor": PlateArmor,
@@ -58,7 +58,8 @@ def item_mappings():
         "Shield": Shield,
         "HealthPotion": HealthPotion,
         "StaminaPotion": StaminaPotion,
-        "ManaPotion": ManaPotion
+        "ManaPotion": ManaPotion,
+        "DungeonMap": DungeonMap
     }
 
 

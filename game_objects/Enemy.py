@@ -78,6 +78,7 @@ class Goblin(Enemy):
         super().__init__()
         from game_objects.LootTable import LootTable
         self.name = "Goblin"
+        self.health = 25
         self.max_health = 25
         self.possible_actions: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
@@ -104,6 +105,7 @@ class Kobold(Enemy):
         super().__init__()
         from game_objects.LootTable import LootTable
         self.name = "Kobold"
+        self.health = 15
         self.max_health = 15
         self.possible_actions: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
@@ -133,6 +135,7 @@ class Orc(Enemy):
         from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Orc"
+        self.health = 75
         self.max_health = 75
         self.possible_actions: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=1)),
@@ -141,11 +144,11 @@ class Orc(Enemy):
         self.armor_bonus: dict = {
             "hit": {
                 "slash": 2,
-                "stab": 1,
+                "pierce": 1,
                 "electrcity": -1
             },
             "dmg": {
-                "slash": 2,
+                "pierce": 2,
                 "bludgeon": 1,
                 "electricity": -5
             }

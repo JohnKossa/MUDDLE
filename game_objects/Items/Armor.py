@@ -41,13 +41,13 @@ class PlateArmor(Armor):
         self.name: str = "IronPlate"
         self.damage_resistances: dict = {
             "slash": 2,
-            "stab": 0,
+            "pierce": 0,
             "bludgeon": 1,
             "electricity": -5
         }
         self.hit_resistances: dict = {
             "slash": 2,
-            "stab": 1,
+            "pierce": 1,
             "bludgeon": 0,
             "electricity": -1
         }
@@ -63,13 +63,13 @@ class ChainArmor(Armor):
         self.name: str = "IronChainmail"
         self.damage_resistances: dict = {
             "slash": 2,
-            "stab": 1,
+            "pierce": 1,
             "bludgeon": 1,
             "electricity": -3
         }
         self.hit_resistances: dict = {
             "slash": 2,
-            "stab": 1,
+            "pierce": 1,
             "bludgeon": 0,
             "electricity": -1
         }
@@ -84,7 +84,7 @@ class Gambeson(Armor):
         self.name: str = "Gambeson"
         self.damage_resistances: dict = {
             "slash": 1,
-            "stab": 0,
+            "pierce": 0,
             "bludgeon": 2,
             "electricity": 2,
             "ice": 2,
@@ -92,7 +92,7 @@ class Gambeson(Armor):
         }
         self.hit_resistances: dict = {
             "slash": 1,
-            "stab": 0,
+            "pierce": 0,
             "bludgeon": 0,
             "electricity": 0,
             "ice": 0,

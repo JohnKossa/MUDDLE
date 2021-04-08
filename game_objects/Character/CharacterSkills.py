@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, List
 
 import Game
+import utils.TriggerFunc
 
 
 class CharacterSkills:
@@ -59,8 +60,13 @@ class CartographySkill(CharacterSkill):
         self.name = "Cartography"
 
     def setup_triggers(self, game: Game) -> None:
+        # TODO on maze reset, clear visited rooms
+        game.on("maze_reset", utils.TriggerFunc.TriggerFunc(self.clear_visited_rooms))
         if self.level >= 1:
-            game.on("enter_room", Game.TriggerFunc(self.add_to_map))
+            game.on("enter_room", utils.TriggerFunc.TriggerFunc(self.add_to_map))
+
+    def clear_visited_rooms(self, **kwargs) -> None:
+        self.data["visited_rooms"] = []
 
     def add_to_map(self, room: Optional[Room] = None, **kwargs) -> None:
         print("room visit added to map")

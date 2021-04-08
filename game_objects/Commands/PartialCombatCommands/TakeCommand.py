@@ -33,20 +33,18 @@ class Take(PartialCombatCommand):
         player = discord_user.current_character
         room = player.current_room
         items = room.items
-        target_item = get_by_index(params, 0)
-        if target_item is None or target_item.lower() == "all":
+        target_item_name = get_by_index(params, 0, None)
+        if (target_item_name is None) or (target_item_name.lower() == "all"):
             if len(items) == 0:
                 return "Nothing to pick up."
             pickup_strings = []
             for item in items:
                 player.inventory.add_item_to_bag(item)
                 pickup_strings.append(f"Picked up {item.quantity} {item.name}")
+            room.items = []
             return "\n".join(pickup_strings)
         else:
-            if target_item is None and len(items) == 1:
-                matched_item = items[0]
-            else:
-                matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
+            matched_item = next(filter(lambda x: x.name.lower() == target_item_name.lower(), items), None)
             if matched_item is None:
                 return "Item not found"
             player.inventory.add_item_to_bag(matched_item)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List
+from typing import Any, List, Optional
 
 import Game
 from game_objects.Character.Character import Character
@@ -45,12 +45,12 @@ class Exit(PartialCombatCommand):
         return source_player.current_room.describe(game)
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
-        from Game import TriggerFunc
+        from utils.TriggerFunc import TriggerFunc
         # after combat finishes, leave room
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} runs for the door.")
         game.once("round_end", TriggerFunc(self.leave_room, game, source_player, params))
 
-    def leave_room(self, game: Game, source_player: Character, params: List[Any], **kwargs) -> None:
+    def leave_room(self, source_player: Character, params: List[Any], game: Optional[Game] = None, **kwargs) -> None:
         discord_user = source_player.discord_user
         room = source_player.current_room
         direction = params[0]

@@ -4,21 +4,14 @@ import inspect
 import math
 import random
 
-from typing import Callable, List, Optional
+from typing import List, Optional
 
-from game_objects.RoomFixture import TreasureChest
 from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
 from game_objects.Maze.Maze import Maze
+from game_objects.RoomFixture import TreasureChest
 from utils.Scheduler import Scheduler, ScheduledTask
-
-
-class TriggerFunc:
-    def __init__(self, func, *f_args, **f_kwargs):
-        self.func: Callable = func
-        self.f_args = f_args
-        self.f_kwargs = f_kwargs
-        self.do_once: bool = False
+from utils.TriggerFunc import TriggerFunc
 
 
 class Game:
@@ -64,8 +57,12 @@ class Game:
         import datetime
         import json
         for player in self.players:
-            with open(f"savefiles/characters/{player.name}.json", "w") as outfile:
-                json.dump(player.to_dict(), outfile, indent=4)
+            try:
+                player_dict = player.to_dict()
+                with open(f"savefiles/characters/{player.name}.json", "w") as outfile:
+                    json.dump(player_dict, outfile, indent=4)
+            except:
+                print(f"Unable to save player {player.name}")
         print("Saving players")
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
@@ -76,21 +73,14 @@ class Game:
         self.on("enter_room", TriggerFunc(self.check_final_room))
         self.on("player_defeated", TriggerFunc(self.cleanup_dead_player))
         self.on("enemy_defeated", TriggerFunc(self.cleanup_dead_enemy))
+        self.on("maze_reset", TriggerFunc(self.invalidate_player_maps))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
-        self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.check_lists))
 
-    def check_lists(self):
-        import datetime
-        if set(self.enemies_dict.values()) != set(self.enemies):
-            print("Enemies dictionary desynced")
-            print(self.enemies_dict.values())
-            print(self.enemies)
-        if set(self.players_dict.values()) != set(self.players):
-            print("Players dictionary desynced")
-            print(self.players_dict.values())
-            print(self.players)
-        self.scheduler.schedule_task(
-            ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.check_lists))
+    def invalidate_player_maps(self, **kwargs) -> None:
+        for player in self.players:
+            maps = list(filter(lambda x: x.name == "DungeonMap", player.inventory.bag))
+            for map_item in maps:
+                player.inventory.bag.remove(map_item)
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
@@ -146,6 +136,7 @@ class Game:
         self.seed_enemies()
         self.seed_loot_stashes()
         self.return_players_to_start()
+        self.trigger("maze_reset", game=self)
 
     def return_players_to_start(self) -> None:
         for player in self.players:
@@ -158,14 +149,14 @@ class Game:
         new_player.current_room = self.maze.entry_room
         self.players.append(new_player)
         self.players_dict[new_player.guid] = new_player
-        new_player.initialize()
+        new_player.initialize(self)
 
     def on(self, event: str, trigger_func: TriggerFunc) -> None:
         if event not in self.hooks:
             self.hooks[event] = []
         self.hooks[event].append(trigger_func)
 
-    def off(self, event, trigger_func) -> bool:
+    def off(self, event: str, trigger_func: TriggerFunc) -> bool:
         if event in self.hooks and trigger_func in self.hooks[event]:
             self.hooks[event].remove(trigger_func)
             if len(self.hooks[event]) == 0:
@@ -185,10 +176,12 @@ class Game:
                 if inspect.iscoroutine(trigger_func):
                     passed_kwargs = trigger_func.f_kwargs
                     passed_kwargs.update(kwargs)
+                    passed_kwargs.update({"game": self})
                     self.aioloop.create_task(trigger_func.func(*trigger_func.f_args, **passed_kwargs))
                 else:
                     passed_kwargs = trigger_func.f_kwargs
                     passed_kwargs.update(kwargs)
+                    passed_kwargs.update({"game": self})
                     trigger_func.func(*trigger_func.f_args, **passed_kwargs)
                 if trigger_func.do_once:
                     self.off(event, trigger_func)

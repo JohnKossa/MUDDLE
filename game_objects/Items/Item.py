@@ -85,4 +85,4 @@ class Coins(Item):
 class DungeonMap(Item):
     def __init__(self):
         super().__init__()
-        self.name: str = "Dungeon Map"
+        self.name: str = "DungeonMap"

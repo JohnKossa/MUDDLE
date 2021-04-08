@@ -40,6 +40,7 @@ class Character(CombatEntity, GameEntity):
             "hit": {},
             "dmg": {}
         }
+        self.status_effects = []
         self.assign_damage = assign_damage
 
     @property
@@ -50,6 +51,9 @@ class Character(CombatEntity, GameEntity):
         for item in equipment:
             to_return["hit"] = sum_resistances(to_return["hit"], item.hit_resistances)
             to_return["dmg"] = sum_resistances(to_return["dmg"], item.damage_resistances)
+        for status in self.status_effects:
+            to_return["hit"] = sum_resistances(to_return["hit"], status.hit_resistances)
+            to_return["dmg"] = sum_resistances(to_return["dmg"], status.dmg_resistances)
         return to_return
 
     @property
@@ -109,17 +113,20 @@ class Character(CombatEntity, GameEntity):
             if self in self.current_room.combat.players:
                 self.current_room.combat.players.remove(self)
         self.discord_user.current_character = None
+        for status in self.status_effects:
+            status.character = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
     def get_commands(self) -> List[Command]:
         if self.dead:
             return []
+        from game_objects.Commands.CombatCommands.DodgeCommand import DodgeCommand
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
         from game_objects.Commands.Command import CharacterCommand, LookCommand
         from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
         from game_objects.Commands.NoncombatCommands.NoncombatCommand import NoncombatCommand
         # TODO add a character sheet command
-        to_return = [CharacterCommand(), PassCommand(), LookCommand()]
+        to_return = [CharacterCommand(), PassCommand(), LookCommand(), DodgeCommand()]
         if self.current_room is not None:
             to_return.extend(self.current_room.get_commands())
         if self.skills is not None:

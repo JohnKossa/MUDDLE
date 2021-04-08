@@ -14,6 +14,7 @@ class UseItem(PartialCombatCommand):
             "UseItem",
             "Use",
         ]
+        self.combat_action_cost: int = 1
 
     @classmethod
     def show_help(cls) -> str:
@@ -62,6 +63,7 @@ class UseItem(PartialCombatCommand):
         matched_item = source_player.inventory.get_belt_item_by_name(item_name)
         if matched_item is None:
             game.discord_connection.send_game_chat_sync(f"{item_name} was not found on belt", [source_player.discord_user])
+        game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {matched_item.name}.")
         matched_item.use_effect(game, source_player, params[1:])
         matched_item.quantity = matched_item.quantity - 1
         if matched_item.quantity == 0:

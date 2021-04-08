@@ -11,7 +11,7 @@
     "resistances": {},
     "damage_resistances": {
         "slash": 1,
-        "stab": 0,
+        "pierce": 0,
         "bludgeon": 2,
         "electricity": 2,
         "ice": 2,
@@ -19,7 +19,7 @@
     },
     "hit_resistances": {
         "slash": 1,
-        "stab": 0,
+        "pierce": 0,
         "bludgeon": 0,
         "electricity": 0,
         "ice": 0,

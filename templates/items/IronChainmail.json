@@ -11,13 +11,13 @@
     "resistances": {},
     "damage_resistances": {
         "slash": 2,
-        "stab": 1,
+        "pierce": 1,
         "bludgeon": 1,
         "electricity": -3
     },
     "hit_resistances": {
         "slash": 2,
-        "stab": 1,
+        "pierce": 1,
         "bludgeon": 0,
         "electricity": -1
     }
