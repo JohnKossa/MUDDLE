@@ -31,9 +31,9 @@ class CharacterInventory:
             if v is not None and k != "belt":
                 to_return["equipment"][k] = v.to_dict()
             elif k == "belt":
-                to_return["belt"] = []
+                to_return["equipment"]["belt"] = []
                 for item in self.equipment["belt"]:
-                    to_return["belt"].append(item.to_dict())
+                    to_return["equipment"]["belt"].append(item.to_dict())
         for item in self.bag:
             to_return["bag"].append(item.to_dict())
         return to_return
@@ -56,11 +56,12 @@ class CharacterInventory:
                 constructor_name = v.pop("constructor")
                 to_return.equipment[k] = constructors.get(constructor_name).from_dict(v)
             elif k == "belt":
-                for item in source_dict["equipment"][k]:
+                for item in source_dict["equipment"]["belt"]:
                     constructor_name = item.pop("constructor")
-                    to_return.equipment[k].append(constructors.get(constructor_name).from_dict(item))
+                    to_return.equipment["belt"].append(constructors.get(constructor_name).from_dict(item))
         for item in source_dict["bag"]:
             constructor_name = item.pop("constructor")
+            to_return.bag = []
             to_return.add_item_to_bag(constructors.get(constructor_name).from_dict(item))
         return to_return
 
@@ -93,15 +94,21 @@ class CharacterInventory:
                         break
                 if consolidation_made:
                     break
-        print("consolidated items")
 
-    def equip_item(self, item: Equipment, slot_name: str) -> (bool, str):
-        # TODO add special case for belt equips
+    def equip_item(self, item: Item, slot_name: str) -> (bool, str):
         from game_objects.Items.Equipment import Equipment
+        from game_objects.Items.Consumable import Consumable
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
             return False, "Invalid Slot Name"
-        if not isinstance(item, Equipment):
+        if slot_name == "belt":
+            if not isinstance(item, Consumable):
+                return False, "Cannot equip that item to belt."
+            else:
+                self.add_item_to_belt(item)
+                self.bag.remove(item)
+                return True, None
+        if not isinstance(item, Equipment) and slot_name in ["offhand", "mainhand", "head", "body"]:
             return False, "Item is not an equipment"
         if item.slot == "hand" and slot_name not in ["offhand", "mainhand"]:
             return False, "Equipment cannot go in that slot"
@@ -109,7 +116,6 @@ class CharacterInventory:
             return False, "Equipment cannot go in that slot"
         if item.slot == "body" and slot_name != "body":
             return False, "Equipment cannot go in that slot"
-        # TODO check if specified item can be equipped to the named slot
         if item.quantity > 1:
             to_equip = item.take_count_from_stack(1)
         else:
@@ -123,12 +129,28 @@ class CharacterInventory:
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
             return False, "Invalid Slot Name"
-        if self.equipment[slot_name] is None:
+        if slot_name != "belt" and self.equipment[slot_name] is None:
             return False, "Slot is already empty."
-        to_add_to_bag = self.equipment[slot_name]
-        self.equipment[slot_name] = None
-        self.add_item_to_bag(to_add_to_bag)
-        return True, None
+        if slot_name == "belt":
+            if len(self.equipment["belt"]) == 0:
+                return False, "Slot is already empty."
+            else:
+                for item in self.equipment["belt"]:
+                    self.add_item_to_bag(item)
+                self.equipment["belt"] = []
+                return True, None
+        else:
+            to_add_to_bag = self.equipment[slot_name]
+            self.equipment[slot_name] = None
+            self.add_item_to_bag(to_add_to_bag)
+            return True, None
+
+    def add_item_to_belt(self, to_add: Item) -> None:
+        for item in self.equipment["belt"]:
+            if item.able_to_join(to_add):
+                item.quantity += to_add.quantity
+                return
+        self.equipment["belt"].append(to_add)
 
     def add_item_to_bag(self, to_add: Item) -> None:
         for item in self.bag:
