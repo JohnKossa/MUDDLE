@@ -10,6 +10,8 @@ from utils.CombatHelpers import sum_resistances, assign_damage
 
 
 class Enemy(CombatEntity, GameEntity):
+    from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
+
     def __init__(self):
         super().__init__()
         from game_objects.Room import Room
@@ -29,7 +31,7 @@ class Enemy(CombatEntity, GameEntity):
             "hit": {},
             "dmg": {}
         }
-        self.possible_actions: List[(int, AttackAction)] = [
+        self.possible_attacks: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0))
         ]
         self.assign_damage = assign_damage
@@ -68,9 +70,11 @@ class Enemy(CombatEntity, GameEntity):
             if self in self.current_room.combat.enemies:
                 self.current_room.combat.enemies.remove(self)
 
-    def get_action(self) -> AttackAction:
-        weighted_choices = random.choices([x[1] for x in self.possible_actions], weights=[x[0] for x in self.possible_actions], k=1)
-        return weighted_choices[0] if weighted_choices else None
+    def get_action(self) -> AttackCommand:
+        from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
+        weighted_choices = random.choices([x[1] for x in self.possible_attacks], weights=[x[0] for x in self.possible_attacks], k=1)
+        attack_action = weighted_choices[0] if weighted_choices else None
+        return AttackCommand(attack_action)
 
 
 class Goblin(Enemy):
@@ -80,7 +84,7 @@ class Goblin(Enemy):
         self.name = "Goblin"
         self.health = 25
         self.max_health = 25
-        self.possible_actions: List[(int, AttackAction)] = [
+        self.possible_attacks: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
             (3, AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=0))
         ]
@@ -107,7 +111,7 @@ class Kobold(Enemy):
         self.name = "Kobold"
         self.health = 15
         self.max_health = 15
-        self.possible_actions: List[(int, AttackAction)] = [
+        self.possible_attacks: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
             (1, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(2, 4), dmg_bonus=0)),
             (1, AttackAction(name="stab", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0))
@@ -137,7 +141,7 @@ class Orc(Enemy):
         self.name = "Orc"
         self.health = 75
         self.max_health = 75
-        self.possible_actions: List[(int, AttackAction)] = [
+        self.possible_attacks: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=1)),
             (3, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(1, 16), dmg_bonus=0))
         ]

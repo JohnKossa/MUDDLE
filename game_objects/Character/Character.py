@@ -25,7 +25,7 @@ class Character(CombatEntity, GameEntity):
             self.name: str = name
         self.current_room: Optional[Room] = None
         self.zone: str = "Labrynth"
-        self.skills: CharacterSkills = CharacterSkills()
+        self.skills: CharacterSkills = CharacterSkills(self)
         self.inventory: CharacterInventory = CharacterInventory()
         self.discord_user: Optional[DiscordUser] = None
         self.max_health: int = 100
@@ -89,7 +89,7 @@ class Character(CombatEntity, GameEntity):
         from game_objects.Character.CharacterSkills import CharacterSkills
         new_char = Character(name=source_dict["name"])
         new_char.zone = source_dict["zone"]
-        new_char.skills = CharacterSkills.from_dict(source_dict["skills"])
+        new_char.skills = CharacterSkills.from_dict(source_dict["skills"], new_char)
         new_char.inventory = CharacterInventory.from_dict(source_dict["inventory"])
         new_char.discord_user = UserUtils.get_user_by_username(source_dict["discord_user"], game.discord_users)
         new_char.health = source_dict["health"]

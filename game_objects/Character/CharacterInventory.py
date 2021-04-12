@@ -76,6 +76,25 @@ class CharacterInventory:
         matched_item = next(filter(lambda x: x.name.lower() == item_name.lower(), self.equipment.values()), None)
         return matched_item
 
+    def consolidate_items(self) -> None:
+        from game_objects.Items.Item import Item
+        consolidation_made: bool = True
+        while consolidation_made:
+            consolidation_made = False
+            for i in range(len(self.bag)):
+                first_item: Item = self.bag[i]
+                remaining_items: List[Item] = self.bag[i+1:]
+                for ii in range(len(remaining_items)):
+                    second_item: Item = remaining_items[ii]
+                    if first_item.able_to_join(second_item):
+                        first_item.quantity = first_item.quantity + second_item.quantity
+                        self.bag.remove(second_item)
+                        consolidation_made = True
+                        break
+                if consolidation_made:
+                    break
+        print("consolidated items")
+
     def equip_item(self, item: Equipment, slot_name: str) -> (bool, str):
         # TODO add special case for belt equips
         from game_objects.Items.Equipment import Equipment

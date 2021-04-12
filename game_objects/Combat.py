@@ -67,18 +67,18 @@ class Combat:
         return False
 
     def determine_enemy_actions(self):
-        from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
         for enemy in self.enemies:
             action_count = self.sum_actions_for_entity(enemy)
             failsafe = 100
             while action_count < enemy.actions and failsafe > 0:
-                chosen_action = enemy.get_action()
-                if action_count + chosen_action.action_cost <= enemy.actions:
-                    cmd = AttackCommand(chosen_action)
+                chosen_combat_command = enemy.get_action()
+                if action_count + chosen_combat_command.combat_action_cost <= enemy.actions:
                     target_player = random.choice(self.players).combat_name  # TODO randomly targeting players, switch for intelligent decision later
-                    self.orders[enemy].append((cmd.do_combat_action, [target_player], cmd.combat_action_cost))
+                    self.orders[enemy].append((chosen_combat_command.do_combat_action, [target_player], chosen_combat_command.combat_action_cost))
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_entity(enemy)
+            if failsafe <= 0:
+                print("Failsafe triggered when attempting to determine actions.")
 
     def cleanup_dead_enemies(self, game: Game):
         for enemy in self.enemies:

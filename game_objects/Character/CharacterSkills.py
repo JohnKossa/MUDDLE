@@ -7,9 +7,11 @@ import utils.TriggerFunc
 
 class CharacterSkills:
     from game_objects.Commands.Command import Command
+    from game_objects.Character.Character import Character
 
-    def __init__(self):
-        cartography = CartographySkill()
+    def __init__(self, source_character: Character):
+        self.current_character = source_character
+        cartography = CartographySkill(self.current_character)
         cartography.level = 1
         self.skill_entries = {"Cartography": cartography}
 
@@ -27,15 +29,16 @@ class CharacterSkills:
         return {}
 
     @classmethod
-    def from_dict(cls, source_dict):
-        return CharacterSkills()
+    def from_dict(cls, source_dict, character):
+        return CharacterSkills(character)
 
     def get_commands(self) -> List[Command]:
         return []
 
 
 class CharacterSkill(object):
-    def __init__(self):
+    def __init__(self, source_character):
+        self.current_character = source_character
         self.name: str = ""
         self.level: int = 0
         self.proficiency: int = 0
@@ -54,9 +57,10 @@ class CharacterSkill(object):
 
 class CartographySkill(CharacterSkill):
     from game_objects.Room import Room
+    from game_objects.Character.Character import Character
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, source_character):
+        super().__init__(source_character)
         self.name = "Cartography"
 
     def setup_triggers(self, game: Game) -> None:
@@ -68,7 +72,9 @@ class CartographySkill(CharacterSkill):
     def clear_visited_rooms(self, **kwargs) -> None:
         self.data["visited_rooms"] = []
 
-    def add_to_map(self, room: Optional[Room] = None, **kwargs) -> None:
+    def add_to_map(self, source_player: Character, room: Optional[Room] = None, **kwargs) -> None:
+        if source_player != self.current_character:
+            return
         print("room visit added to map")
         if "visited_rooms" in self.data.keys():
             self.data["visited_rooms"].append(room)
