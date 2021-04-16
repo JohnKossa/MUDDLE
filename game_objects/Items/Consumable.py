@@ -20,7 +20,7 @@ class HealthPotion(Consumable):
         self.name = "HealthPotion"
         self.max_stack_size = 5
 
-    def to_dict(self, full_depth=True):
+    def to_dict(self, full_depth=True) -> dict:
         to_return = super().to_dict()
         to_return.update({
             "constructor": self.__class__.__name__
@@ -55,7 +55,7 @@ class StaminaPotion(Consumable):
         self.name = "StaminaPotion"
         self.max_stack_size = 5
 
-    def to_dict(self, full_depth=True):
+    def to_dict(self, full_depth=True) -> dict:
         to_return = super().to_dict()
         to_return.update({
             "constructor": self.__class__.__name__
@@ -74,4 +74,4 @@ class StaminaPotion(Consumable):
         previous_stamina = source_player.stamina
         source_player.stamina = min(raw_roll + source_player.stamina, source_player.max_stamina)
         restored_amt = source_player.stamina - previous_stamina
-        game.discord_connection.send_game_char_sync(f"Restored {restored_amt} stamina.", [source_player.discord_user])
+        game.discord_connection.send_game_chat_sync(f"Restored {restored_amt} stamina.", [source_player.discord_user])

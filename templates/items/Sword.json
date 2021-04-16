@@ -2,7 +2,7 @@
     "constructor": "Sword",
     "quantity": 1,
     "max_stack_size": 1,
-    "weight": 0,
+    "weight": 1588,
     "name": "Sword",
     "slot": "hand",
     "max_hitpoints": 100,

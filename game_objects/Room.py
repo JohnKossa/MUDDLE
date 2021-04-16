@@ -52,9 +52,10 @@ class Room:
             return f"You are in a room. It's super interesting. {self.name}"
         return self.template
 
-    def describe_enemies(self, game: Game):
+    def describe_entities(self, game: Game):
         enemies = self.get_enemies(game)
-        if len(enemies) == 0:
+        characters = self.get_characters(game)
+        if len(enemies) == 0 and len(characters) <= 1:
             return "The room appears to be vacant."
         enemy_counts = {}
         for enemy in enemies:
@@ -62,10 +63,12 @@ class Room:
                 enemy_counts[enemy.name] = 1
             else:
                 enemy_counts[enemy.name] = enemy_counts[enemy.name] + 1
-        count_strings = []
+        enemy_count_strings = []
         for name, count in enemy_counts.items():
-            count_strings.append(f"{count} {pluralize(name, count)}")
-        formatted_list = enumerate_objects(count_strings)
+            enemy_count_strings.append(f"{count} {pluralize(name, count)}")
+        for character in characters:
+            enemy_count_strings.append(f"{character.name}")
+        formatted_list = enumerate_objects(enemy_count_strings)
         return f"In the room, you see {formatted_list}"
 
     def describe_fixtures(self) -> Optional[str]:
@@ -90,11 +93,11 @@ class Room:
 
     def describe(self, game: Game):
         to_return = self.describe_room()
-        enemies = self.describe_enemies(game)
+        entities = self.describe_entities(game)
         fixtures = self.describe_fixtures()
         items = self.describe_items()
         exits = self.describe_exits()
-        to_return = to_return + "\n" + enemies
+        to_return = to_return + "\n" + entities
         if fixtures is not None:
             to_return = to_return + "\n" + fixtures
         if items is not None:

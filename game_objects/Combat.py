@@ -85,14 +85,14 @@ class Combat:
             if enemy.health <= 0:
                 enemy.dead = True
                 game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
-                if enemy.loot_table:
-                    dropped_items = enemy.loot_table.roll_drops()
+                if enemy.drops:
+                    dropped_items = enemy.drops
                     if len(dropped_items):
                         game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
                         self.room.items = self.room.items + dropped_items
-                game.trigger("enemy_defeated", source_enemy=enemy)
+                game.trigger("enemy_defeated", source_enemy=enemy, room=self.room)
 
-    def cleanup_dead_players(self, game: Game):
+    def cleanup_dead_players(self, game: Game) -> None:
         for player in self.players:
             if player.health <= 0:
                 player.dead = True
@@ -207,7 +207,7 @@ class Combat:
             return 0
         return sum(x[2] for x in order_list)
 
-    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int):
+    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int) -> None:
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
         possible_targets: List[str] = [x.combat_name for x in self.players + self.enemies]

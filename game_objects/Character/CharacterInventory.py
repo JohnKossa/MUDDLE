@@ -22,7 +22,7 @@ class CharacterInventory:
         }
         self.bag: List[Item] = [HealthPotion()]
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         to_return = {
             "equipment": {},
             "bag": []
@@ -59,9 +59,9 @@ class CharacterInventory:
                 for item in source_dict["equipment"]["belt"]:
                     constructor_name = item.pop("constructor")
                     to_return.equipment["belt"].append(constructors.get(constructor_name).from_dict(item))
+        to_return.bag = []
         for item in source_dict["bag"]:
             constructor_name = item.pop("constructor")
-            to_return.bag = []
             to_return.add_item_to_bag(constructors.get(constructor_name).from_dict(item))
         return to_return
 
@@ -172,7 +172,7 @@ class CharacterInventory:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):
             to_return.append(Unequip())
-        if any(isinstance(x, Equipment) for x in self.bag):
+        if any(isinstance(x, Equipment) for x in self.bag) or any(isinstance(x, Consumable) for x in self.bag):
             to_return.append(Equip())
         if any(isinstance(x, Consumable) for x in self.bag + self.equipment["belt"]):
             to_return.append(UseItem())

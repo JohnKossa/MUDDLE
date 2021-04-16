@@ -2,7 +2,7 @@
     "constructor": "Torch",
     "quantity": 1,
     "max_stack_size": 1,
-    "weight": 0,
+    "weight": 454,
     "name": "Torch",
     "slot": "hand",
     "max_hitpoints": 100,

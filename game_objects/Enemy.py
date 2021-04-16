@@ -38,7 +38,7 @@ class Enemy(CombatEntity, GameEntity):
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
-            (Coins(count=random.randint(0, 10)), .30),
+            (Coins(count=random.randint(1, 10)), .30),
             (Torch(),                            .10),
             (Dagger(),                           .10),
             (Axe(),                              .08),
@@ -46,6 +46,7 @@ class Enemy(CombatEntity, GameEntity):
             (Mace(),                             .03),
             (Spear(),                            .03)
         ])
+        self.drops = self.loot_table.roll_drops()
 
     @property
     def resistances(self) -> dict:  # TODO create a type for this
@@ -92,7 +93,7 @@ class Goblin(Enemy):
         from game_objects.Items.Item import Coins
         from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         self.loot_table = LootTable([
-            (Coins(count=random.randint(0, 10)), .30),
+            (Coins(count=random.randint(1, 10)), .30),
             (HealthPotion(),                     .20),
             (StaminaPotion(),                    .10),
             (Torch(),                            .10),
@@ -102,6 +103,7 @@ class Goblin(Enemy):
             (Mace(),                             .03),
             (Spear(),                            .03)
         ])
+        self.drops = self.loot_table.roll_drops()
 
 
 class Kobold(Enemy):
@@ -120,8 +122,8 @@ class Kobold(Enemy):
         from game_objects.Items.Item import Coins
         from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         self.loot_table = LootTable([
-            (Coins(count=random.randint(0, 10)), .50),
-            (Dagger(), .50),
+            (Coins(count=random.randint(1, 10)), .50),
+            (Dagger(),                           .50),
             (HealthPotion(),                     .20),
             (StaminaPotion(),                    .10),
             (Torch(),                            .10),
@@ -130,6 +132,7 @@ class Kobold(Enemy):
             (Mace(),                             .03),
             (Spear(),                            .03)
         ])
+        self.drops = self.loot_table.roll_drops()
 
 
 class Orc(Enemy):
@@ -160,7 +163,7 @@ class Orc(Enemy):
         from game_objects.Items.Consumable import HealthPotion, StaminaPotion
         from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
-            (Coins(count=random.randint(0, 100)), .50),
+            (Coins(count=random.randint(1, 100)), .50),
             (HealthPotion(),                      .50),
             (PlateArmor(),                        .30),
             (StaminaPotion(),                     .20),
@@ -169,3 +172,4 @@ class Orc(Enemy):
             (Mace(),                              .10),
             (Spear(),                             .10)
         ])
+        self.drops = self.loot_table.roll_drops()

@@ -30,7 +30,7 @@ class TreasureChest(Fixture):
         super().__init__()
         self.name = "Chest"
         self.items = LootTable(lootable_items or [
-            (Coins(count=random.randint(0, 50)), .75),
+            (Coins(count=random.randint(0, 50)), .85),
             (HealthPotion(),                     .60),
             (DungeonMap(),                       .50),
             (StaminaPotion(),                    .30),
@@ -47,7 +47,10 @@ class TreasureChest(Fixture):
         ]).roll_drops()
 
     def describe(self) -> str:
-        return "An old wooden treasure chest sits on the floor."
+        if len(self.items) > 0:
+            return "An old wooden treasure chest sits on the floor."
+        else:
+            return "An empty wooden treasure chest sits on the floor."
 
     def get_commands(self) -> List[Command]:
         return super().get_commands() + [LootCommand()]

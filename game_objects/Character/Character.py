@@ -103,7 +103,6 @@ class Character(CombatEntity, GameEntity):
         return new_char
 
     def initialize(self, game: Game):
-        print("player initialized")
         self.skills.setup_triggers(game)
 
     def cleanup(self, game: Game):

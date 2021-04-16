@@ -8,6 +8,7 @@ from typing import List, Optional
 
 from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
+from game_objects.BossEnemy import StrawGolem, StoneGolem
 from game_objects.Maze.Maze import Maze
 from game_objects.RoomFixture import TreasureChest
 from utils.Scheduler import Scheduler, ScheduledTask
@@ -70,9 +71,9 @@ class Game:
     def setup_hooks(self) -> None:
         import datetime
         self.on("enter_room", TriggerFunc(self.start_combat))
-        self.on("enter_room", TriggerFunc(self.check_final_room))
         self.on("player_defeated", TriggerFunc(self.cleanup_dead_player))
         self.on("enemy_defeated", TriggerFunc(self.cleanup_dead_enemy))
+        self.on("enemy_defeated", TriggerFunc(self.boss_defeated))
         self.on("maze_reset", TriggerFunc(self.invalidate_player_maps))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
@@ -99,6 +100,11 @@ class Game:
             new_enemy.current_room = room
             self.enemies.append(new_enemy)
             self.enemies_dict[new_enemy.guid] = new_enemy
+        boss_enemy_types = [StrawGolem, StoneGolem]
+        boss = random.choice(boss_enemy_types)()
+        boss.current_room = self.maze.exit_room
+        self.enemies.append(boss)
+        self.enemies_dict[boss.guid] = boss
 
     def seed_loot_stashes(self) -> None:
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
@@ -121,11 +127,28 @@ class Game:
             self.init_maze()
             self.return_players_to_start()
 
+    def boss_defeated(self, source_enemy: Optional[Enemy] = None, room: Optional[Room] = None, **kwargs):
+        import datetime
+        if room == self.maze.exit_room:
+            enemies = room.get_enemies(self)
+            enemies = [*filter(lambda x: not x.dead, enemies)]
+            if len(enemies) == 0:
+                self.discord_connection.send_game_chat_sync("You're Winner!", [x.discord_user for x in room.get_characters(self)])
+                self.discord_connection.send_game_chat_sync("With the boss room cleared, the walls begin to dissolve to an inky black smoke. It may not last longer than 10 more minutes.")
+                self.scheduler.schedule_task(
+                    ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=10), self.restart_maze))
+
     def cleanup_dead_player(self, source_player: Optional[Character] = None, **kwargs):
         source_player.cleanup(self)
 
     def cleanup_dead_enemy(self, source_enemy: Optional[Enemy] = None, **kwargs):
         source_enemy.cleanup(self)
+
+    def restart_maze(self):
+        self.init_maze()
+        self.return_players_to_start()
+        self.discord_connection.send_game_chat_sync(
+            "The labyrinth vanishes into a puff of smoke and re-materializes. You suddenly find yourself in the entrance chamber to a brand new maze.")
 
     def init_maze(self, width: int = 11, height: int = 11, difficulty: int = 6) -> None:
         if self.maze is not None:
@@ -136,6 +159,8 @@ class Game:
         self.seed_enemies()
         self.seed_loot_stashes()
         self.return_players_to_start()
+        if self.discord_connection is not None:
+            self.discord_connection.send_game_chat_sync("Rebuilding maze")
         self.trigger("maze_reset", game=self)
 
     def return_players_to_start(self) -> None:

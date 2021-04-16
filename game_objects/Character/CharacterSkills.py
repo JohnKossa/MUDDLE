@@ -25,7 +25,7 @@ class CharacterSkills:
     def add_proficiency(self, skill_name, amount):
         pass
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {}
 
     @classmethod
@@ -75,7 +75,6 @@ class CartographySkill(CharacterSkill):
     def add_to_map(self, source_player: Character, room: Optional[Room] = None, **kwargs) -> None:
         if source_player != self.current_character:
             return
-        print("room visit added to map")
         if "visited_rooms" in self.data.keys():
             self.data["visited_rooms"].append(room)
         else:
@@ -84,8 +83,8 @@ class CartographySkill(CharacterSkill):
 
 
 class CombatSense(CharacterSkill):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, source_character):
+        super().__init__(source_character)
         self.name = "CombatSense"
 
     def get_commands(self):
@@ -94,8 +93,8 @@ class CombatSense(CharacterSkill):
 
 
 class DungeonLore(CharacterSkill):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, source_character):
+        super().__init__(source_character)
         self.name = "DungeonLore"
 
     def get_commands(self):

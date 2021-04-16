@@ -43,10 +43,10 @@ class AttackCommand(CombatOnlyCommand):
         target = None
         if len(params):
             for enemy in enemies:
-                if enemy.combat_name == params[0]:
+                if enemy.combat_name.lower() == params[0].lower():
                     target = enemy
             for player in players:
-                if player.combat_name == params[0]:
+                if player.combat_name.lower() == params[0].lower():
                     target = player
         elif isinstance(source_player, Character):
             if len(enemies) == 0:

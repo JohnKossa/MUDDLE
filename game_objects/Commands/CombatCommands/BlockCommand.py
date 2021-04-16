@@ -40,7 +40,13 @@ class BlockCommand(CombatOnlyCommand):
         target.stamina = max(0, target.stamina - stamina_damage)
         remaining_damage = damage - stamina_damage
         target.health = max(0, target.health - remaining_damage)
-        to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage."
+        if isinstance(target, Character):
+            to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage. ({target.stamina} pp left)"
+        else:
+            to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage."
         if remaining_damage > 0:
-            to_return = to_return + f"{target.name} takes {remaining_damage} damage."
+            if isinstance(target, Character):
+                to_return = to_return + f"{target.name} takes {remaining_damage} damage. ({target.health} hp left)"
+            else:
+                to_return = to_return + f"{target.name} takes {remaining_damage} damage."
         return to_return
