@@ -71,7 +71,7 @@ class Enemy(CombatEntity, GameEntity):
             if self in self.current_room.combat.enemies:
                 self.current_room.combat.enemies.remove(self)
 
-    def get_action(self) -> AttackCommand:
+    def get_action(self, **kwargs) -> AttackCommand:
         from game_objects.Commands.CombatCommands.AttackCommand import AttackCommand
         weighted_choices = random.choices([x[1] for x in self.possible_attacks], weights=[x[0] for x in self.possible_attacks], k=1)
         attack_action = weighted_choices[0] if weighted_choices else None

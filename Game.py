@@ -114,11 +114,14 @@ class Game:
         for room in chosen_rooms:
             room.fixtures.append(TreasureChest())
 
-    def start_combat(self, room: Optional[Room] = None, **kwargs) -> None:
+    def start_combat(self, source_player: Optional[Character], room: Optional[Room] = None, **kwargs) -> None:
         if room is None:
             return
         if len(room.get_enemies(self)) > 0 and len(room.get_characters(self)) > 0:
             room.start_combat(self)
+            return
+        if room.combat is not None and not room.combat.processing_round:
+            room.combat.add_player(self, source_player)
 
     def check_final_room(self, room: Optional[Room] = None, source_player: Optional[Character] = None, **kwargs) -> None:
         if room == self.maze.exit_room:

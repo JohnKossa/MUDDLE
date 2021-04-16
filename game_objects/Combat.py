@@ -21,13 +21,16 @@ class Combat:
         self.initiatives: dict = {}
         self.round_schedule_object: Optional[ScheduledTask] = None
         self.room: Room = room
+        self.round_counter: int = 0
+        self.combat_in_progress: bool = False
+        self.processing_round: bool = False
 
     def start(self, game: Game) -> None:
         if len(self.players) == 0:
-            game.discord_connection.send_game_chat_sync("Could not start combat. There are no players in the room.")
+            print("Could not start combat. There are no players in the room.")
             return
         if len(self.enemies) == 0:
-            game.discord_connection.send_game_chat_sync("Could not start combat. There are no enemies in the room.")
+            print("Could not start combat. There are no enemies in the room.")
             return
 
         for player in self.players:
@@ -36,74 +39,13 @@ class Combat:
             self.orders[enemy] = []
         self.disambiguate_enemies()
         game.discord_connection.send_game_chat_sync(f"Started combat in room {self.room.name}.")
+        self.combat_in_progress = True
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=10),
                                                    self.process_round, game)
         game.scheduler.schedule_task(self.round_schedule_object)
 
-    def disambiguate_enemies(self) -> None:
-        all_enemies_in_room: List[Enemy] = self.enemies.copy()
-        all_names: Dict[str, List[Enemy]] = {}
-        while len(all_enemies_in_room) > 0:
-            current_enemy = all_enemies_in_room[0]
-            all_names[current_enemy.name] = list(filter(lambda x: x.name == current_enemy.name, all_enemies_in_room))
-            for enemy in all_names[current_enemy.name]:
-                all_enemies_in_room.remove(enemy)
-        for name, lst in all_names.items():
-            if len(lst) == 1:
-                lst[0].disambiguation_num = 0
-                continue
-            for i in range(len(lst)):
-                lst[i].disambiguation_num = i + 1
-
-    def fill_unused_player_orders(self, player: Character) -> bool:
-        from game_objects.Commands.CombatCommands.PassCommand import PassCommand
-        pass_cmd = PassCommand()
-        action_count = self.sum_actions_for_entity(player)
-        if action_count < player.actions:
-            actions_to_fill = player.actions - action_count
-            for count in range(actions_to_fill):
-                self.orders[player].append((pass_cmd.do_combat_action, [], pass_cmd.combat_action_cost))
-            return True
-        return False
-
-    def determine_enemy_actions(self):
-        for enemy in self.enemies:
-            action_count = self.sum_actions_for_entity(enemy)
-            failsafe = 100
-            while action_count < enemy.actions and failsafe > 0:
-                chosen_combat_command = enemy.get_action()
-                if action_count + chosen_combat_command.combat_action_cost <= enemy.actions:
-                    target_player = random.choice(self.players).combat_name  # TODO randomly targeting players, switch for intelligent decision later
-                    self.orders[enemy].append((chosen_combat_command.do_combat_action, [target_player], chosen_combat_command.combat_action_cost))
-                failsafe = failsafe - 1
-                action_count = self.sum_actions_for_entity(enemy)
-            if failsafe <= 0:
-                print("Failsafe triggered when attempting to determine actions.")
-
-    def cleanup_dead_enemies(self, game: Game):
-        for enemy in self.enemies:
-            if enemy.health <= 0:
-                enemy.dead = True
-                game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
-                if enemy.drops:
-                    dropped_items = enemy.drops
-                    if len(dropped_items):
-                        game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
-                        self.room.items = self.room.items + dropped_items
-                game.trigger("enemy_defeated", source_enemy=enemy, room=self.room)
-
-    def cleanup_dead_players(self, game: Game) -> None:
-        for player in self.players:
-            if player.health <= 0:
-                player.dead = True
-                game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
-                dropped_items = player.inventory.generate_loot_table().roll_drops()
-                if len(dropped_items):
-                    game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
-                    self.room.items = self.room.items + dropped_items
-                game.trigger("player_defeated", source_player=player)
-
     def process_round(self, game: Game) -> None:
+        self.processing_round = True
         from game_objects.Character.Character import Character
         # all players dead or left room, end combat
         if len(self.players) == 0:
@@ -180,20 +122,89 @@ class Combat:
 
         # clear orders, reset timer
         game.discord_connection.send_game_chat_sync("Round complete.")
+        self.round_counter = self.round_counter + 1
         self.orders = {}
         for player in self.players:
             self.orders[player] = []
         for enemy in self.enemies:
             self.orders[enemy] = []
+        self.processing_round = False
         self.round_schedule_object = ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=10),
                                                    self.process_round, game)
         game.scheduler.schedule_task(self.round_schedule_object)
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Accepting orders for next round in {remaining_time[0]} minutes and {remaining_time[1]} seconds")
 
+    def disambiguate_enemies(self) -> None:
+        all_enemies_in_room: List[Enemy] = self.enemies.copy()
+        all_names: Dict[str, List[Enemy]] = {}
+        while len(all_enemies_in_room) > 0:
+            current_enemy = all_enemies_in_room[0]
+            all_names[current_enemy.name] = list(filter(lambda x: x.name == current_enemy.name, all_enemies_in_room))
+            for enemy in all_names[current_enemy.name]:
+                all_enemies_in_room.remove(enemy)
+        for name, lst in all_names.items():
+            if len(lst) == 1:
+                lst[0].disambiguation_num = 0
+                continue
+            for i in range(len(lst)):
+                lst[i].disambiguation_num = i + 1
+
+    def fill_unused_player_orders(self, player: Character) -> bool:
+        from game_objects.Commands.CombatCommands.PassCommand import PassCommand
+        pass_cmd = PassCommand()
+        action_count = self.sum_actions_for_entity(player)
+        if action_count < player.actions:
+            actions_to_fill = player.actions - action_count
+            for count in range(actions_to_fill):
+                self.orders[player].append((pass_cmd.do_combat_action, [], pass_cmd.combat_action_cost))
+            return True
+        return False
+
+    def determine_enemy_actions(self) -> None:
+        for enemy in self.enemies:
+            action_count = self.sum_actions_for_entity(enemy)
+            failsafe = 100
+            while action_count < enemy.actions and failsafe > 0:
+                chosen_combat_command = enemy.get_action(round_num=self.round_counter)
+                if action_count + chosen_combat_command.combat_action_cost <= enemy.actions:
+                    target_player = random.choice(self.players).combat_name  # TODO randomly targeting players, switch for intelligent decision later
+                    self.orders[enemy].append((chosen_combat_command.do_combat_action, [target_player], chosen_combat_command.combat_action_cost))
+                failsafe = failsafe - 1
+                action_count = self.sum_actions_for_entity(enemy)
+            if failsafe <= 0:
+                print("Failsafe triggered when attempting to determine actions.")
+
+    def cleanup_dead_enemies(self, game: Game) -> None:
+        for enemy in self.enemies:
+            if enemy.health <= 0:
+                enemy.dead = True
+                game.discord_connection.send_game_chat_sync(f"{enemy.combat_name} was slain")
+                if enemy.drops:
+                    dropped_items = enemy.drops
+                    if len(dropped_items):
+                        game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                        self.room.items = self.room.items + dropped_items
+                game.trigger("enemy_defeated", source_enemy=enemy, room=self.room)
+
+    def cleanup_dead_players(self, game: Game) -> None:
+        for player in self.players:
+            if player.health <= 0:
+                player.dead = True
+                game.discord_connection.send_game_chat_sync(f"{player.combat_name} has fallen in combat")
+                dropped_items = player.inventory.generate_loot_table().roll_drops()
+                if len(dropped_items):
+                    game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
+                    self.room.items = self.room.items + dropped_items
+                game.trigger("player_defeated", source_player=player)
+
     def add_player(self, game: Game, player: Character) -> None:
-        self.players.append(player)
-        self.orders[player] = []
+        if player not in self.initiatives:
+            self.initiatives[player] = player.initiative
+        if player not in self.players:
+            self.players.append(player)
+        if player not in self.orders:
+            self.orders[player] = []
         remaining_time = time_until_event(self.round_schedule_object)
         game.discord_connection.send_game_chat_sync(f"Combat will process in {remaining_time[0]} minutes, and {remaining_time[1]} seconds")
 

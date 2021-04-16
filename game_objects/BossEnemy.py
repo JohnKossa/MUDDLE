@@ -76,8 +76,23 @@ class StrawGolem(BossEnemy):
             }
         }
         self.possible_attacks: List[(int, AttackAction)] = [
-            (2, AttackAction(name="punch", hit_bonus=1, dmg_type="bludgeon", dmg_roll=(2, 10), dmg_bonus=0, action_cost=1)),
-            (1, AttackAction(name="hay hook", hit_bonus=2, dmg_type="pierce", dmg_roll=(3, 6), dmg_bonus=1, action_cost=1)),
-            (1, AttackAction(name="smash", hit_bonus=2, dmg_type="bludgeon", dmg_roll=(3, 20), dmg_bonus=0, action_cost=2))
+            (2, AttackAction(name="punch",
+                             hit_bonus=1,
+                             dmg_type="bludgeon",
+                             dmg_roll=(2, 10),
+                             dmg_bonus=0,
+                             action_cost=1)),
+            (1, AttackAction(name="hay hook",
+                             hit_bonus=2,
+                             dmg_type="pierce",
+                             dmg_roll=(3, 6),
+                             dmg_bonus=1,
+                             action_cost=1)),
+            (1, AttackAction(name="smash",
+                             hit_bonus=2,
+                             dmg_type="bludgeon",
+                             dmg_roll=(3, 20),
+                             dmg_bonus=0,
+                             action_cost=2))
         ]
         self.drops: List[Item] = [Coins(count=random.randint(100, 300))] + random.choices([Sword(), Dagger(), Spear(), Mace(), Axe(), Torch()], k=4)
