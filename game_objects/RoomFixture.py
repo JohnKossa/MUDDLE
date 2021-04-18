@@ -32,7 +32,7 @@ class TreasureChest(Fixture):
         self.items = LootTable(lootable_items or [
             (Coins(count=random.randint(0, 50)), .85),
             (HealthPotion(),                     .60),
-            (DungeonMap(),                       .50),
+            (DungeonMap(),                       .05),
             (StaminaPotion(),                    .30),
             (Shield(),                           .15),
             (Torch(),                            .05),

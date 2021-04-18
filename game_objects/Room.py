@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 import Game
 from game_objects.Commands.Command import Command
+from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
 from game_objects.Enemy import Enemy
 from utils.TextHelpers import enumerate_objects, pluralize
@@ -16,10 +17,41 @@ class Room:
         from game_objects.RoomFixture import Fixture
         from game_objects.Items.Item import Item
         self.name: str = name
+        self.aliases: List[str] = []
         self.template: Any = None
         self.fixtures: List[Fixture] = []
         self.items: List[Item] = []
         self.combat: Optional[Combat] = None
+        self.neighbors: List[Room] = []
+
+    def get_door(self, name: str) -> Optional[Room]:
+        # dig through all neighbors by name then alias, returning the correct one
+        for neighbor in self.neighbors:
+            if neighbor.name.lower() == name.lower():
+                return neighbor
+        for neighbor in self.neighbors:
+            for alias in neighbor.aliases:
+                if alias.lower() == name.lower():
+                    return neighbor
+        for neighbor in self.neighbors:
+            no_space_string = neighbor.name.replace(" ", "")
+            if no_space_string.lower() == name.lower():
+                return neighbor
+        for neighbor in self.neighbors:
+            for alias in neighbor.aliases:
+                no_space_string = alias.replace(" ", "")
+                if no_space_string.lower() == name.lower():
+                    return neighbor
+        for neighbor in self.neighbors:
+            underscore_string = neighbor.name.replace(" ", "_")
+            if underscore_string.lower() == name.lower():
+                return neighbor
+        for neighbor in self.neighbors:
+            for alias in neighbor.aliases:
+                underscore_string = alias.replace(" ", "_")
+                if underscore_string.lower() == name.lower():
+                    return neighbor
+        return None
 
     def get_characters(self, game: Game) -> List[Character]:
         return list(filter(lambda x: x.current_room == self, game.players))
@@ -28,7 +60,7 @@ class Room:
         return list(filter(lambda x: x.current_room == self, game.enemies))
 
     def get_commands(self) -> List[Command]:
-        to_return = []
+        to_return = [Exit()]
         if len(self.items) > 0:
             to_return.append(Take())
         for fixture in self.fixtures:
@@ -89,7 +121,15 @@ class Room:
             return f"A large assortment of items is strewn about the floor including {formatted_list}"
 
     def describe_exits(self) -> str:
-        return ""
+        exit_names = [*map(lambda x: x.name, self.neighbors)]
+        exit_count = len(exit_names)
+        if exit_count == 1:
+            return f"There is one exit to the {exit_names[0]}"
+        elif exit_count == 2:
+            return f"Exits are to the {exit_names[0]} and {exit_names[1]}"
+        elif exit_count > 2:
+            formatted_list = enumerate_objects(exit_names)
+            return f"Exits include {formatted_list}"
 
     def describe(self, game: Game):
         to_return = self.describe_room()

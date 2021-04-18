@@ -109,7 +109,9 @@ class Maze:
 
         self.rooms = potential_rooms
         self.entry_room = RoomUtils.get_room_by_coords(entry_coords[0], entry_coords[1], self.rooms)
+        self.entry_room.starting_room = True
         self.exit_room = RoomUtils.get_room_by_coords(exit_coords[0], exit_coords[1], self.rooms)
+        self.exit_room.exit_room = True
 
     def cleanup(self):
         # Remove all door connections so the garbage collector will remove them

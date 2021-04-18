@@ -10,6 +10,7 @@ from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
 from game_objects.BossEnemy import StrawGolem, StoneGolem
 from game_objects.Maze.Maze import Maze
+from game_objects.Town.Town import Town
 from game_objects.RoomFixture import TreasureChest
 from utils.Scheduler import Scheduler, ScheduledTask
 from utils.TriggerFunc import TriggerFunc
@@ -22,6 +23,7 @@ class Game:
         from discord_objects.DiscordUser import DiscordUser
         from DiscordConnection import CustomClient
         self.maze: Maze = None
+        self.town: Town = Town()
         self.players_dict: dict = {}
         self.enemies_dict: dict = {}
         self.discord_users: List[DiscordUser] = []

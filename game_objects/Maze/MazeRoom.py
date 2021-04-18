@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from game_objects.Commands.Command import Command
 from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
-from game_objects.Maze import Maze
+from game_objects.Commands.NoncombatCommands.ExitMazeCommand import ExitMaze
 from game_objects.Room import Room
 from utils.TextHelpers import enumerate_objects
 
@@ -21,6 +21,8 @@ class MazeRoom(Room):
         self.south_door: Optional[MazeRoom] = None
         self.west_door: Optional[MazeRoom] = None
         self.description_template = None
+        self.starting_room = False
+        self.exit_room = False
 
     @property
     def connected_neighbors(self) -> List[Room]:
@@ -72,12 +74,6 @@ class MazeRoom(Room):
         elif direction == "west":
             self.west_door = val
 
-    def is_starting_room(self, maze: Maze) -> bool:
-        return self == maze.entry_room
-
-    def is_exit_room(self, maze: Maze) -> bool:
-        return self == maze.exit_room
-
     def describe_exits(self) -> str:
         exits = {
             "North": self.north_door,
@@ -96,7 +92,9 @@ class MazeRoom(Room):
             return f"Exits include {formatted_list}"
 
     def get_commands(self) -> List[Command]:
-        to_return = super().get_commands() + [Exit()]
+        to_return = super().get_commands()
+        if self.starting_room or self.exit_room:
+            to_return = to_return + [ExitMaze()]
         return to_return
 
     def __str__(self):
