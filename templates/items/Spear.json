@@ -2,7 +2,7 @@
     "constructor": "Spear",
     "quantity": 1,
     "max_stack_size": 1,
-    "weight": 2722,
+    "weight": 0,
     "name": "Spear",
     "slot": "hand",
     "max_hitpoints": 100,

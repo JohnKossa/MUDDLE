@@ -2,7 +2,7 @@
     "constructor": "Mace",
     "quantity": 1,
     "max_stack_size": 1,
-    "weight": 1814,
+    "weight": 0,
     "name": "Mace",
     "slot": "hand",
     "max_hitpoints": 100,

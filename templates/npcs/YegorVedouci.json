@@ -1,5 +1,5 @@
 {
-  "name": "Yegor Vedouci",
+  "name": "Person",
   "dialog_tree": {
     "init": [
       {

@@ -9,6 +9,7 @@ from typing import List, Optional
 from game_objects.Character.Character import Character
 from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
 from game_objects.BossEnemy import StrawGolem, StoneGolem
+from game_objects.NPC import NPC
 from game_objects.Maze.Maze import Maze
 from game_objects.Town.Town import Town
 from game_objects.RoomFixture import TreasureChest
@@ -24,8 +25,10 @@ class Game:
         from DiscordConnection import CustomClient
         self.maze: Maze = None
         self.town: Town = Town()
+        self.seed_npcs()
         self.players_dict: dict = {}
         self.enemies_dict: dict = {}
+        self.npcs_dict: dict = {}
         self.discord_users: List[DiscordUser] = []
         self.hooks: dict = {}
         self.aioloop = asyncio.get_event_loop()
@@ -39,6 +42,10 @@ class Game:
     @property
     def enemies(self) -> List[Enemy]:
         return list(self.enemies_dict.values())
+
+    @property
+    def npcs(self) -> List[NPC]:
+        return list(self.npcs_dict.values())
 
     def load_players(self):
         from os import listdir
@@ -84,6 +91,11 @@ class Game:
             maps = list(filter(lambda x: x.name == "DungeonMap", player.inventory.bag))
             for map_item in maps:
                 player.inventory.bag.remove(map_item)
+
+    def seed_npcs(self) -> None:
+        from templates.TemplateLoaders import load_npc_from_template
+        new_npc = load_npc_from_template("YegorVedouci")
+        new_npc.current_room = self.town.entry_room
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)

@@ -1,6 +1,15 @@
 from game_objects.Items.Item import Item
 
 
+def load_npc_from_template(filename):
+    import json
+    from game_objects.NPC import NPC
+    with open(f"templates/npcs/{filename}.json", "r") as infile:
+        source_dict = json.load(infile)
+        to_return = NPC.from_dict(source_dict)
+        return to_return
+
+
 def load_item_from_template(filename):
     import json
     from game_objects.Items.Armor import Armor

@@ -13,14 +13,19 @@ class Conversation:
         self.dialog_dict = None
         self.conversation_node = None
         self.room = None
+        self.relationship = {
+            "opinion": 0,
+            "familiarity": 0
+        }
         self.possible_responses = []
         self.active_triggers = []
 
     def init_conversation(self, game, source_dict):
         self.dialog_dict = source_dict
+        self.relationship = self.npc.get_relationship(self.character.name)
         for possible_init in self.dialog_dict["init"]:
             if possible_init.get("condition") is not None:
-                if eval(possible_init, {}, {"game": game, "npc": self.npc, "character": self.character}):
+                if eval(possible_init, {}, {"game": game, "npc": self.npc, "relationship": self.relationship, "character": self.character}):
                     self.conversation_node = possible_init["dialog"]
         if self.conversation_node is None:
             raise Exception("Unable to start dialog.")
@@ -43,7 +48,7 @@ class Conversation:
             self.cleanup(game)
             return
         response_objects = [*map(lambda x: self.dialog_dict["responses"][x], response_ids)]
-        filtered_response_objects = [x for x in response_objects if x.get("condition", True)]
+        filtered_response_objects = [x for x in response_objects if eval(x.get("condition", "True"), {}, {"game": game, "npc": self.npc, "relationship": self.relationship, "character": self.character})]
         if len(filtered_response_objects) == 0:
             self.cleanup(game)
             return
@@ -67,7 +72,8 @@ class Conversation:
             return
         response_effect = matched_response.get("effect", None)
         if response_effect is not None:
-            eval(response_effect, {}, {"game": game, "npc": self.npc, "character": self.character})
+            eval(response_effect, {}, {"game": game, "npc": self.npc, "relationship": self.relationship, "character": self.character})
+            self.npc.set_relationship(self.character.name, self.relationship)
         self.conversation_node = matched_response["dialog"]
         self.say_node(game)
 

@@ -1,7 +1,7 @@
 {
     "constructor": "ManaPotion",
     "quantity": 1,
-    "max_stack_size": 1,
+    "max_stack_size": 5,
     "weight": 0,
     "name": "ManaPotion"
 }

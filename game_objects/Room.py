@@ -7,6 +7,7 @@ from game_objects.Conversation import Conversation
 from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
 from game_objects.Enemy import Enemy
+from game_objects.NPC import NPC
 from utils.TextHelpers import enumerate_objects, pluralize
 
 
@@ -61,10 +62,17 @@ class Room:
     def get_enemies(self, game: Game) -> List[Enemy]:
         return list(filter(lambda x: x.current_room == self, game.enemies))
 
+    def get_npcs(self, game: Game) -> List[NPC]:
+        return list(filter(lambda x: x.current_room == self, game.npcs))
+
     def get_commands(self) -> List[Command]:
+        from game_objects.Commands.NoncombatCommands.ConversationCommands import TalkCommand, SayCommand
         to_return = [Exit()]
         if len(self.items) > 0:
             to_return.append(Take())
+        if len(self.conversations):
+            to_return.append(TalkCommand())
+            to_return.append(SayCommand())
         for fixture in self.fixtures:
             to_return.extend(fixture.get_commands())
         return to_return
@@ -89,7 +97,8 @@ class Room:
     def describe_entities(self, game: Game):
         enemies = self.get_enemies(game)
         characters = self.get_characters(game)
-        if len(enemies) == 0 and len(characters) <= 1:
+        npcs = self.get_npcs(game)
+        if len(enemies) == 0 and len(npcs) == 0 and len(characters) <= 1:
             return "The room appears to be vacant."
         enemy_counts = {}
         for enemy in enemies:
@@ -102,6 +111,8 @@ class Room:
             enemy_count_strings.append(f"{count} {pluralize(name, count)}")
         for character in characters:
             enemy_count_strings.append(f"{character.name}")
+        for npc in npcs:
+            enemy_count_strings.append(f"{npc.name}")
         formatted_list = enumerate_objects(enemy_count_strings)
         return f"In the room, you see {formatted_list}"
 
