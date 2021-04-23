@@ -3,6 +3,7 @@ from typing import Any, List, Optional
 
 import Game
 from game_objects.Commands.Command import Command
+from game_objects.Conversation import Conversation
 from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
 from game_objects.Enemy import Enemy
@@ -22,6 +23,7 @@ class Room:
         self.fixtures: List[Fixture] = []
         self.items: List[Item] = []
         self.combat: Optional[Combat] = None
+        self.conversations: List[Conversation] = []
         self.neighbors: List[Room] = []
 
     def get_door(self, name: str) -> Optional[Room]:

@@ -1,0 +1,68 @@
+{
+  "init": [
+    {
+      "condition": "relationship.familiarity==0",
+      "dialog": "GREETING_STRANGER"
+    },
+    {
+      "condition": null,
+      "dialog": "GREETING_AQUAINTED"
+    }
+  ],
+  "dialogs": {
+    "GREETING_STRANGER": {
+      "text": "Hello there. I don't believe we've met. I'm a test NPC. And you are?",
+      "responses": [
+        "INTRODUCE_SELF",
+        "GREETING_RESP_DISMISSIVE"
+      ]
+    },
+    "INTRODUCTION_RESP": {
+      "text": "Well, it's a pleasure to make your acquaintance {player.name}",
+      "responses": [
+        "LOVE_YOU_LOW_LEVEL",
+        "LOVE_YOU"
+      ]
+    },
+    "GREETING_AQUAINTED": {
+      "text": "Well, hello again {player.name}. Good to see you again.",
+      "responses": [
+        "LOVE_YOU_LOW_LEVEL",
+        "LOVE_YOU"
+      ]
+    },
+    "SORRY_BYE": {
+      "text": "Oh, sorry to bother you then. Bye.",
+      "responses": null
+    },
+    "LOVE_YOU_UNREQUITED": {
+      "text": "I'm not ready for that kind of commitment",
+      "responses": null
+    },
+    "LOVE_YOU_ACCEPTED": {
+      "text": "I love you too",
+      "responses": null
+    }
+  },
+  "responses": {
+    "INTRODUCE_SELF": {
+      "text": "Nice to meet you, I'm {player.name}.",
+      "effect": "relationship.familiarity=1 if relationship.familiarity=0 else relationship.familiarity",
+      "dialog": "INTRODUCTION_RESP"
+    },
+    "GREETING_RESP_DISMISSIVE": {
+      "text": "Leave me alone",
+      "dialog": "SORRY_BYE"
+    },
+    "LOVE_YOU_LOW_LEVEL": {
+      "text": "I love you",
+      "condition": "relationship.opinion<2 or relationship.familiarity<3",
+      "dialog": "LOVE_YOU_UNREQUITED"
+    },
+    "LOVE_YOU": {
+      "text": "I love you",
+      "condition": "relationship.opinion>=2 and relationship.familiarity>=3",
+      "dialog": "LOVE YOU_ACCEPTED"
+    }
+  }
+}
