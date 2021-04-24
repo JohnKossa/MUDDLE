@@ -28,7 +28,7 @@ def sum_resistances(set1: Dict[str, int], set2: Dict[str, int]) -> Dict[str, int
     return to_return
 
 
-def assign_damage(game, source, target, damage):
+def assign_damage(game, source, target, damage) -> str:
     from game_objects.Character.Character import Character
     target.health = max(0, target.health-damage)
     if isinstance(target, Character):

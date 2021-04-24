@@ -1,13 +1,13 @@
 {
-  "name": "Person",
+  "name": "YegorVedouci",
   "dialog_tree": {
     "init": [
       {
-        "condition": "relationship.familiarity==0",
+        "condition": "relationship['familiarity']==0",
         "dialog": "GREETING_STRANGER"
       },
       {
-        "condition": null,
+        "condition": "True",
         "dialog": "GREETING_AQUAINTED"
       }
     ],
@@ -20,14 +20,14 @@
         ]
       },
       "INTRODUCTION_RESP": {
-        "text": "Well, it's a pleasure to make your acquaintance {player.name}",
+        "text": "Well, it's a pleasure to make your acquaintance {character.name}",
         "responses": [
           "LOVE_YOU_LOW_LEVEL",
           "LOVE_YOU"
         ]
       },
       "GREETING_AQUAINTED": {
-        "text": "Well, hello again {player.name}. Good to see you again.",
+        "text": "Well, hello again {character.name}. Good to see you again.",
         "responses": [
           "LOVE_YOU_LOW_LEVEL",
           "LOVE_YOU"
@@ -48,8 +48,8 @@
     },
     "responses": {
       "INTRODUCE_SELF": {
-        "text": "Nice to meet you, I'm {player.name}.",
-        "effect": "relationship.familiarity=1 if relationship.familiarity=0 else relationship.familiarity",
+        "text": "Nice to meet you, I'm {character.name}.",
+        "effect": "relationship['familiarity'] = (1 if relationship['familiarity']==0 else relationship['familiarity'])",
         "dialog": "INTRODUCTION_RESP"
       },
       "GREETING_RESP_DISMISSIVE": {
@@ -58,12 +58,12 @@
       },
       "LOVE_YOU_LOW_LEVEL": {
         "text": "I love you",
-        "condition": "relationship.opinion<2 or relationship.familiarity<3",
+        "condition": "relationship['opinion']<2 or relationship['familiarity']<3",
         "dialog": "LOVE_YOU_UNREQUITED"
       },
       "LOVE_YOU": {
         "text": "I love you",
-        "condition": "relationship.opinion>=2 and relationship.familiarity>=3",
+        "condition": "relationship['opinion']>=2 and relationship['familiarity']>=3",
         "dialog": "LOVE YOU_ACCEPTED"
       }
     }

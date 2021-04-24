@@ -22,7 +22,7 @@ class Command:
         return "No help text has been set for this command."
 
     @classmethod
-    def command_name(cls):
+    def command_name(cls) -> str:
         return cls.__name__
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:

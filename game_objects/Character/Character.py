@@ -102,10 +102,10 @@ class Character(CombatEntity, GameEntity):
         new_char.base_resistances = source_dict["base_resistances"]
         return new_char
 
-    def initialize(self, game: Game):
+    def initialize(self, game: Game) -> None:
         self.skills.setup_triggers(game)
 
-    def cleanup(self, game: Game):
+    def cleanup(self, game: Game) -> None:
         import os
         game.players_dict.pop(self.guid)
         if self.current_room.combat is not None:

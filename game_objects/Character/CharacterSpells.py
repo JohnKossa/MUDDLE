@@ -7,7 +7,7 @@ class CharacterSpells:
     def __init__(self):
         self.known_spells = []
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {}
 
     def get_commands(self) -> List[Command]:

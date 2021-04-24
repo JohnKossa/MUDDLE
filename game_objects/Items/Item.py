@@ -16,7 +16,7 @@ class Item(GameEntity):
         self.name: str = "Item"
         self.template: Any = None
 
-    def to_dict(self, full_depth=True):
+    def to_dict(self, full_depth=True) -> dict:
         return {
             "constructor": self.__class__.__name__,
             "quantity": self.quantity,
@@ -26,7 +26,7 @@ class Item(GameEntity):
         }
 
     @classmethod
-    def from_dict(cls, source_dict):
+    def from_dict(cls, source_dict) -> Item:
         to_return = Item()
         to_return.__dict__.update(source_dict)
         return to_return

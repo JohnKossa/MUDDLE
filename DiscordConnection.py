@@ -23,7 +23,7 @@ class CustomClient(discord.Client):
         self.game_channel = None
         self.game = None
 
-    async def on_ready(self):
+    async def on_ready(self) -> None:
         print(f'{self.user} has connected to Discord!')
         print('Collecting users')
         guild = self.guilds[0]
@@ -89,13 +89,15 @@ class CustomClient(discord.Client):
                 matched_command = possible_command
 
         if matched_command is not None:
-            await self.send_game_chat(matched_command.do_action(self.game, params, message), tagged_users=[discord_user])
+            resp = matched_command.do_action(self.game, params, message)
+            if resp is not None:
+                await self.send_game_chat(matched_command.do_action(self.game, params, message), tagged_users=[discord_user])
             return
 
         if command.lower() == "get" and params[0].lower() == "ye" and params[1].lower() == "flask":
             await channel.send("You can't get ye flask")
 
-    async def on_error(self, event, *args, **kwargs):
+    async def on_error(self, event, *args, **kwargs) -> None:
         with open('err.log', 'a') as f:
             if event == 'on_message':
                 print("\n".join([str(x) for x in args]))
@@ -106,7 +108,7 @@ class CustomClient(discord.Client):
 client = CustomClient(intents_contract=intents)
 
 
-def run(game_ref):
+def run(game_ref) -> None:
     client.game = game_ref
     client.game.scheduler = Scheduler(client.loop)
     client.game.discord_connection = client

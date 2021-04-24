@@ -24,11 +24,11 @@ class Game:
         from discord_objects.DiscordUser import DiscordUser
         from DiscordConnection import CustomClient
         self.maze: Maze = None
-        self.town: Town = Town()
-        self.seed_npcs()
         self.players_dict: dict = {}
         self.enemies_dict: dict = {}
         self.npcs_dict: dict = {}
+        self.town: Town = Town()
+        self.seed_npcs()
         self.discord_users: List[DiscordUser] = []
         self.hooks: dict = {}
         self.aioloop = asyncio.get_event_loop()
@@ -47,7 +47,7 @@ class Game:
     def npcs(self) -> List[NPC]:
         return list(self.npcs_dict.values())
 
-    def load_players(self):
+    def load_players(self) -> None:
         from os import listdir
         from os.path import isfile, join
         import json
@@ -63,7 +63,7 @@ class Game:
                 to_add.initialize(self)
                 self.discord_connection.send_game_chat_sync(f"Loaded player {to_add.name} for {to_add.discord_user.username}")
 
-    def save_players(self):
+    def save_players(self) -> None:
         import datetime
         import json
         for player in self.players:
@@ -77,6 +77,20 @@ class Game:
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
+    def save_npcs(self) -> None:
+        import datetime
+        import json
+        for npc in self.npcs:
+            try:
+                npc_dict = npc.to_dict()
+                with open(f"templates/npcs/{npc.name}.json", "w") as outfile:
+                    json.dump(npc_dict, outfile, indent=4)
+            except:
+                print(f"Unable to save npc {npc.name}")
+        print("Saving players")
+        self.scheduler.schedule_task(
+            ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_npcs))
+
     def setup_hooks(self) -> None:
         import datetime
         self.on("enter_room", TriggerFunc(self.start_combat))
@@ -85,6 +99,7 @@ class Game:
         self.on("enemy_defeated", TriggerFunc(self.boss_defeated))
         self.on("maze_reset", TriggerFunc(self.invalidate_player_maps))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
+        self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_npcs))
 
     def invalidate_player_maps(self, **kwargs) -> None:
         for player in self.players:
@@ -95,7 +110,9 @@ class Game:
     def seed_npcs(self) -> None:
         from templates.TemplateLoaders import load_npc_from_template
         new_npc = load_npc_from_template("YegorVedouci")
-        new_npc.current_room = self.town.entry_room
+        new_npc.current_room = self.town.get_room_by_name("Town Square")
+        self.npcs.append(new_npc)
+        self.npcs_dict[new_npc.guid] = new_npc
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
@@ -155,13 +172,13 @@ class Game:
                 self.scheduler.schedule_task(
                     ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=10), self.restart_maze))
 
-    def cleanup_dead_player(self, source_player: Optional[Character] = None, **kwargs):
+    def cleanup_dead_player(self, source_player: Optional[Character] = None, **kwargs) -> None:
         source_player.cleanup(self)
 
-    def cleanup_dead_enemy(self, source_enemy: Optional[Enemy] = None, **kwargs):
+    def cleanup_dead_enemy(self, source_enemy: Optional[Enemy] = None, **kwargs) -> None:
         source_enemy.cleanup(self)
 
-    def restart_maze(self):
+    def restart_maze(self) -> None:
         self.init_maze()
         self.return_players_to_start()
         self.discord_connection.send_game_chat_sync(
@@ -184,7 +201,7 @@ class Game:
         for player in self.players:
             player.current_room = self.maze.entry_room
 
-    def delete_all_enemies(self):
+    def delete_all_enemies(self) -> None:
         self.enemies_dict = {}
 
     def register_player(self, new_player: Character) -> None:
