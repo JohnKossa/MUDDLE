@@ -56,6 +56,14 @@ class Enemy(CombatEntity, GameEntity):
         }
 
     @property
+    def hit_bonus(self) -> int:
+        return 0
+
+    @property
+    def dmg_bonus(self) -> int:
+        return 0
+
+    @property
     def initiative(self) -> int:
         return roll(1, 20)
 

@@ -7,6 +7,8 @@ class CharacterStatus(object):
     def __init__(self, parent):
         self.hit_resistances = {}
         self.dmg_resistances = {}
+        self.hit_bonus = 0
+        self.dmg_bonus = 0
         self.triggers = {}
         self.data = {}
         self.character = parent

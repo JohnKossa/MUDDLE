@@ -22,9 +22,9 @@ class Equipment(Item):
         # equips the item
         pass
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         # will add equip and unequip commands
-        return super().get_commands() + []
+        return super().get_commands(game) + []
 
     def to_dict(self, full_depth=True) -> dict:
         to_return = super().to_dict() if full_depth else {}

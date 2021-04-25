@@ -91,8 +91,8 @@ class MazeRoom(Room):
             formatted_list = enumerate_objects(valid_exits)
             return f"Exits include {formatted_list}"
 
-    def get_commands(self) -> List[Command]:
-        to_return = super().get_commands()
+    def get_commands(self, game) -> List[Command]:
+        to_return = super().get_commands(game)
         if self.starting_room or self.exit_room:
             to_return = to_return + [ExitMaze()]
         return to_return

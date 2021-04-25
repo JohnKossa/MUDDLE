@@ -58,13 +58,15 @@ class AttackCommand(CombatOnlyCommand):
             target = random.choice(players)
         if target is None:
             return
+        hit_bonus = source_player.hit_bonus
+        dmg_bonus = target.dmg_bonus
         hit_resistance = target.resistances["hit"]
         dmg_resistance = target.resistances["dmg"]
-        attack_hits = calculate_hit(self.attack_action, hit_resistance)
+        attack_hits = calculate_hit(self.attack_action, hit_bonus, hit_resistance)
         if not attack_hits:
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. It misses.")
             return
-        damage_to_assign = calculate_damage(self.attack_action, dmg_resistance)
+        damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
         assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. "+assign_damage_response)
         game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)

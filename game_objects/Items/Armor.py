@@ -30,8 +30,8 @@ class Armor(Equipment):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + []
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + []
 
 
 class PlateArmor(Armor):
@@ -52,8 +52,8 @@ class PlateArmor(Armor):
             "electricity": -1
         }
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + []
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + []
 
 
 class ChainArmor(Armor):
@@ -74,8 +74,8 @@ class ChainArmor(Armor):
             "electricity": -1
         }
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + []
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + []
 
 
 class Gambeson(Armor):
@@ -99,5 +99,5 @@ class Gambeson(Armor):
             "fire": -1
         }
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + []
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + []

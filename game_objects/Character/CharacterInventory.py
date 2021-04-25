@@ -159,7 +159,7 @@ class CharacterInventory:
                 return
         self.bag.append(to_add)
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         from game_objects.Commands.Command import Command, InventoryCommand
         from game_objects.Commands.NoncombatCommands.UnequipCommand import Unequip
         from game_objects.Commands.NoncombatCommands.EquipCommand import Equip
@@ -179,10 +179,10 @@ class CharacterInventory:
         for slot in self.equipment.keys():
             if slot == "belt":
                 for item in self.equipment["belt"]:
-                    to_return = to_return + item.get_commands()
+                    to_return = to_return + item.get_commands(game)
                 continue
             if self.equipment.get(slot, None) is not None:
-                to_return = to_return + self.equipment.get(slot).get_commands()
+                to_return = to_return + self.equipment.get(slot).get_commands(game)
         return to_return
 
     def generate_loot_table(self) -> LootTable:

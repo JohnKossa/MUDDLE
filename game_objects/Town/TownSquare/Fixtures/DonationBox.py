@@ -14,6 +14,6 @@ class DonationBox(Fixture):
     def describe(self) -> str:
         return "Off to the side is a simple wooden box on a post. It's heavily weathered. It's super interesting."
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         # TODO will add a donate command
-        return super().get_commands()
+        return super().get_commands(game)

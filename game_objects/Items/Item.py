@@ -63,7 +63,7 @@ class Item(GameEntity):
         # describes what happens when a player does !use with the item
         raise Exception(f"Use effect not implemented for {self.name}")
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         return []
 
 

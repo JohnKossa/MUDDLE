@@ -14,6 +14,6 @@ class WishingWell(Fixture):
     def describe(self) -> str:
         return "In the center of the town square sits a simple stone well. It's old; incalculably old. There's no telling how long it's been here. It's super interesting."
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         # TODO will add a donate command
-        return super().get_commands()
+        return super().get_commands(game)

@@ -26,6 +26,6 @@ class Shield(Equipment):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         # will add "block" command
-        return super().get_commands() + [BlockCommand()]
+        return super().get_commands(game) + [BlockCommand()]

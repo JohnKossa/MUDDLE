@@ -14,11 +14,11 @@ class DiscordUser:
         self.is_admin: bool = True if username == "kg959#1350" else False
         self.discord_obj: discord.User = discord_obj
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp, AdminMap
         cmd_list = [ListCommands(), ShowAliases(), ShowMap(), ShowHelp()]
         if self.current_character is not None and not self.current_character.dead:
-            cmd_list.extend(self.current_character.get_commands())
+            cmd_list.extend(self.current_character.get_commands(game))
         else:
             cmd_list.append(NewCharacter())
         if self.is_admin:

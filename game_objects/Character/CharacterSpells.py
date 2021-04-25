@@ -10,5 +10,5 @@ class CharacterSpells:
     def to_dict(self):
         return {}
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         return []

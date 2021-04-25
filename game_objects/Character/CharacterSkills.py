@@ -32,7 +32,7 @@ class CharacterSkills:
     def from_dict(cls, source_dict, character):
         return CharacterSkills(character)
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         return []
 
 

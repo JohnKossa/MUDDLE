@@ -57,6 +57,20 @@ class Character(CombatEntity, GameEntity):
         return to_return
 
     @property
+    def hit_bonus(self) -> int:
+        to_return = 0
+        for status in self.status_effects:
+            to_return = to_return + status.hit_bonus
+        return to_return
+
+    @property
+    def dmg_bonus(self) -> int:
+        to_return = 0
+        for status in self.status_effects:
+            to_return = to_return + status.dmg_bonus
+        return to_return
+
+    @property
     def initiative(self) -> int:
         return roll(1, 20, advantage=1)
 
@@ -116,7 +130,7 @@ class Character(CombatEntity, GameEntity):
             status.character = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         if self.dead:
             return []
         from game_objects.Commands.CombatCommands.DodgeCommand import DodgeCommand
@@ -127,11 +141,11 @@ class Character(CombatEntity, GameEntity):
         # TODO add a character sheet command
         to_return = [CharacterCommand(), PassCommand(), LookCommand(), DodgeCommand()]
         if self.current_room is not None:
-            to_return.extend(self.current_room.get_commands())
+            to_return.extend(self.current_room.get_commands(game))
         if self.skills is not None:
-            to_return.extend(self.skills.get_commands())
+            to_return.extend(self.skills.get_commands(game))
         if self.inventory is not None:
-            to_return.extend(self.inventory.get_commands())
+            to_return.extend(self.inventory.get_commands(game))
         # if player not in combat, remove all combat only commands
         if self.current_room.combat is None:
             to_return = list(filter(lambda x: not isinstance(x, CombatOnlyCommand), to_return))

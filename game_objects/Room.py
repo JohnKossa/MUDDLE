@@ -65,7 +65,7 @@ class Room:
     def get_npcs(self, game: Game) -> List[NPC]:
         return list(filter(lambda x: x.current_room == self, game.npcs))
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         from game_objects.Commands.NoncombatCommands.ConversationCommands import TalkCommand, SayCommand
         to_return = [Exit()]
         if len(self.items) > 0:
@@ -74,7 +74,7 @@ class Room:
             to_return.append(TalkCommand())
             to_return.append(SayCommand())
         for fixture in self.fixtures:
-            to_return.extend(fixture.get_commands())
+            to_return.extend(fixture.get_commands(game))
         return to_return
 
     def start_combat(self, game: Game) -> None:

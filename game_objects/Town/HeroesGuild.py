@@ -15,5 +15,5 @@ class HeroesGuild(Room):
     def describe_room(self) -> str:
         return "You are at the Heroes Guild. It's super interesting."
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands()
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game)

@@ -14,7 +14,7 @@ class Fixture:
     def describe(self) -> str:
         return ""
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         return []
 
 
@@ -25,16 +25,18 @@ class TreasureChest(Fixture):
         from game_objects.Items.Shield import Shield
         from game_objects.Items.Armor import PlateArmor, ChainArmor, Gambeson
         from game_objects.Items.Item import Coins, DungeonMap
-        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        from game_objects.Items.Consumable import HealthPotion, StaminaPotion, FocusPotion, RagePotion
         from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Chest"
         self.items = LootTable(lootable_items or [
             (Coins(count=random.randint(0, 50)), .85),
             (HealthPotion(),                     .60),
-            (DungeonMap(),                       .05),
+            (FocusPotion(),                      .30),
             (StaminaPotion(),                    .30),
+            (RagePotion(),                       .30),
             (Shield(),                           .15),
+            (DungeonMap(),                       .05),
             (Torch(),                            .05),
             (Dagger(),                           .05),
             (Axe(),                              .05),
@@ -52,5 +54,5 @@ class TreasureChest(Fixture):
         else:
             return "An empty wooden treasure chest sits on the floor."
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + [LootCommand()]
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + [LootCommand()]

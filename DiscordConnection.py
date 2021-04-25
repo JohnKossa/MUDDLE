@@ -73,7 +73,7 @@ class CustomClient(discord.Client):
         if not content.startswith("!"):
             return
 
-        command_list = discord_user.get_commands()
+        command_list = discord_user.get_commands(self.game)
 
         matches = re.match(r"^!(\w+)((?:\s\w+)+)?$", message.content)
         command = matches.group(1)

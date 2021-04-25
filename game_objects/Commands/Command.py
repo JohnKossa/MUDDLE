@@ -54,7 +54,7 @@ class ShowHelp(Command):
         if discord_user is None:
             return "You are not listed as a user in this game."
         supplied_alias = get_by_index(params, 0).lower()
-        for command in discord_user.get_commands():
+        for command in discord_user.get_commands(game):
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
                 return command.show_help()
@@ -85,7 +85,7 @@ class ShowAliases(Command):
         if discord_user is None:
             return "You are not listed as a user in this game."
         supplied_alias = get_by_index(params, 0).lower()
-        for command in discord_user.get_commands():
+        for command in discord_user.get_commands(game):
             lower_aliases = [x.lower() for x in command.aliases]
             if supplied_alias in lower_aliases:
                 return f"Known aliases for {command.command_name()}:\n"+("\n".join(command.aliases))
@@ -111,7 +111,7 @@ class ListCommands(Command):
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user is None:
             return "You are not listed as a user in this game."
-        commands = discord_user.get_commands()
+        commands = discord_user.get_commands(game)
         command_aliases = [x.default_alias() for x in commands]
         command_aliases.sort()
         return "Your commands are:\n{}".format("\n".join(command_aliases))

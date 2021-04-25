@@ -31,14 +31,14 @@ class Weapon(Equipment):
         to_return.attacks = [AttackAction.from_dict(x) for x in source_dict["attacks"]]
         return to_return
 
-    def get_commands(self) -> List[Command]:
+    def get_commands(self, game) -> List[Command]:
         to_add = []
         for attack in self.attacks:
             if attack.name == self.default_attack:
                 to_add.append(AttackCommand(attack, aliases=[attack.name.capitalize(), "Attack", "Atk"]))
             else:
                 to_add.append(AttackCommand(attack, aliases=[attack.name.capitalize()]))
-        return super().get_commands() + to_add
+        return super().get_commands(game) + to_add
 
 
 class Sword(Weapon):
@@ -52,8 +52,8 @@ class Sword(Weapon):
         ]
         self.default_attack: str = "slash"
 
-    def get_commands(self) -> List[Command]:
-        return super().get_commands() + []
+    def get_commands(self, game) -> List[Command]:
+        return super().get_commands(game) + []
 
 
 class Torch(Weapon):
