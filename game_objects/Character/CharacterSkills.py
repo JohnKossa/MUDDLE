@@ -22,14 +22,14 @@ class CharacterSkills:
         for skill in self.skill_entries.values():
             skill.setup_triggers(game)
 
-    def add_proficiency(self, skill_name, amount):
+    def add_proficiency(self, skill_name, amount) -> None:
         pass
 
     def to_dict(self) -> dict:
         return {}
 
     @classmethod
-    def from_dict(cls, source_dict, character):
+    def from_dict(cls, source_dict, character) -> CharacterSkills:
         return CharacterSkills(character)
 
     def get_commands(self, game) -> List[Command]:

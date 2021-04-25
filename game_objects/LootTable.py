@@ -10,10 +10,10 @@ class LootTable:
     def __init__(self, items):
         self.items = items if items else []
 
-    def add_item(self, item, drop_rate):
+    def add_item(self, item, drop_rate) -> None:
         self.items.append((item, drop_rate))
 
-    def remove_item(self, item):
+    def remove_item(self, item) -> None:
         self.items.remove(item)
 
     def roll_drops(self, luck=0) -> List[Item]:

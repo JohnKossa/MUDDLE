@@ -1,3 +1,4 @@
+from __future__ import annotations
 import random
 from typing import Optional, List
 
@@ -39,7 +40,7 @@ class CharacterInventory:
         return to_return
 
     @classmethod
-    def from_dict(cls, source_dict):
+    def from_dict(cls, source_dict) -> CharacterInventory:
         from templates.TemplateLoaders import item_mappings
         constructors = item_mappings()
 

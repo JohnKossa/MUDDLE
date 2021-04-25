@@ -23,7 +23,7 @@ class DodgeStatus(CharacterStatus):
             "leave_room": TriggerFunc(self.detach_on_turn_start, self.character)
         }
 
-    def detach_on_turn_start(self, source_player: Optional[Character] = None, game: Optional[Game] = None, **kwargs):
+    def detach_on_turn_start(self, source_player: Optional[Character] = None, game: Optional[Game] = None, **kwargs) -> None:
         if source_player == self.character:
             source_player.status_effects.remove(self)
             self.character = None

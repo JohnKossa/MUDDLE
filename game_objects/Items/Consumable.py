@@ -28,7 +28,7 @@ class HealthPotion(Consumable):
         return to_return
 
     @classmethod
-    def from_dict(cls, source_dict):
+    def from_dict(cls, source_dict) -> HealthPotion:
         to_return = HealthPotion()
         to_return.__dict__.update(source_dict)
         return to_return
@@ -63,7 +63,7 @@ class StaminaPotion(Consumable):
         return to_return
 
     @classmethod
-    def from_dict(cls, source_dict):
+    def from_dict(cls, source_dict) -> StaminaPotion:
         to_return = StaminaPotion()
         to_return.__dict__.update(source_dict)
         return to_return

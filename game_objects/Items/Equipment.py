@@ -40,7 +40,7 @@ class Equipment(Item):
         return to_return
 
     @classmethod
-    def from_dict(cls, source_dict):
+    def from_dict(cls, source_dict) -> Equipment:
         to_return = Equipment()
         to_return.__dict__.update(source_dict)
         return to_return

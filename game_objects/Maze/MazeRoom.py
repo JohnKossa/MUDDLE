@@ -97,18 +97,6 @@ class MazeRoom(Room):
             to_return = to_return + [ExitMaze()]
         return to_return
 
-    def __str__(self):
-        to_return = self.describe_room()
-        fixtures = self.describe_fixtures()
-        items = self.describe_items()
-        exits = self.describe_exits()
-        if fixtures is not None:
-            to_return = to_return+"\n"+fixtures
-        if items is not None:
-            to_return = to_return+"\n"+items
-        to_return = to_return+"\n"+exits
-        return to_return
-
 
 class RoomUtils:
     @staticmethod

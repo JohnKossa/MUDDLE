@@ -1,7 +1,7 @@
 from __future__ import annotations
 import discord
 
-from typing import List
+from typing import List, Optional
 
 import Game
 
@@ -26,22 +26,21 @@ class TalkCommand(NoncombatCommand):
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         from game_objects.Conversation import Conversation
-        discord_user = UserUtils.get_character_by_username(str(message.author), game.discord_users)
-        player = discord_user.current_character
+        player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         current_room = player.current_room
         npcs = current_room.get_npcs(game)
         npc_name = get_by_index(params, 0, None)
         if npc_name is None and len(npcs) == 1:
-            chosen_npc = next(npcs)
+            chosen_npc = npcs[0]
         else:
-            chosen_npc = next(filter(lambda x: x.name == npc_name), None)
+            chosen_npc = next(filter(lambda x: x.name == npc_name, npcs), None)
         if chosen_npc is None:
-                return "Named person was not found"
-        # TODO set up conversation in room
+            return "Named person was not found"
         new_conversation = Conversation()
         new_conversation.npc = chosen_npc
         new_conversation.character = player
-        current_room.convesations.append(new_conversation)
+        new_conversation.room = current_room
+        current_room.conversations.append(new_conversation)
         new_conversation.init_conversation(game, chosen_npc.dialog_tree)
 
 
@@ -58,11 +57,12 @@ class SayCommand(NoncombatCommand):
             "  0: Response Number"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: List[str], message: discord.Message) -> Optional[str]:
         from discord_objects.DiscordUser import UserUtils
-        discord_user = UserUtils.get_character_by_username(str(message.author), game.discord_users)
-        player = discord_user.current_character
+        player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         current_room = player.current_room
-        conversations = current_room.convesations
+        conversations = current_room.conversations
         my_conversation = next(filter(lambda x: x.character == player, conversations), None)
+        if my_conversation is None:
+            raise Exception(f"Conversation is none")
         my_conversation.handle_response(game, params[0])

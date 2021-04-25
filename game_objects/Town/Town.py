@@ -19,7 +19,7 @@ class Town:
     def get_room_by_name(self, name) -> Optional[Room]:
         return next(filter(lambda x: x.name == name, self.rooms), None)
 
-    def generate_town(self, level: int = 0):
+    def generate_town(self, level: int = 0) -> None:
         town_square = TownSquare()
         apothecary = ApothecaryStore()
         blacksmith = BlacksmithShop()

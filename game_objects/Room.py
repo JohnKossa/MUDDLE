@@ -70,8 +70,8 @@ class Room:
         to_return = [Exit()]
         if len(self.items) > 0:
             to_return.append(Take())
+        to_return.append(TalkCommand())
         if len(self.conversations):
-            to_return.append(TalkCommand())
             to_return.append(SayCommand())
         for fixture in self.fixtures:
             to_return.extend(fixture.get_commands(game))
@@ -94,7 +94,7 @@ class Room:
             return f"You are in a room. It's super interesting. {self.name}"
         return self.template
 
-    def describe_entities(self, game: Game):
+    def describe_entities(self, game: Game) -> str:
         enemies = self.get_enemies(game)
         characters = self.get_characters(game)
         npcs = self.get_npcs(game)
@@ -144,7 +144,7 @@ class Room:
             formatted_list = enumerate_objects(exit_names)
             return f"Exits include {formatted_list}"
 
-    def describe(self, game: Game):
+    def describe(self, game: Game) -> str:
         to_return = self.describe_room()
         entities = self.describe_entities(game)
         fixtures = self.describe_fixtures()
@@ -156,16 +156,4 @@ class Room:
         if items is not None:
             to_return = to_return + "\n" + items
         to_return = to_return + "\n" + exits
-        return to_return
-
-    def __str__(self):
-        to_return = self.describe_room()
-        fixtures = self.describe_fixtures()
-        items = self.describe_items()
-        exits = self.describe_exits()
-        if fixtures is not None:
-            to_return = to_return+"\n"+fixtures
-        if items is not None:
-            to_return = to_return+"\n"+items
-        to_return = to_return+"\n"+exits
         return to_return

@@ -13,11 +13,11 @@ class CharacterStatus(object):
         self.data = {}
         self.character = parent
 
-    def attach_triggers(self, game: Game):
+    def attach_triggers(self, game: Game) -> None:
         for k, v, in self.triggers.items():
             game.on(k, v)
 
-    def detach_triggers(self, game: Game):
+    def detach_triggers(self, game: Game) -> None:
         for k, v, in self.triggers.items():
             game.off(k, v)
 

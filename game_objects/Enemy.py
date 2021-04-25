@@ -73,7 +73,7 @@ class Enemy(CombatEntity, GameEntity):
             return self.name
         return f"{self.name}{self.disambiguation_num}"
 
-    def cleanup(self, game: Game):
+    def cleanup(self, game: Game) -> None:
         game.enemies_dict.pop(self.guid)
         if self.current_room.combat is not None:
             if self in self.current_room.combat.enemies:
