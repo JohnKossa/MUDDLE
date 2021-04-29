@@ -90,8 +90,9 @@ class CustomClient(discord.Client):
 
         if matched_command is not None:
             resp = matched_command.do_action(self.game, params, message)
+            # print(f"Matched {command} to {matched_command.aliases[0]}")
             if resp is not None:
-                await self.send_game_chat(matched_command.do_action(self.game, params, message), tagged_users=[discord_user])
+                await self.send_game_chat(resp, tagged_users=[discord_user])
             return
 
         if command.lower() == "get" and params[0].lower() == "ye" and params[1].lower() == "flask":
