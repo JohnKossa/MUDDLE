@@ -124,19 +124,16 @@ class Game:
             small_enemy_types = [Goblin, Kobold]
             new_enemy = random.choice(small_enemy_types)()
             new_enemy.current_room = room
-            self.enemies.append(new_enemy)
             self.enemies_dict[new_enemy.guid] = new_enemy
         num_big_enemies = math.isqrt(num_small_enemies)
         chosen_rooms = random.choices(viable_rooms, k=num_big_enemies)
         for room in chosen_rooms:
             new_enemy = Orc()
             new_enemy.current_room = room
-            self.enemies.append(new_enemy)
             self.enemies_dict[new_enemy.guid] = new_enemy
         boss_enemy_types = [StrawGolem, StoneGolem]
         boss = random.choice(boss_enemy_types)()
         boss.current_room = self.maze.exit_room
-        self.enemies.append(boss)
         self.enemies_dict[boss.guid] = boss
 
     def seed_loot_stashes(self) -> None:
@@ -209,7 +206,6 @@ class Game:
 
     def register_player(self, new_player: Character) -> None:
         new_player.current_room = self.maze.entry_room
-        self.players.append(new_player)
         self.players_dict[new_player.guid] = new_player
         new_player.initialize(self)
 
