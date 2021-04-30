@@ -68,5 +68,10 @@
             }
         }
     },
-    "relationship": {}
+    "relationship": {
+        "Horace Hamilton": {
+            "familiarity": 1,
+            "opinion": 0
+        }
+    }
 }

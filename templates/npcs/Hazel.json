@@ -1,0 +1,66 @@
+{
+    "name": "Hazel",
+    "dialog_tree": {
+        "init": [
+            {
+                "condition": "relationship['familiarity']==0",
+                "dialog": "GREETING_STRANGER"
+            },
+            {
+                "condition": "True",
+                "dialog": "GREETING_AQUAINTED"
+            }
+        ],
+        "dialogs": {
+            "GREETING_STRANGER": {
+                "text": "The little girl leans forward against the counter, clearly trying to balance on her toes. \"Hey there! I'm Hazel. Welcome to Bottle of Wonders! How can I help you today?\"",
+                "responses": [
+                    "INTRODUCE_SELF",
+                    "WHERE_PARENTS_UNFAMILIAR"
+                ]
+            },
+            "GREETING_AQUAINTED": {
+                "text": "Hazel says in her usual squeaky voice, \"Well, hello again {character.name}. Good to see you again.\"",
+                "responses": [
+                    "WHERE_PARENTS_FAMILIAR"
+                ]
+            },
+            "INTRODUCTION_RESP": {
+                "text": "\"Nice to meet you, {character.name}. Let me know if you need help with anything.\"",
+                "responses": [
+                    "WHERE_PARENTS_FAMILIAR"
+                ]
+            },
+            "PARENTS_RESP_EVASIVE": {
+                "text": "Hazel looks annoyed. \"They're.... not here. I can help you though.\"",
+                "responses": null
+            },
+            "PARENTS_RESP_HONEST": {
+                "text": "\"Oh, I haven't seen them in a loooong time. They died over a hundred years ago. This is my shop. If there's anything you need, I can probably get it for you.\"",
+                "responses": null
+            }
+        },
+        "responses": {
+            "INTRODUCE_SELF": {
+                "text": "Nice to meet you, young lady, I'm {character.name}.",
+                "effect": "relationship['familiarity'] = (1 if relationship['familiarity']==0 else relationship['familiarity'])",
+                "dialog": "INTRODUCTION_RESP"
+            },
+            "WHERE_PARENTS_UNFAMILIAR": {
+                "text": "Are your parents around?",
+                "dialog": "PARENTS_RESP_EVASIVE"
+            },
+            "WHERE_PARENTS_FAMILIAR": {
+                "text": "Are your parents around?",
+                "dialog": "PARENTS_RESP_HONEST"
+            },
+            "WHAT_DO_YOU_SELL": {}
+        }
+    },
+    "relationship": {
+        "Eric Cothran": {
+            "familiarity": 1,
+            "opinion": 0
+        }
+    }
+}

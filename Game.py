@@ -109,10 +109,12 @@ class Game:
 
     def seed_npcs(self) -> None:
         from templates.TemplateLoaders import load_npc_from_template
-        new_npc = load_npc_from_template("YegorVedouci")
-        new_npc.current_room = self.town.get_room_by_name("Town Square")
-        self.npcs.append(new_npc)
-        self.npcs_dict[new_npc.guid] = new_npc
+        mayor = load_npc_from_template("YegorVedouci")
+        mayor.current_room = self.town.get_room_by_name("Town Square")
+        self.npcs_dict[mayor.guid] = mayor
+        apothecary = load_npc_from_template("Hazel")
+        apothecary.current_room = self.town.get_room_by_name("Apothecary Store")
+        self.npcs_dict[apothecary.guid] = apothecary
 
     def seed_enemies(self) -> None:
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)

@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import List, Optional
 
 from game_objects.Commands.Command import Command
-from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
 from game_objects.Commands.NoncombatCommands.ExitMazeCommand import ExitMaze
 from game_objects.Room import Room
 from utils.TextHelpers import enumerate_objects
@@ -10,6 +9,7 @@ from utils.TextHelpers import enumerate_objects
 
 class MazeRoom(Room):
     def __init__(self, x_coord: int, y_coord: int):
+        import random
         super(MazeRoom, self).__init__(name=f"{x_coord},{y_coord}")
         self.x_coord: int = x_coord
         self.y_coord: int = y_coord
@@ -20,6 +20,7 @@ class MazeRoom(Room):
         self.east_door: Optional[MazeRoom] = None
         self.south_door: Optional[MazeRoom] = None
         self.west_door: Optional[MazeRoom] = None
+        self.description_seed = random.randint(0, 1000000)
         self.description_template = None
         self.starting_room = False
         self.exit_room = False
