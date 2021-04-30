@@ -22,6 +22,10 @@ class PartialCombatCommand(Command):
         else:
             return self.enqueue_order(game, target_player, params)
 
+    def command_valid(self, game: Game, source_player: Character, params: List[Any]) -> bool:
+        """Check if the command is still valid."""
+        return True
+
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         return ""
 

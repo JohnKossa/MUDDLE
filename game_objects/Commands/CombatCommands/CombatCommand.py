@@ -13,6 +13,10 @@ class CombatOnlyCommand(Command):
         super().__init__()
         self.combat_action_cost: int = 1
 
+    def command_valid(self, game: Game, source_player: Character, params: List[Any]) -> bool:
+        """Check if the command is still valid."""
+        return True
+
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
