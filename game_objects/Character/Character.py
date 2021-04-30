@@ -24,7 +24,7 @@ class Character(CombatEntity, GameEntity):
         else:
             self.name: str = name
         self.current_room: Optional[Room] = None
-        self.zone: str = "Labrynth"
+        self.zone: str = "Labyrinth"
         self.skills: CharacterSkills = CharacterSkills(self)
         self.inventory: CharacterInventory = CharacterInventory()
         self.discord_user: Optional[DiscordUser] = None

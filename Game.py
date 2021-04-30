@@ -201,7 +201,8 @@ class Game:
 
     def return_players_to_start(self) -> None:
         for player in self.players:
-            player.current_room = self.maze.entry_room
+            if player.zone == "Labyrinth":
+                player.current_room = self.maze.entry_room
 
     def delete_all_enemies(self) -> None:
         self.enemies_dict = {}
