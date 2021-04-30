@@ -35,3 +35,7 @@ def print_advantage_spread() -> None:
         for i in range(1000):
             total = total + roll(1, 20, advantage=adv)
         print(f"avg {total/1000}")
+
+
+if __name__ == "__main__":
+    print_advantage_spread()

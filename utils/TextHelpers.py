@@ -17,4 +17,4 @@ def pluralize(item: str, count: int) -> str:
         return item
     if count == 0 or count > 1:
         return f"{item}s"
-    raise Exception("Call to TextHelpers had less than 0 count")
+    raise Exception("Call to TextHelpers.pluralize had less than 0 count")

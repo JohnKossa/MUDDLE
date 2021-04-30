@@ -19,8 +19,10 @@ class Character(CombatEntity, GameEntity):
         from discord_objects.DiscordUser import DiscordUser
         from game_objects.Character.CharacterInventory import CharacterInventory
         from game_objects.Character.CharacterSkills import CharacterSkills
+        import random
+        self.gender = random.choice(["male", "female"])
         if name is None:
-            self.name: str = names.get_full_name()
+            self.name: str = names.get_full_name(gender=self.gender)
         else:
             self.name: str = name
         self.current_room: Optional[Room] = None
