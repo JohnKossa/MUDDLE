@@ -12,7 +12,7 @@ class CharacterInventory:
     def __init__(self):
         from game_objects.Items.Armor import Gambeson
         from game_objects.Items.Weapon import Sword, Dagger, Mace, Spear, Axe, Torch
-        from game_objects.Items.Consumable import HealthPotion
+        from game_objects.Items.Consumables.HealthPotion import HealthPotion
         from game_objects.Items.Item import Item
         self.equipment = {
             "head": None,
@@ -98,7 +98,7 @@ class CharacterInventory:
 
     def equip_item(self, item: Item, slot_name: str) -> (bool, str):
         from game_objects.Items.Equipment import Equipment
-        from game_objects.Items.Consumable import Consumable
+        from game_objects.Items.Consumables.Consumable import Consumable
         slot_name = slot_name.lower()
         if slot_name not in self.equipment.keys():
             return False, "Invalid Slot Name"
@@ -168,7 +168,7 @@ class CharacterInventory:
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop
         from game_objects.Commands.PartialCombatCommands.UseItemCommand import UseItem
         from game_objects.Items.Equipment import Equipment
-        from game_objects.Items.Consumable import Consumable
+        from game_objects.Items.Consumables.Consumable import Consumable
         to_return: List[Command] = [InventoryCommand()]
         if len(self.bag) > 0:
             to_return.append(Drop())

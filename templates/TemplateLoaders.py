@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, Dict, List
+from typing import Dict
 
 from game_objects.Items.Item import Item
 from game_objects.NPC import NPC
@@ -51,7 +51,11 @@ def item_mappings() -> Dict[str, Item]:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon
     from game_objects.Items.Shield import Shield
-    from game_objects.Items.Consumable import HealthPotion, StaminaPotion, ManaPotion, FocusPotion, RagePotion
+    from game_objects.Items.Consumables.HealthPotion import HealthPotion
+    from game_objects.Items.Consumables.ManaPotion import ManaPotion
+    from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
+    from game_objects.Items.Consumables.RagePotion import RagePotion
+    from game_objects.Items.Consumables.FocusPotion import FocusPotion
 
     from game_objects.Items.Item import Item, Coins, DungeonMap
     return {
@@ -82,7 +86,9 @@ def generate_item_templates() -> None:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
     from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
     from game_objects.Items.Shield import Shield
-    from game_objects.Items.Consumable import HealthPotion, StaminaPotion, ManaPotion
+    from game_objects.Items.Consumables.HealthPotion import HealthPotion
+    from game_objects.Items.Consumables.ManaPotion import ManaPotion
+    from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
     to_write = [
         Armor(),
         PlateArmor(),

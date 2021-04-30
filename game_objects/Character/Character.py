@@ -20,7 +20,7 @@ class Character(CombatEntity, GameEntity):
         from game_objects.Character.CharacterInventory import CharacterInventory
         from game_objects.Character.CharacterSkills import CharacterSkills
         if name is None:
-            self.name: str = names.get_full_name(gender='male')
+            self.name: str = names.get_full_name()
         else:
             self.name: str = name
         self.current_room: Optional[Room] = None

@@ -99,7 +99,8 @@ class Goblin(Enemy):
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
-        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        from game_objects.Items.Consumables.HealthPotion import HealthPotion
+        from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 10)), .30),
             (HealthPotion(),                     .20),
@@ -128,7 +129,8 @@ class Kobold(Enemy):
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
-        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        from game_objects.Items.Consumables.HealthPotion import HealthPotion
+        from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 10)), .50),
             (Dagger(),                           .50),
@@ -168,7 +170,8 @@ class Orc(Enemy):
                 "electricity": -5
             }
         }
-        from game_objects.Items.Consumable import HealthPotion, StaminaPotion
+        from game_objects.Items.Consumables.HealthPotion import HealthPotion
+        from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
         from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 100)), .50),

@@ -62,7 +62,7 @@ class StrawGolem(BossEnemy):
         self.health = 150
         self.natural_armor = {
             "hit": {
-                "slash": -2,
+                "slash": -1,
                 "fire": -5,
                 "pierce": 1,
                 "bludgeon": 2

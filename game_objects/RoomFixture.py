@@ -25,7 +25,10 @@ class TreasureChest(Fixture):
         from game_objects.Items.Shield import Shield
         from game_objects.Items.Armor import PlateArmor, ChainArmor, Gambeson
         from game_objects.Items.Item import Coins, DungeonMap
-        from game_objects.Items.Consumable import HealthPotion, StaminaPotion, FocusPotion, RagePotion
+        from game_objects.Items.Consumables.HealthPotion import HealthPotion
+        from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
+        from game_objects.Items.Consumables.RagePotion import RagePotion
+        from game_objects.Items.Consumables.FocusPotion import FocusPotion
         from game_objects.LootTable import LootTable
         super().__init__()
         self.name = "Chest"
