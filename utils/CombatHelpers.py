@@ -5,13 +5,16 @@ from game_objects.AttackAction import AttackAction
 from utils.Dice import roll
 
 
-def calculate_hit(attack: AttackAction, player_hit_bonus, hit_resistances: Dict[str, int]) -> bool:
+def calculate_hit(attack: AttackAction, player_hit_bonus, hit_resistances: Dict[str, int]) -> str:
     matched_hit_resistance = hit_resistances.get(attack.dmg_type, 0)
     hit_roll = roll(1, 20, advantage=attack.hit_bonus+player_hit_bonus)
     miss_roll = roll(1, 20, advantage=matched_hit_resistance)
+    # print(f"Rolled {hit_roll} vs {miss_roll} diff is {hit_roll-miss_roll}")
     if hit_roll <= miss_roll:
-        return False
-    return True
+        return "miss"
+    if (hit_roll - miss_roll) > 10:
+        return "critical"
+    return "hit"
 
 
 def calculate_damage(attack: AttackAction, player_dmg_bonus, dmg_resistances: Dict[str, int]) -> int:

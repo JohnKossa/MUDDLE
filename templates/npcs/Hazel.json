@@ -16,28 +16,43 @@
                 "text": "The little girl leans forward against the counter, clearly trying to balance on her toes. \"Hey there! I'm Hazel. Welcome to Bottle of Wonders! How can I help you today?\"",
                 "responses": [
                     "INTRODUCE_SELF",
-                    "WHERE_PARENTS_UNFAMILIAR"
+                    "WHERE_PARENTS_UNFAMILIAR",
+                    "WHAT_DO_YOU_SELL"
                 ]
             },
             "GREETING_AQUAINTED": {
                 "text": "Hazel says in her usual squeaky voice, \"Well, hello again {character.name}. Good to see you again.\"",
                 "responses": [
-                    "WHERE_PARENTS_FAMILIAR"
+                    "WHERE_PARENTS_FAMILIAR",
+                    "WHAT_DO_YOU_SELL"
                 ]
             },
             "INTRODUCTION_RESP": {
                 "text": "\"Nice to meet you, {character.name}. Let me know if you need help with anything.\"",
                 "responses": [
-                    "WHERE_PARENTS_FAMILIAR"
+                    "WHERE_PARENTS_FAMILIAR",
+                    "WHAT_DO_YOU_SELL"
                 ]
             },
             "PARENTS_RESP_EVASIVE": {
                 "text": "Hazel looks annoyed. \"They're.... not here. I can help you though.\"",
-                "responses": null
+                "responses": [
+                    "WHAT_DO_YOU_SELL"
+                ]
             },
             "PARENTS_RESP_HONEST": {
                 "text": "\"Oh, I haven't seen them in a loooong time. They died over a hundred years ago. This is my shop. If there's anything you need, I can probably get it for you.\"",
-                "responses": null
+                "responses": [
+                    "WHAT_DO_YOU_SELL"
+                ]
+            },
+            "WHAT_I_SELL": {
+                "text": "Hazel giggles slightly, \"We specialize in the more...natural side of magic. We've got a good selection of potions. There's a brewing kit in the corner. We also sell raw ingredients. We also sell...\" Hazel breaks into a whisper,\"poisons, if you're into that kind of thing. If we don't have what you're looking for in stock, I can probably order it for you.\" ",
+                "responses": [
+                    "WHERE_PARENTS_UNFAMILIAR",
+                    "WHERE_PARENTS_FAMILIAR",
+                    "WHAT_DO_YOU_SELL"
+                ]
             }
         },
         "responses": {
@@ -48,17 +63,22 @@
             },
             "WHERE_PARENTS_UNFAMILIAR": {
                 "text": "Are your parents around?",
+                "condition": "relationship['familiarity'] < 1",
                 "dialog": "PARENTS_RESP_EVASIVE"
             },
             "WHERE_PARENTS_FAMILIAR": {
                 "text": "Are your parents around?",
+                "condition": "relationship['familiarity'] >= 1",
                 "dialog": "PARENTS_RESP_HONEST"
             },
-            "WHAT_DO_YOU_SELL": {}
+            "WHAT_DO_YOU_SELL": {
+                "text": "So, what all do you sell here?",
+                "dialog": "WHAT_I_SELL"
+            }
         }
     },
     "relationship": {
-        "Eric Cothran": {
+        "Horace Hamilton": {
             "familiarity": 1,
             "opinion": 0
         }

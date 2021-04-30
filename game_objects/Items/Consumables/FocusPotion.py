@@ -23,7 +23,7 @@ class FocusPotion(Consumable):
 
     @classmethod
     def from_dict(cls, source_dict):
-        to_return = StaminaPotion()
+        to_return = FocusPotion()
         to_return.__dict__.update(source_dict)
         return to_return
 
@@ -50,14 +50,14 @@ class FocusPotionStatus(CharacterStatus):
         if source_player == self.character:
             self.data["remaining_turns"] = self.data["remaining_turns"] - 1
             if self.data["remaining_turns"] <= 0:
-                game.discord_connection.send_game_chat("You feel the effects of the focus potion begin to fade.", [source_player.discord_user])
+                game.discord_connection.send_game_chat_sync("You feel the effects of the focus potion begin to fade.", [source_player.discord_user])
                 source_player.status_effects.remove(self)
                 self.character = None
                 self.detach_triggers(game)
 
     def detach_on_leave_room(self, source_player: Optional[Character] = None, game: Optional[Game] = None, **kwargs):
         if source_player == self.character:
-            game.discord_connection.send_game_chat("You feel the effects of the focus potion begin to fade.",
+            game.discord_connection.send_game_chat_sync("You feel the effects of the focus potion begin to fade.",
                                                    [source_player.discord_user])
             source_player.status_effects.remove(self)
             self.character = None

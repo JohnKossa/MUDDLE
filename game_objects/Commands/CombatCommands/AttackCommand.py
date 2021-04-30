@@ -62,11 +62,19 @@ class AttackCommand(CombatOnlyCommand):
         dmg_bonus = target.dmg_bonus
         hit_resistance = target.resistances["hit"]
         dmg_resistance = target.resistances["dmg"]
-        attack_hits = calculate_hit(self.attack_action, hit_bonus, hit_resistance)
-        if not attack_hits:
-            game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. It misses.")
+        hit_result = calculate_hit(self.attack_action, hit_bonus, hit_resistance)
+        if hit_result == "miss":
+            game.discord_connection.send_game_chat_sync(
+                f"{source_player.combat_name} uses {self.attack_action.name}. It misses.")
             return
-        damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
-        assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
-        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. "+assign_damage_response)
-        game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)
+        elif hit_result == "critical":
+            damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance) + calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
+            assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
+            game.discord_connection.send_game_chat_sync(
+                f"{source_player.combat_name} uses {self.attack_action.name}. Critical hit! " + assign_damage_response)
+            game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)
+        else:
+            damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
+            assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
+            game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. "+assign_damage_response)
+            game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)

@@ -37,5 +37,19 @@ def print_advantage_spread() -> None:
         print(f"avg {total/1000}")
 
 
+def print_diff_spread() -> None:
+    trials = 100000
+    diffs = {}
+    for i in range(-19, 20):
+        diffs[str(i)] = 0
+    for i in range(trials):
+        diff = roll(1, 20) - roll(1, 20)
+        diffs[str(diff)] = diffs[str(diff)] + 1
+    for i in range(-19, 20):
+        diffs[str(i)] = (diffs[str(i)] / trials)*100
+    print(str(diffs))
+
+
 if __name__ == "__main__":
-    print_advantage_spread()
+    # print_advantage_spread()
+    print_diff_spread()
