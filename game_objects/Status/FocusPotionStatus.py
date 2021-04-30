@@ -10,7 +10,7 @@ from utils.TriggerFunc import TriggerFunc
 class FocusPotionStatus(CharacterStatus):
     def __init__(self, parent):
         super().__init__(parent)
-        self.hit_bonus = 1
+        self.hit_bonus = 2
         self.data = {
             "remaining_turns": 5
         }

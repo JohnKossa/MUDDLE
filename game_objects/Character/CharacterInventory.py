@@ -161,7 +161,8 @@ class CharacterInventory:
         self.bag.append(to_add)
 
     def get_commands(self, game) -> List[Command]:
-        from game_objects.Commands.Command import Command, InventoryCommand
+        from game_objects.Commands.Command import Command
+        from game_objects.Commands.StaticCommands.InventoryCommand import InventoryCommand
         from game_objects.Commands.NoncombatCommands.UnequipCommand import Unequip
         from game_objects.Commands.NoncombatCommands.EquipCommand import Equip
         from game_objects.Commands.PartialCombatCommands.DropCommand import Drop

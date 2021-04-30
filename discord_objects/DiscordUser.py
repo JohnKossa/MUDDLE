@@ -15,7 +15,11 @@ class DiscordUser:
         self.discord_obj: discord.User = discord_obj
 
     def get_commands(self, game) -> List[Command]:
-        from game_objects.Commands.Command import ShowMap, ShowAliases, ListCommands, ShowHelp, AdminMap
+        from game_objects.Commands.StaticCommands.AdminMap import AdminMap
+        from game_objects.Commands.StaticCommands.ShowMap import ShowMap
+        from game_objects.Commands.StaticCommands.ListCommands import ListCommands
+        from game_objects.Commands.StaticCommands.ShowAliases import ShowAliases
+        from game_objects.Commands.StaticCommands.ShowHelp import ShowHelp
         cmd_list = [ListCommands(), ShowAliases(), ShowMap(), ShowHelp()]
         if self.current_character is not None and not self.current_character.dead:
             cmd_list.extend(self.current_character.get_commands(game))

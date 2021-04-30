@@ -10,7 +10,7 @@ from utils.TriggerFunc import TriggerFunc
 class RagePotionStatus(CharacterStatus):
     def __init__(self, parent):
         super().__init__(parent)
-        self.dmg_bonus = 1
+        self.dmg_bonus = 2
         self.data = {
             "remaining_turns": 5
         }

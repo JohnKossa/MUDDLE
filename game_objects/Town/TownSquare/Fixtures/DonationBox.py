@@ -12,7 +12,7 @@ class DonationBox(Fixture):
         self.aliases = ["Box"]
 
     def describe(self) -> str:
-        return "Off to the side is a simple wooden box on a post. It's heavily weathered. It's super interesting."
+        return "Off to the side is a simple wooden box on a post. It's heavily weathered."
 
     def get_commands(self, game) -> List[Command]:
         # TODO will add a donate command

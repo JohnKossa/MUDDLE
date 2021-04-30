@@ -16,9 +16,9 @@
             "dmg_type": "fire",
             "dmg_roll": [
                 1,
-                6
+                12
             ],
-            "dmg_bonus": 0,
+            "dmg_bonus": -1,
             "action_cost": 1
         }
     ],

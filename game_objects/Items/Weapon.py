@@ -61,7 +61,7 @@ class Torch(Weapon):
         super().__init__()
         self.name: str = "Torch"
         self.attacks: List[AttackAction] = [
-            AttackAction(name="firepoke", hit_bonus=3, dmg_type="fire", dmg_roll=(1, 6), dmg_bonus=0)
+            AttackAction(name="firepoke", hit_bonus=3, dmg_type="fire", dmg_roll=(1, 12), dmg_bonus=-1)
         ]
         self.default_attack: str = "firepoke"
 

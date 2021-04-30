@@ -20,15 +20,15 @@ class DodgeCommand(CombatOnlyCommand):
         return "\n".join([
             "Attempts to dodge attacks until the beginning of your next turn.",
             "Costs 10 stamina to use.",
-            "Params: None",
+            "Params: None"
         ])
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         from game_objects.Status.DodgeStatus import DodgeStatus
-        if source_player.stamina < 10:
+        if source_player.stamina < 5:
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name}'s stamina is too low.")
         else:
-            source_player.stamina = source_player.stamina - 10
+            source_player.stamina = source_player.stamina - 5
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} dodges.")
             status = DodgeStatus(source_player)
             status.attach_triggers(game)

@@ -135,7 +135,8 @@ class Character(CombatEntity, GameEntity):
             return []
         from game_objects.Commands.CombatCommands.DodgeCommand import DodgeCommand
         from game_objects.Commands.CombatCommands.PassCommand import PassCommand
-        from game_objects.Commands.Command import CharacterCommand, LookCommand
+        from game_objects.Commands.StaticCommands.CharacterCommand import CharacterCommand
+        from game_objects.Commands.StaticCommands.LookCommand import LookCommand
         from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
         from game_objects.Commands.NoncombatCommands.NoncombatCommand import NoncombatCommand
         # TODO add a character sheet command
