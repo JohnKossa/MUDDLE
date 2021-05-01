@@ -50,18 +50,28 @@ class Enemy(CombatEntity, GameEntity):
 
     @property
     def resistances(self) -> dict:  # TODO create a type for this
-        return {
+        to_return = {
             "hit": sum_resistances(self.natural_armor["hit"], self.armor_bonus["hit"]),
             "dmg": sum_resistances(self.natural_armor["dmg"], self.armor_bonus["dmg"])
         }
+        for status in self.status_effects:
+            to_return["hit"] = sum_resistances(to_return["hit"], status.hit_resistances)
+            to_return["dmg"] = sum_resistances(to_return["dmg"], status.dmg_resistances)
+        return to_return
 
     @property
     def hit_bonus(self) -> int:
-        return 0
+        to_return = 0
+        for status in self.status_effects:
+            to_return = to_return + status.hit_bonus
+        return to_return
 
     @property
     def dmg_bonus(self) -> int:
-        return 0
+        to_return = 0
+        for status in self.status_effects:
+            to_return = to_return + status.dmg_bonus
+        return to_return
 
     @property
     def initiative(self) -> int:

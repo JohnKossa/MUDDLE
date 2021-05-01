@@ -3,7 +3,7 @@ from __future__ import annotations
 import Game
 
 
-class CharacterStatus(object):
+class StatusEffect(object):
     def __init__(self, parent):
         self.hit_resistances = {}
         self.dmg_resistances = {}
@@ -11,7 +11,7 @@ class CharacterStatus(object):
         self.dmg_bonus = 0
         self.triggers = {}
         self.data = {}
-        self.character = parent
+        self.parent = parent
 
     def attach_triggers(self, game: Game) -> None:
         for k, v, in self.triggers.items():

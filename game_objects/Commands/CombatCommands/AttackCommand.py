@@ -38,16 +38,18 @@ class AttackCommand(CombatOnlyCommand):
     def do_combat_action(self, game: Game, source_player: CombatEntity, params: List[Any]) -> None:
         from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy
+        from utils.CommandHelpers import match_enemy, match_player
         enemies = source_player.current_room.combat.enemies
         players = source_player.current_room.combat.players
         target = None
         if len(params):
-            for enemy in enemies:
-                if enemy.combat_name.lower() == params[0].lower():
-                    target = enemy
-            for player in players:
-                if player.combat_name.lower() == params[0].lower():
-                    target = player
+            match_enemy_result = match_enemy(enemies, params)
+            if match_enemy_result is not None:
+                target = match_enemy_result
+            else:
+                match_player_result = match_player(players, params)
+                if match_player_result is not None:
+                    target = match_player_result
         elif isinstance(source_player, Character):
             if len(enemies) == 0:
                 return

@@ -13,6 +13,8 @@ class CombatEntity:
         self.max_mana: int = 0
         self.current_room: Optional[Room] = None
         self.dead: bool = False
+        self.status_effects = []
+        self.luck: int = 0
 
     @property
     def combat_name(self) -> str:
@@ -24,4 +26,12 @@ class CombatEntity:
 
     @property
     def initiative(self) -> int:
+        raise Exception("Not Implemented")
+
+    @property
+    def hit_bonus(self) -> int:
+        raise Exception("Not Implemented")
+
+    @property
+    def dmg_bonus(self) -> int:
         raise Exception("Not Implemented")

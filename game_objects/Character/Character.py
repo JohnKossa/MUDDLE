@@ -129,7 +129,7 @@ class Character(CombatEntity, GameEntity):
                 self.current_room.combat.players.remove(self)
         self.discord_user.current_character = None
         for status in self.status_effects:
-            status.character = None
+            status.parent = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
     def get_commands(self, game) -> List[Command]:
