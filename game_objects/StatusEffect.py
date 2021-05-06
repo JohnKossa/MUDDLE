@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 import Game
+from game_objects.CombatEntity import CombatEntity
 
 
 class StatusEffect(object):
-    def __init__(self, parent):
+    def __init__(self, parent: CombatEntity):
         self.hit_resistances = {}
         self.dmg_resistances = {}
         self.hit_bonus = 0
         self.dmg_bonus = 0
         self.triggers = {}
         self.data = {}
-        self.parent = parent
+        self.parent: CombatEntity = parent
 
     def attach_triggers(self, game: Game) -> None:
         for k, v, in self.triggers.items():

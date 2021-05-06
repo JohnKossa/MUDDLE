@@ -4,6 +4,7 @@ from typing import Optional
 class CombatEntity:
     def __init__(self):
         super().__init__()
+        from utils.CombatHelpers import assign_damage
         from game_objects.Room import Room
         self.health: int = 0
         self.max_health: int = 0
@@ -15,6 +16,7 @@ class CombatEntity:
         self.dead: bool = False
         self.status_effects = []
         self.luck: int = 0
+        self.assign_damage = assign_damage
 
     @property
     def combat_name(self) -> str:

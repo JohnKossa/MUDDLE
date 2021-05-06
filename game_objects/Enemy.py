@@ -34,7 +34,6 @@ class Enemy(CombatEntity, GameEntity):
         self.possible_attacks: List[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0))
         ]
-        self.assign_damage = assign_damage
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
         self.loot_table = LootTable([

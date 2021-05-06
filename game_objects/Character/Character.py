@@ -6,7 +6,6 @@ import Game
 
 from game_objects.CombatEntity import CombatEntity
 from game_objects.GameEntity import GameEntity
-from utils.CombatHelpers import sum_resistances, assign_damage
 from utils.Dice import roll
 
 
@@ -42,12 +41,11 @@ class Character(CombatEntity, GameEntity):
             "hit": {},
             "dmg": {}
         }
-        self.status_effects = []
-        self.assign_damage = assign_damage
 
     @property
     def resistances(self) -> dict:  # TODO Define a type for this
         from game_objects.Items.Armor import Armor
+        from utils.CombatHelpers import sum_resistances
         to_return = self.base_resistances.copy()
         equipment = filter(lambda x: isinstance(x, Armor), self.inventory.equipment.values())
         for item in equipment:
@@ -104,7 +102,7 @@ class Character(CombatEntity, GameEntity):
         from game_objects.Character.CharacterInventory import CharacterInventory
         from game_objects.Character.CharacterSkills import CharacterSkills
         new_char = Character(name=source_dict["name"])
-        new_char.zone = source_dict["zone"]
+        #  new_char.zone = source_dict["zone"]
         new_char.skills = CharacterSkills.from_dict(source_dict["skills"], new_char)
         new_char.inventory = CharacterInventory.from_dict(source_dict["inventory"])
         new_char.discord_user = UserUtils.get_user_by_username(source_dict["discord_user"], game.discord_users)

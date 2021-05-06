@@ -1,21 +1,24 @@
 from __future__ import annotations
 
 import random
-from typing import Any, List
+from typing import Any, List, Optional
 
 import Game
-from game_objects.CombatEntity import CombatEntity
+
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from utils.CombatHelpers import calculate_hit, calculate_damage
 
 
 class AttackCommand(CombatOnlyCommand):
+    from game_objects.CombatEntity import CombatEntity
     from game_objects.AttackAction import AttackAction
+    from game_objects.Items.Weapon import Weapon
 
-    def __init__(self, attack_action: AttackAction, aliases: List[str] = None):
+    def __init__(self, attack_action: AttackAction, aliases: List[str] = None, weapon: Optional[Weapon] = None):
         from game_objects.AttackAction import AttackAction
         super().__init__()
         self.combat_action_cost: int = attack_action.action_cost
+        self.source_weapon = weapon
         self.attack_action: AttackAction = attack_action
         if aliases is not None:
             self.aliases: List[str] = aliases
@@ -39,6 +42,7 @@ class AttackCommand(CombatOnlyCommand):
         from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy
         from utils.CommandHelpers import match_enemy, match_player
+        from utils.CombatHelpers import CritBehaviors
         enemies = source_player.current_room.combat.enemies
         players = source_player.current_room.combat.players
         target = None
@@ -70,11 +74,8 @@ class AttackCommand(CombatOnlyCommand):
                 f"{source_player.combat_name} uses {self.attack_action.name}. It misses.")
             return
         elif hit_result == "critical":
-            damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance) + calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
-            assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
-            game.discord_connection.send_game_chat_sync(
-                f"{source_player.combat_name} uses {self.attack_action.name}. Critical hit! " + assign_damage_response)
-            game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)
+            crit_func_name = "default" if self.source_weapon is None else self.source_weapon.crit_behavior
+            CritBehaviors.get_by_name(crit_func_name)(game, self.attack_action, source_player, target, self.source_weapon)
         else:
             damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
             assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)

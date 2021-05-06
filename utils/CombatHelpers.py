@@ -1,7 +1,8 @@
 from __future__ import annotations
-from typing import Dict
+from typing import Callable, Dict, Optional
 
 from game_objects.AttackAction import AttackAction
+
 from utils.Dice import roll
 
 
@@ -38,3 +39,58 @@ def assign_damage(game, source, target, damage) -> str:
         return f"{target.combat_name} takes {damage} damage. ({target.health} hp left)"
     return f"{target.combat_name} takes {damage} damage."
 
+
+class CritBehaviors:
+    import Game
+    from game_objects.AttackAction import AttackAction
+    from game_objects.CombatEntity import CombatEntity
+    from game_objects.Items.Weapon import Weapon
+
+    @staticmethod
+    def get_by_name(name) -> Callable:
+        mappings = {
+            "default": CritBehaviors.double_damage,
+            "apply_status_fire": CritBehaviors.apply_status_fire,
+            "double_dmg": CritBehaviors.double_damage,
+            "triple_dmg": CritBehaviors.triple_damage
+        }
+        return mappings.get(name, CritBehaviors.double_damage)
+
+    @staticmethod
+    def double_damage(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
+        """Roll damage twice"""
+        dmg_bonus = target.dmg_bonus
+        dmg_resistance = target.resistances["dmg"]
+        damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance) + calculate_damage(
+            attack_action, dmg_bonus, dmg_resistance)
+        assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
+        game.discord_connection.send_game_chat_sync(
+            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
+        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+
+    @staticmethod
+    def triple_damage(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
+        """Roll damage three times"""
+        dmg_bonus = target.dmg_bonus
+        dmg_resistance = target.resistances["dmg"]
+        damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance) + calculate_damage(
+            attack_action, dmg_bonus, dmg_resistance) + calculate_damage(
+            attack_action, dmg_bonus, dmg_resistance)
+        assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
+        game.discord_connection.send_game_chat_sync(
+            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
+        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+
+    @staticmethod
+    def apply_status_fire(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
+        """Apply onfire status to target"""
+        from game_objects.Statuses.OnFireStatus import OnFireStatus
+        dmg_bonus = target.dmg_bonus
+        dmg_resistance = target.resistances["dmg"]
+        damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
+        assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
+        target.status_effects.append(OnFireStatus(target))
+        game.discord_connection.send_game_chat_sync(
+            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
+        game.discord_connection.send_game_chat_sync(f"{target.combat_name} is engulfed in flames!")
+        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
