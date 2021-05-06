@@ -17,6 +17,26 @@ class CombatEntity:
         self.status_effects = []
         self.luck: int = 0
         self.assign_damage = assign_damage
+        self.base_actions = 2
+
+    @property
+    def display_health(self) -> str:
+        return str(round(self.health, 1))
+
+    @property
+    def display_stamina(self) -> str:
+        return str(round(self.stamina, 1))
+
+    @property
+    def display_mana(self) -> str:
+        return str(round(self.mana, 1))
+
+    @property
+    def actions(self) -> int:
+        to_return = self.base_actions
+        for status in self.status_effects:
+            to_return = to_return + status.actions
+        return to_return
 
     @property
     def combat_name(self) -> str:

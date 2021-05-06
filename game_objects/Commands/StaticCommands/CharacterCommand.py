@@ -26,9 +26,9 @@ class CharacterCommand(Command):
         player = discord_user.current_character
         to_return = "\n".join([
             f"{player.name}",
-            f"HP: {player.health}/{player.max_health}",
-            f"PP: {player.stamina}/{player.max_stamina}",
-            f"MP {player.mana}/{player.max_mana}"
+            f"HP: {player.display_health}/{player.max_health}",
+            f"PP: {player.display_stamina}/{player.max_stamina}",
+            f"MP {player.display_mana}/{player.max_mana}"
         ])
         if get_by_index(params, 0, "").lower() == "stats":
             to_return = to_return + "\n"

@@ -41,7 +41,7 @@ class RagePotionStatus(StatusEffect):
             "remaining_turns": 5 if duration is None else duration
         }
         self.triggers = {
-            "before_player_combat": TriggerFunc(self.decrement_on_turn_start, self.parent),
+            "before_entity_combat": TriggerFunc(self.decrement_on_turn_start, self.parent),
             "leave_room": TriggerFunc(self.detach_on_leave_room, self.parent)
         }
 

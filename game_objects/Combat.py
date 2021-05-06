@@ -78,10 +78,9 @@ class Combat:
         initiative_list = [(x, self.initiatives[x]) for x in combat_entities]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
         for actor in sorted_initiative_list:
+            game.trigger("before_entity_combat", source_entity=actor, room=self.room)
             if actor.dead:
                 continue
-            if type(actor) is Character:
-                game.trigger("before_player_combat", source_player=actor, room=self.room)
             for order in self.orders[actor]:
                 # if order is still valid
                 action = order[0]
@@ -95,8 +94,7 @@ class Combat:
                 self.cleanup_dead_players(game)
 
                 # TODO additional cleanup for items
-            if type(actor) is Character:
-                game.trigger("after_player_combat", source_player=actor)
+            game.trigger("after_entity_combat", source_entity=actor)
 
         # post-round actions
         game.trigger("round_end", room=self.room)

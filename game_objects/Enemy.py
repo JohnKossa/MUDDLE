@@ -22,7 +22,6 @@ class Enemy(CombatEntity, GameEntity):
         self.description: str = None
         self.max_health: int = 50
         self.health: int = 50
-        self.actions: int = 2
         self.natural_armor: dict = {
             "hit": {},
             "dmg": {}

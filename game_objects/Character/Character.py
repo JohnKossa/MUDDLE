@@ -35,7 +35,6 @@ class Character(CombatEntity, GameEntity):
         self.stamina: int = 100
         self.max_mana: int = 100
         self.mana: int = 100
-        self.actions: int = 2
         self.luck: int = 0
         self.base_resistances: dict = {
             "hit": {},
@@ -91,7 +90,7 @@ class Character(CombatEntity, GameEntity):
             "max_stamina": self.max_stamina,
             "mana": self.mana,
             "max_mana": self.max_mana,
-            "actions": self.actions,
+            "base_actions": self.base_actions,
             "luck": self.luck,
             "base_resistances": self.base_resistances
         }
@@ -112,7 +111,7 @@ class Character(CombatEntity, GameEntity):
         new_char.max_stamina = source_dict["max_stamina"]
         new_char.mana = source_dict["mana"]
         new_char.max_mana = source_dict["max_mana"]
-        new_char.actions = source_dict["actions"]
+        new_char.base_actions = source_dict["base_actions"]
         new_char.base_resistances = source_dict["base_resistances"]
         return new_char
 

@@ -28,7 +28,7 @@ class BlockCommand(CombatOnlyCommand):
         from utils.TriggerFunc import TriggerFunc
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} raises their shield.")
         source_player.assign_damage = BlockCommand.assign_damage
-        game.once("before_player_combat", TriggerFunc(BlockCommand.detach_damage_replacement))
+        game.once("before_entity_combat", TriggerFunc(BlockCommand.detach_damage_replacement))
 
     @staticmethod
     def detach_damage_replacement(source_player=None, **kwargs):
@@ -41,12 +41,12 @@ class BlockCommand(CombatOnlyCommand):
         remaining_damage = damage - stamina_damage
         target.health = max(0, target.health - remaining_damage)
         if isinstance(target, Character):
-            to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage. ({target.stamina} pp left)"
+            to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage. ({target.display_stamina} pp left)"
         else:
             to_return = f"{target.combat_name}'s shield absorbs {stamina_damage} damage."
         if remaining_damage > 0:
             if isinstance(target, Character):
-                to_return = to_return + f"{target.name} takes {remaining_damage} damage. ({target.health} hp left)"
+                to_return = to_return + f"{target.name} takes {remaining_damage} damage. ({target.display_health} hp left)"
             else:
                 to_return = to_return + f"{target.name} takes {remaining_damage} damage."
         return to_return

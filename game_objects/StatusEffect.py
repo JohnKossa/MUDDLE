@@ -12,6 +12,7 @@ class StatusEffect(object):
         self.dmg_bonus = 0
         self.triggers = {}
         self.data = {}
+        self.actions = 0
         self.parent: CombatEntity = parent
 
     def attach_triggers(self, game: Game) -> None:

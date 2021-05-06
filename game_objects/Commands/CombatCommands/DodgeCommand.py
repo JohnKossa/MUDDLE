@@ -21,7 +21,7 @@ class DodgeCommand(CombatOnlyCommand):
     def show_help(cls) -> str:
         return "\n".join([
             "Attempts to dodge attacks until the beginning of your next turn.",
-            "Costs 10 stamina to use.",
+            "Costs 5 stamina to use.",
             "Params: None"
         ])
 
@@ -48,7 +48,7 @@ class DodgeStatus(StatusEffect):
             "fire": 1
         }
         self.triggers = {
-            "before_player_combat": TriggerFunc(self.detach_on_turn_start, self.parent),
+            "before_entity_combat": TriggerFunc(self.detach_on_turn_start, self.parent),
             "leave_room": TriggerFunc(self.detach_on_turn_start, self.parent)
         }
 

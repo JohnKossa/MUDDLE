@@ -36,7 +36,7 @@ def assign_damage(game, source, target, damage) -> str:
     from game_objects.Character.Character import Character
     target.health = max(0, target.health-damage)
     if isinstance(target, Character):
-        return f"{target.combat_name} takes {damage} damage. ({target.health} hp left)"
+        return f"{target.combat_name} takes {damage} damage. ({target.display_health} hp left)"
     return f"{target.combat_name} takes {damage} damage."
 
 
@@ -89,7 +89,9 @@ class CritBehaviors:
         dmg_resistance = target.resistances["dmg"]
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
         assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
-        target.status_effects.append(OnFireStatus(target))
+        fire_status = OnFireStatus(target)
+        fire_status.attach_triggers(game)
+        target.status_effects.append(fire_status)
         game.discord_connection.send_game_chat_sync(
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
         game.discord_connection.send_game_chat_sync(f"{target.combat_name} is engulfed in flames!")
