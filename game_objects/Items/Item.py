@@ -1,13 +1,12 @@
 from __future__ import annotations
 from typing import Any, List, Optional
 
-import Game
-from game_objects import Character
-from game_objects.Commands.Command import Command
 from game_objects.GameEntity import GameEntity
 
 
 class Item(GameEntity):
+    from game_objects import Character
+
     def __init__(self):
         super().__init__()
         self.quantity: int = 1
@@ -59,11 +58,11 @@ class Item(GameEntity):
         new_item.template = self.template
         return new_item
 
-    def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def use_effect(self, game: 'Game', source_player: Character, params: List[Any]) -> None:
         # describes what happens when a player does !use with the item
         raise Exception(f"Use effect not implemented for {self.name}")
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> List['Command']:
         return []
 
 

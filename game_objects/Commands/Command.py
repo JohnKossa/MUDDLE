@@ -2,8 +2,6 @@ from __future__ import annotations
 from typing import List, Optional
 import discord
 
-import Game
-
 from utils.ListHelpers import get_by_index
 
 
@@ -25,7 +23,7 @@ class Command:
     def command_name(cls) -> str:
         return cls.__name__
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: 'Game', params: List[str], message: discord.Message) -> str:
         raise Exception("No action implemented for command")
 
 
@@ -48,7 +46,7 @@ class RebuildMaze(Command):
             "    2. Difficulty"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: 'Game', params: List[str], message: discord.Message) -> str:
         width = int(get_by_index(params, 0, "11"))
         height = int(get_by_index(params, 1, "11"))
         difficulty = int(get_by_index(params, 2, "6"))
@@ -73,7 +71,7 @@ class NewCharacter(Command):
             "Params: None"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: 'Game', params: List[str], message: discord.Message) -> str:
         from game_objects.Character.Character import Character
         from discord_objects.DiscordUser import UserUtils, DiscordUser
         new_player = Character()

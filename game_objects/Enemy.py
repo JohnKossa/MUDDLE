@@ -6,7 +6,7 @@ from game_objects.AttackAction import AttackAction
 from game_objects.CombatEntity import CombatEntity
 from game_objects.GameEntity import GameEntity
 from utils.Dice import roll
-from utils.CombatHelpers import sum_resistances, assign_damage
+from utils.CombatHelpers import sum_resistances
 
 
 class Enemy(CombatEntity, GameEntity):

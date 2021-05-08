@@ -44,5 +44,6 @@
             "action_cost": 2
         }
     ],
-    "default_attack": "strike"
+    "default_attack": "strike",
+    "crit_behavior": "default"
 }

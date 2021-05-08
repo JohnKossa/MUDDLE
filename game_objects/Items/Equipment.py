@@ -1,13 +1,12 @@
 from __future__ import annotations
 from typing import Any, List
 
-import Game
-from game_objects import Character
-from game_objects.Commands.Command import Command
 from game_objects.Items.Item import Item
 
 
 class Equipment(Item):
+    from game_objects import Character
+
     def __init__(self):
         super().__init__()
         self.slot: str = ""
@@ -18,11 +17,11 @@ class Equipment(Item):
 
         }
 
-    def use_effect(self, game: Game, source_player: Character, params: List[Any]):
+    def use_effect(self, game: 'Game', source_player: Character, params: List[Any]):
         # equips the item
         pass
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> List['Command']:
         # will add equip and unequip commands
         return super().get_commands(game) + []
 

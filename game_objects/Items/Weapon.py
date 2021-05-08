@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import List
 
-from game_objects.Commands.Command import Command
 from game_objects.Items.Equipment import Equipment
 
 
 class Weapon(Equipment):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         from game_objects.AttackAction import AttackAction
         super().__init__()
@@ -45,6 +46,8 @@ class Weapon(Equipment):
 
 
 class Sword(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -61,6 +64,8 @@ class Sword(Weapon):
 
 
 class Torch(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -73,6 +78,8 @@ class Torch(Weapon):
 
 
 class Dagger(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -84,7 +91,24 @@ class Dagger(Weapon):
         self.default_attack: str = "stab"
 
 
+class DoyensDagger(Weapon):
+    from game_objects.Commands.Command import Command
+
+    def __init__(self):
+        super().__init__()
+        from game_objects.AttackAction import AttackAction
+        self.name: str = "Doyen'sDagger"
+        self.attacks: List[AttackAction] = [
+            AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(2, 4), dmg_bonus=0),
+            AttackAction(name="stab", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0)
+        ]
+        self.default_attack: str = "stab"
+        self.crit_behavior = "triple_dmg"
+
+
 class Mace(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -98,6 +122,8 @@ class Mace(Weapon):
 
 
 class Spear(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -110,6 +136,8 @@ class Spear(Weapon):
 
 
 class Axe(Weapon):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction

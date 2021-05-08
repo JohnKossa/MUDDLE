@@ -1,4 +1,6 @@
 class Spell:
     def __init__(self):
-        pass
+        self.name = ""
+        self.mana_cost = 0
+
 

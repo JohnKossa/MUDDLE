@@ -10,8 +10,6 @@ from utils.Dice import roll
 
 
 class Character(CombatEntity, GameEntity):
-    from game_objects.Commands.Command import Command
-
     def __init__(self, name: str = None):
         super().__init__()
         from game_objects.Room import Room
@@ -129,7 +127,7 @@ class Character(CombatEntity, GameEntity):
             status.parent = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> List['Command']:
         if self.dead:
             return []
         from game_objects.Commands.CombatCommands.DodgeCommand import DodgeCommand

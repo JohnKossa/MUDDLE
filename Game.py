@@ -5,24 +5,22 @@ import math
 import random
 
 from typing import List, Optional
-
-from game_objects.Character.Character import Character
-from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
-from game_objects.BossEnemy import StrawGolem, StoneGolem
-from game_objects.NPC import NPC
-from game_objects.Maze.Maze import Maze
-from game_objects.Town.Town import Town
-from game_objects.RoomFixture import TreasureChest
-from utils.Scheduler import Scheduler, ScheduledTask
-from utils.TriggerFunc import TriggerFunc
+from utils.Scheduler import ScheduledTask
 
 
 class Game:
     from game_objects.Room import Room
+    from game_objects.Character.Character import Character
+    from game_objects.Enemy import Enemy
+    from game_objects.NPC import NPC
+    from utils.TriggerFunc import TriggerFunc
 
     def __init__(self):
+        from game_objects.Maze.Maze import Maze
         from discord_objects.DiscordUser import DiscordUser
         from DiscordConnection import CustomClient
+        from game_objects.Town.Town import Town
+        from utils.Scheduler import Scheduler
         self.maze: Maze = None
         self.players_dict: dict = {}
         self.enemies_dict: dict = {}
@@ -48,6 +46,7 @@ class Game:
         return list(self.npcs_dict.values())
 
     def load_players(self) -> None:
+        from game_objects.Character.Character import Character
         from os import listdir
         from os.path import isfile, join
         import json
@@ -66,6 +65,7 @@ class Game:
     def save_players(self) -> None:
         import datetime
         import json
+        from utils.Scheduler import ScheduledTask
         for player in self.players:
             try:
                 player_dict = player.to_dict()
@@ -93,6 +93,8 @@ class Game:
 
     def setup_hooks(self) -> None:
         import datetime
+        from utils.Scheduler import ScheduledTask
+        from utils.TriggerFunc import TriggerFunc
         self.on("enter_room", TriggerFunc(self.start_combat))
         self.on("player_defeated", TriggerFunc(self.cleanup_dead_player))
         self.on("enemy_defeated", TriggerFunc(self.cleanup_dead_enemy))
@@ -117,6 +119,8 @@ class Game:
         self.npcs_dict[apothecary.guid] = apothecary
 
     def seed_enemies(self) -> None:
+        from game_objects.Enemy import Enemy, Goblin, Kobold, Orc
+        from game_objects.BossEnemy import StrawGolem, StoneGolem
         num_small_enemies = math.isqrt(self.maze.width * self.maze.height)
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
         chosen_rooms = random.choices(viable_rooms, k=num_small_enemies)
@@ -137,6 +141,7 @@ class Game:
         self.enemies_dict[boss.guid] = boss
 
     def seed_loot_stashes(self) -> None:
+        from game_objects.RoomFixture import TreasureChest
         viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
         loot_stash_count = math.isqrt(len(viable_rooms))
         viable_rooms.sort(key=lambda x: x.num_neighbors)
@@ -162,6 +167,7 @@ class Game:
 
     def boss_defeated(self, source_enemy: Optional[Enemy] = None, room: Optional[Room] = None, **kwargs):
         import datetime
+        from utils.Scheduler import ScheduledTask
         if room == self.maze.exit_room:
             enemies = room.get_enemies(self)
             enemies = [*filter(lambda x: not x.dead, enemies)]
@@ -183,7 +189,8 @@ class Game:
         self.discord_connection.send_game_chat_sync(
             "The labyrinth vanishes into a puff of smoke and re-materializes. You suddenly find yourself in the entrance chamber to a brand new maze.")
 
-    def init_maze(self, width: int = 11, height: int = 11, difficulty: int = 6) -> None:
+    def init_maze(self, width: int = 9, height: int = 9, difficulty: int = 6) -> None:
+        from game_objects.Maze.Maze import Maze
         if self.maze is not None:
             self.maze.cleanup()
         self.maze = Maze(width=width, height=height)

@@ -37,7 +37,8 @@ class CustomClient(discord.Client):
         text_channels = guild.text_channels
         self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
         await self.send_game_chat("Server started.")
-        self.game.load_players()
+        if len(self.game.players) == 0:
+            self.game.load_players()
 
     def send_game_chat_sync(self, text: str, tagged_users: List[DiscordUser] = []) -> None:
         self.loop.create_task(self.send_game_chat(text, tagged_users=tagged_users))

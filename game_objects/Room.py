@@ -1,23 +1,21 @@
 from __future__ import annotations
 from typing import Any, List, Optional
 
-import Game
-from game_objects.Commands.Command import Command
-from game_objects.Conversation import Conversation
-from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
-from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
-from game_objects.Enemy import Enemy
-from game_objects.NPC import NPC
 from utils.TextHelpers import enumerate_objects, pluralize
 
 
 class Room:
+    import Game
     from game_objects.Character.Character import Character
+    from game_objects.Enemy import Enemy
+    from game_objects.Commands.Command import Command
+    from game_objects.NPC import NPC
 
     def __init__(self, name: str = ""):
         from game_objects.Combat import Combat
         from game_objects.RoomFixture import Fixture
         from game_objects.Items.Item import Item
+        from game_objects.Conversation import Conversation
         self.name: str = name
         self.aliases: List[str] = []
         self.template: Any = None
@@ -66,6 +64,8 @@ class Room:
         return list(filter(lambda x: x.current_room == self, game.npcs))
 
     def get_commands(self, game) -> List[Command]:
+        from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
+        from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
         from game_objects.Commands.NoncombatCommands.ConversationCommands import TalkCommand, SayCommand
         to_return = [Exit()]
         if len(self.items) > 0:

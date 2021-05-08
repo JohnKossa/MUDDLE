@@ -78,6 +78,8 @@ class Combat:
         initiative_list = [(x, self.initiatives[x]) for x in combat_entities]
         sorted_initiative_list = map(lambda y: y[0], sorted(initiative_list, key=lambda x: x[1]))
         for actor in sorted_initiative_list:
+            if actor.dead:
+                continue
             game.trigger("before_entity_combat", source_entity=actor, room=self.room)
             if actor.dead:
                 continue

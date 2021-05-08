@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import List
 
-from game_objects.Commands.Command import Command
 from game_objects.Items.Equipment import Equipment
 
 
 class Armor(Equipment):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         self.slot: str = "Body"
@@ -35,6 +36,8 @@ class Armor(Equipment):
 
 
 class PlateArmor(Armor):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
@@ -57,6 +60,8 @@ class PlateArmor(Armor):
 
 
 class ChainArmor(Armor):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
@@ -79,6 +84,8 @@ class ChainArmor(Armor):
 
 
 class Gambeson(Armor):
+    from game_objects.Commands.Command import Command
+
     def __init__(self):
         super().__init__()
         self.name: str = "Gambeson"

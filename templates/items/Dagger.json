@@ -33,5 +33,6 @@
             "action_cost": 1
         }
     ],
-    "default_attack": "stab"
+    "default_attack": "stab",
+    "crit_behavior": "default"
 }

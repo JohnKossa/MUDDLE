@@ -21,7 +21,7 @@ class Fixture:
 class TreasureChest(Fixture):
     def __init__(self, lootable_items=None):
         import random
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DoyensDagger
         from game_objects.Items.Shield import Shield
         from game_objects.Items.Armor import PlateArmor, ChainArmor, Gambeson
         from game_objects.Items.Item import Coins, DungeonMap
@@ -48,7 +48,8 @@ class TreasureChest(Fixture):
             (Spear(),                            .05),
             (PlateArmor(),                       .05),
             (ChainArmor(),                       .05),
-            (Gambeson(),                         .05)
+            (Gambeson(),                         .05),
+            (DoyensDagger(),                     .01)
         ]).roll_drops()
 
     def describe(self) -> str:

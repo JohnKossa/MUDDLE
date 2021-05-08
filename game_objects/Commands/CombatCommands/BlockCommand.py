@@ -1,13 +1,16 @@
 from __future__ import annotations
-from typing import Any, List
+from typing import Any, List, Optional
 
 from Game import Game
-from game_objects.Character.Character import Character
+from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
-from utils.CombatHelpers import assign_damage as default_damage_assignment
+from game_objects.StatusEffect import StatusEffect
+from utils.TriggerFunc import TriggerFunc
 
 
 class BlockCommand(CombatOnlyCommand):
+    from game_objects.CombatEntity import CombatEntity
+
     def __init__(self, aliases: List[str] = None):
         super().__init__()
         self.combat_action_cost: int = 1
@@ -24,18 +27,47 @@ class BlockCommand(CombatOnlyCommand):
             "Params: None",
         ])
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
-        from utils.TriggerFunc import TriggerFunc
-        game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} raises their shield.")
-        source_player.assign_damage = BlockCommand.assign_damage
-        game.once("before_entity_combat", TriggerFunc(BlockCommand.detach_damage_replacement))
+    def do_combat_action(self, game: Game, source_entity: CombatEntity, params: List[Any]) -> None:
+        game.discord_connection.send_game_chat_sync(f"{source_entity.combat_name} raises their shield.")
+        status = BlockingStatus(source_entity)
+        status.attach_triggers(game)
+        source_entity.status_effects.append(status)
 
-    @staticmethod
-    def detach_damage_replacement(source_player=None, **kwargs):
-        source_player.assign_damage = default_damage_assignment
+
+class BlockingStatus(StatusEffect):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.hit_resistances = {
+            "pierce": 1,
+            "slash": 1
+        }
+        self.triggers = {
+            "before_entity_combat": TriggerFunc(self.tick),
+            "leave_room": TriggerFunc(self.remove_on_leave_room)
+        }
+        self.parent.assign_damage = BlockingStatus.assign_damage
+
+    def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:
+        if source_entity != self.parent:
+            return
+        from utils.CombatHelpers import assign_damage
+        self.parent.assign_damage = assign_damage
+        self.parent.status_effects.remove(self)
+        self.parent = None
+        self.detach_triggers(game)
+
+    def remove_on_leave_room(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:
+        if source_entity != self.parent:
+            return
+        from utils.CombatHelpers import assign_damage
+        self.parent.assign_damage = assign_damage
+        self.parent.status_effects.remove(self)
+        self.parent = None
+        self.detach_triggers(game)
 
     @staticmethod
     def assign_damage(game, source, target, damage):
+        from game_objects.Character.Character import Character
         stamina_damage = min(damage, target.stamina)
         target.stamina = max(0, target.stamina - stamina_damage)
         remaining_damage = damage - stamina_damage

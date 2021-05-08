@@ -22,5 +22,6 @@
             "action_cost": 1
         }
     ],
-    "default_attack": "firepoke"
+    "default_attack": "firepoke",
+    "crit_behavior": "apply_status_fire"
 }

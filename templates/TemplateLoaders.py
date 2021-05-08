@@ -1,19 +1,20 @@
 from __future__ import annotations
 from typing import Dict
 
-from game_objects.Items.Item import Item
-from game_objects.NPC import NPC
+#from game_objects.Items.Item import Item
+#from game_objects.NPC import NPC
 
 
-def load_npc_from_template(filename) -> NPC:
+def load_npc_from_template(filename) -> 'NPC':
     import json
+    from game_objects.NPC import NPC
     with open(f"templates/npcs/{filename}.json", "r") as infile:
         source_dict = json.load(infile)
         to_return = NPC.from_dict(source_dict)
         return to_return
 
 
-def load_item_from_template(filename) -> Item:
+def load_item_from_template(filename) -> 'Item':
     import json
     from game_objects.Items.Armor import Armor
     from game_objects.Items.Item import Item, Coins
@@ -40,16 +41,16 @@ def load_item_from_template(filename) -> Item:
             return constructors[constructor].from_dict(source_dict)
 
 
-def save_item_template(item: Item) -> None:
+def save_item_template(item: 'Item') -> None:
     import json
     print(f"Writing to templates/items/{item.name}")
     with open(f"templates/items/{item.name}.json", "w") as outfile:
         json.dump(item.to_dict(full_depth=True), outfile, indent=4)
 
 
-def item_mappings() -> Dict[str, Item]:
+def item_mappings() -> Dict[str, 'Item']:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
-    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon
+    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon, DoyensDagger
     from game_objects.Items.Shield import Shield
     from game_objects.Items.Consumables.HealthPotion import HealthPotion
     from game_objects.Items.Consumables.ManaPotion import ManaPotion
@@ -66,6 +67,7 @@ def item_mappings() -> Dict[str, Item]:
         "Sword": Sword,
         "Torch": Torch,
         "Dagger": Dagger,
+        "DoyensDagger": DoyensDagger,
         "Mace": Mace,
         "Spear": Spear,
         "Axe": Axe,
@@ -84,7 +86,7 @@ def item_mappings() -> Dict[str, Item]:
 
 def generate_item_templates() -> None:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
-    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe
+    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, DoyensDagger
     from game_objects.Items.Shield import Shield
     from game_objects.Items.Consumables.HealthPotion import HealthPotion
     from game_objects.Items.Consumables.ManaPotion import ManaPotion
@@ -97,6 +99,7 @@ def generate_item_templates() -> None:
         Sword(),
         Torch(),
         Dagger(),
+        DoyensDagger(),
         Mace(),
         Spear(),
         Axe(),
