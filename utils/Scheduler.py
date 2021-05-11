@@ -4,7 +4,7 @@ import asyncio
 
 
 class Scheduler:
-    def __init__(self, async_loop, resolution: int = 10):
+    def __init__(self, async_loop, resolution: int = 5):
         self.scheduled_tasks = []
         self.async_loop = async_loop
         self.resolution = resolution

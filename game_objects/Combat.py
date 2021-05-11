@@ -84,14 +84,13 @@ class Combat:
             if actor.dead:
                 continue
             for order in self.orders[actor]:
-                # if order is still valid
-                action = order[0]
-                params = order[1]
-                action(game, actor, params)
-                # else
-                #   perform pass
-
-                # cleanup
+                order_still_valid = order.validator(game, actor, order.params)
+                if not order_still_valid:
+                    from game_objects.Commands.CombatCommands.PassCommand import PassCommand
+                    pass_cmd = PassCommand()
+                    pass_cmd.do_combat_action(game, actor, [])
+                else:
+                    order.action(game, actor, order.params)
                 self.cleanup_dead_enemies(game)
                 self.cleanup_dead_players(game)
 
@@ -157,7 +156,7 @@ class Combat:
         if action_count < player.actions:
             actions_to_fill = player.actions - action_count
             for count in range(actions_to_fill):
-                self.orders[player].append((pass_cmd.do_combat_action, [], pass_cmd.combat_action_cost))
+                self.orders[player].append(CombatOrder(action=pass_cmd.do_combat_action, params=[], validator=pass_cmd.command_valid, cost=pass_cmd.combat_action_cost))
             return True
         return False
 
@@ -169,7 +168,7 @@ class Combat:
                 chosen_combat_command = enemy.get_action(round_num=self.round_counter)
                 if action_count + chosen_combat_command.combat_action_cost <= enemy.actions:
                     target_player = random.choice(self.players).combat_name  # TODO randomly targeting players, switch for intelligent decision later
-                    self.orders[enemy].append((chosen_combat_command.do_combat_action, [target_player], chosen_combat_command.combat_action_cost))
+                    self.orders[enemy].append(CombatOrder(action=chosen_combat_command.do_combat_action, params=[target_player], validator=chosen_combat_command.command_valid, cost=chosen_combat_command.combat_action_cost))
                 failsafe = failsafe - 1
                 action_count = self.sum_actions_for_entity(enemy)
             if failsafe <= 0:
@@ -216,15 +215,12 @@ class Combat:
             return 0
         if len(order_list) == 0:
             return 0
-        return sum(x[2] for x in order_list)
+        return sum(x.cost for x in order_list)
 
     def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int, command_valid: Callable) -> bool:
-        # TODO check if player order is valid?
-        # TODO probably bounce that check back to a function on the action itself
         if not command_valid(game, source_player, params):
             game.discord_connection.send_game_chat_sync("Order invalid", tagged_users=[source_player.discord_user])
             return False
-        possible_targets: List[str] = [x.combat_name for x in self.players + self.enemies]
 
         current_action_costs = self.sum_actions_for_entity(source_player)
         if current_action_costs + cost > source_player.actions:
@@ -234,7 +230,7 @@ class Combat:
 
         if self.orders[source_player] is None:
             self.orders[source_player] = []
-        self.orders[source_player].append((action, params, cost))
+        self.orders[source_player].append(CombatOrder(action=action, validator=command_valid, params=params, cost=cost))
 
         all_actions_filled = True
         for player in self.players:
@@ -252,3 +248,11 @@ class Combat:
             game.scheduler.schedule_task(self.round_schedule_object)
             return True
         return True
+
+
+class CombatOrder:
+    def __init__(self, action=None, params=[], validator=None, cost=1):
+        self.action = action
+        self.params = params
+        self.validator = validator
+        self.cost = cost
