@@ -50,7 +50,7 @@ def save_item_template(item: 'Item') -> None:
 
 def item_mappings() -> Dict[str, 'Item']:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
-    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon, DoyensDagger
+    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, Weapon, DuelistDagger, WerebatFang
     from game_objects.Items.Shield import Shield
     from game_objects.Items.Consumables.HealthPotion import HealthPotion
     from game_objects.Items.Consumables.ManaPotion import ManaPotion
@@ -67,7 +67,8 @@ def item_mappings() -> Dict[str, 'Item']:
         "Sword": Sword,
         "Torch": Torch,
         "Dagger": Dagger,
-        "DoyensDagger": DoyensDagger,
+        "DuelistDagger": DuelistDagger,
+        "WerebatFang": WerebatFang,
         "Mace": Mace,
         "Spear": Spear,
         "Axe": Axe,
@@ -86,7 +87,7 @@ def item_mappings() -> Dict[str, 'Item']:
 
 def generate_item_templates() -> None:
     from game_objects.Items.Armor import Armor, PlateArmor, ChainArmor, Gambeson
-    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, DoyensDagger
+    from game_objects.Items.Weapon import Sword, Torch, Dagger, Mace, Spear, Axe, DuelistDagger, WerebatFang
     from game_objects.Items.Shield import Shield
     from game_objects.Items.Consumables.HealthPotion import HealthPotion
     from game_objects.Items.Consumables.ManaPotion import ManaPotion
@@ -99,7 +100,8 @@ def generate_item_templates() -> None:
         Sword(),
         Torch(),
         Dagger(),
-        DoyensDagger(),
+        DuelistDagger(),
+        WerebatFang(),
         Mace(),
         Spear(),
         Axe(),

@@ -218,19 +218,23 @@ class Combat:
             return 0
         return sum(x[2] for x in order_list)
 
-    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int) -> None:
+    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int, command_valid: Callable) -> bool:
         # TODO check if player order is valid?
         # TODO probably bounce that check back to a function on the action itself
+        if not command_valid(game, source_player, params):
+            game.discord_connection.send_game_chat_sync("Order invalid", tagged_users=[source_player.discord_user])
+            return False
         possible_targets: List[str] = [x.combat_name for x in self.players + self.enemies]
 
         current_action_costs = self.sum_actions_for_entity(source_player)
-        if current_action_costs + cost <= source_player.actions:
-            if self.orders[source_player] is None:
-                self.orders[source_player] = []
-            self.orders[source_player].append((action, params, cost))
-        else:
-            game.discord_connection.send_game_chat_sync("Order would overrun allowed action count", tagged_users=[source_player.discord_user])
-            return
+        if current_action_costs + cost > source_player.actions:
+            game.discord_connection.send_game_chat_sync("Order would overrun allowed action count",
+                                                        tagged_users=[source_player.discord_user])
+            return False
+
+        if self.orders[source_player] is None:
+            self.orders[source_player] = []
+        self.orders[source_player].append((action, params, cost))
 
         all_actions_filled = True
         for player in self.players:
@@ -240,8 +244,11 @@ class Combat:
         if all_actions_filled:
             game.discord_connection.send_game_chat_sync("All orders accepted.")
             game.scheduler.unschedule_task(self.round_schedule_object)
-            self.round_schedule_object = None
-            self.process_round(game)
+            self.round_schedule_object = ScheduledTask(datetime.datetime.now()+datetime.timedelta(seconds=1), self.process_round, game)
+            game.scheduler.schedule_task(self.round_schedule_object)
+            return True
         elif self.round_schedule_object is None:
             self.round_schedule_object = ScheduledTask(datetime.datetime.now()+datetime.timedelta(minutes=10), self.process_round, game)
             game.scheduler.schedule_task(self.round_schedule_object)
+            return True
+        return True

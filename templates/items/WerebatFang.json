@@ -1,9 +1,9 @@
 {
-    "constructor": "DoyensDagger",
+    "constructor": "WerebatFang",
     "quantity": 1,
     "max_stack_size": 1,
     "weight": 0,
-    "name": "Doyen'sDagger",
+    "name": "WerebatFang",
     "slot": "hand",
     "max_hitpoints": 100,
     "hit_points": 100,
@@ -11,18 +11,7 @@
     "resistances": {},
     "attacks": [
         {
-            "name": "slash",
-            "hit_bonus": 1,
-            "dmg_type": "slash",
-            "dmg_roll": [
-                2,
-                4
-            ],
-            "dmg_bonus": 0,
-            "action_cost": 1
-        },
-        {
-            "name": "stab",
+            "name": "impale",
             "hit_bonus": 3,
             "dmg_type": "pierce",
             "dmg_roll": [
@@ -33,6 +22,6 @@
             "action_cost": 1
         }
     ],
-    "default_attack": "stab",
-    "crit_behavior": "triple_dmg"
+    "default_attack": "impale",
+    "crit_behavior": "vampirism"
 }

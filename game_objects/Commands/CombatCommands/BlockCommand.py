@@ -27,6 +27,10 @@ class BlockCommand(CombatOnlyCommand):
             "Params: None",
         ])
 
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+        # could optionally check for a shield or an item tha grants block, but might not be worth it
+        return True
+
     def do_combat_action(self, game: Game, source_entity: CombatEntity, params: List[Any]) -> None:
         game.discord_connection.send_game_chat_sync(f"{source_entity.combat_name} raises their shield.")
         status = BlockingStatus(source_entity)

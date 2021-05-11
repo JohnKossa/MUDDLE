@@ -91,19 +91,31 @@ class Dagger(Weapon):
         self.default_attack: str = "stab"
 
 
-class DoyensDagger(Weapon):
+class DuelistDagger(Weapon):
     from game_objects.Commands.Command import Command
 
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
-        self.name: str = "Doyen'sDagger"
+        self.name: str = "DuelistDagger"
         self.attacks: List[AttackAction] = [
             AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(2, 4), dmg_bonus=0),
             AttackAction(name="stab", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0)
         ]
         self.default_attack: str = "stab"
         self.crit_behavior = "triple_dmg"
+
+
+class WerebatFang(Weapon):
+    def __init__(self):
+        super().__init__()
+        from game_objects.AttackAction import AttackAction
+        self.name: str = "WerebatFang"
+        self.attacks: List[AttackAction] = [
+            AttackAction(name="impale", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0)
+        ]
+        self.default_attack: str = "impale"
+        self.crit_behavior = "vampirism"
 
 
 class Mace(Weapon):

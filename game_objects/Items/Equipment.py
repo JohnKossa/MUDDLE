@@ -14,7 +14,6 @@ class Equipment(Item):
         self.hit_points: int = 100
         self.active_effects: List[Any] = []
         self.resistances: dict = {  # any resistance not specified is assumed to be 0
-
         }
 
     def use_effect(self, game: 'Game', source_player: Character, params: List[Any]):

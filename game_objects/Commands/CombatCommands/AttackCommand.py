@@ -38,6 +38,33 @@ class AttackCommand(CombatOnlyCommand):
             "   0: Name of the enemy to attack (optional)"
         ])
 
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+        from game_objects.Character.Character import Character
+        from game_objects.Enemy import Enemy
+        from utils.CommandHelpers import match_enemy, match_player
+        enemies = source_player.current_room.combat.enemies
+        players = source_player.current_room.combat.players
+        target = None
+        if len(params) > 0:
+            match_enemy_result = match_enemy(enemies, params)
+            if match_enemy_result is not None:
+                target = match_enemy_result
+            else:
+                match_player_result = match_player(players, params)
+                if match_player_result is not None:
+                    target = match_player_result
+        elif isinstance(source_player, Character):
+            if len(enemies) == 0:
+                return False
+            target = random.choice(enemies)
+        elif isinstance(source_player, Enemy):
+            if len(players) == 0:
+                return False
+            target = random.choice(players)
+        if target is None:
+            return False
+        return True
+
     def do_combat_action(self, game: Game, source_player: CombatEntity, params: List[Any]) -> None:
         from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy

@@ -12,7 +12,7 @@ class BossEnemy(Enemy):
 class StoneGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DoyensDagger
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "Stone Golem"
@@ -48,13 +48,21 @@ class StoneGolem(BossEnemy):
                              action_cost=2))
         ]
         self.drops: List[Item] = [Coins(count=random.randint(100, 300))] + random.choices(
-            [Sword(), Dagger(), Spear(), Mace(), Axe(), Torch(), DoyensDagger()], k=4)
+            [
+                Sword(),
+                Dagger(),
+                Spear(),
+                Mace(),
+                Axe(),
+                Torch(),
+                DuelistDagger()
+            ], k=4) + random.choices([DuelistDagger(), WerebatFang()], k=1)
 
 
 class StrawGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DoyensDagger
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "Straw Golem"
@@ -95,4 +103,13 @@ class StrawGolem(BossEnemy):
                              dmg_bonus=0,
                              action_cost=2))
         ]
-        self.drops: List[Item] = [Coins(count=random.randint(100, 300))] + random.choices([Sword(), Dagger(), Spear(), Mace(), Axe(), Torch(), DoyensDagger()], k=4)
+        self.drops: List[Item] = [
+             Coins(count=random.randint(100, 300))
+         ] + random.choices([
+            Sword(),
+            Dagger(),
+            Spear(),
+            Mace(),
+            Axe(),
+            Torch()
+        ], k=4) + random.choices([DuelistDagger(), WerebatFang()], k=1)

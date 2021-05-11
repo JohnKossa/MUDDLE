@@ -9,6 +9,8 @@ from utils.ListHelpers import get_by_index
 
 
 class Exit(PartialCombatCommand):
+    from game_objects.CombatEntity import CombatEntity
+
     def __init__(self):
         super().__init__()
         self.aliases: List[str] = [
@@ -25,6 +27,14 @@ class Exit(PartialCombatCommand):
             "Params:",
             "    0: The name of the door to use"
         ])
+
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+        room = source_player.current_room
+        direction = params[0]
+        door = room.get_door(direction.lower())
+        if door is None:
+            return False
+        return True
 
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils

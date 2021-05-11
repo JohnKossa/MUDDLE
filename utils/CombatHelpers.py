@@ -52,7 +52,8 @@ class CritBehaviors:
             "default": CritBehaviors.double_damage,
             "apply_status_fire": CritBehaviors.apply_status_fire,
             "double_dmg": CritBehaviors.double_damage,
-            "triple_dmg": CritBehaviors.triple_damage
+            "triple_dmg": CritBehaviors.triple_damage,
+            "vampirism": CritBehaviors.vampirism
         }
         return mappings.get(name, CritBehaviors.double_damage)
 
@@ -96,3 +97,17 @@ class CritBehaviors:
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
         game.discord_connection.send_game_chat_sync(f"{target.combat_name} is engulfed in flames!")
         game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+
+    @staticmethod
+    def vampirism(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
+        """Roll damage and restore that amount of health in addition to the damage"""
+        dmg_bonus = target.dmg_bonus
+        dmg_resistance = target.resistances["dmg"]
+        damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
+        assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
+        damage_to_restore = min(damage_to_assign, source.max_health-source.health)
+        source.health = source.health + damage_to_restore
+        game.discord_connection.send_game_chat_sync(
+            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response + f"{source.combat_name} restores {damage_to_assign} health.")
+        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+

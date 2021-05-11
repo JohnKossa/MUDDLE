@@ -8,6 +8,8 @@ from game_objects.Commands.Command import Command
 
 
 class PartialCombatCommand(Command):
+    from game_objects.CombatEntity import CombatEntity
+
     def __init__(self):
         super().__init__()
 
@@ -22,8 +24,9 @@ class PartialCombatCommand(Command):
         else:
             return self.enqueue_order(game, target_player, params)
 
-    def command_valid(self, game: Game, source_player: Character, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
         """Check if the command is still valid."""
+        print("default validity command used")
         return True
 
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
@@ -34,11 +37,12 @@ class PartialCombatCommand(Command):
 
     def enqueue_order(self, game: Game, target_player: Character, params: List[Any]) -> str:
         room = target_player.current_room
-        room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost)
-        to_return = "Order Accepted."
-        if room.combat is not None:
-            action_count = room.combat.sum_actions_for_entity(target_player)
-            remaining_actions = target_player.actions - action_count
-            if 0 < remaining_actions < target_player.actions:
-                to_return = to_return + f"You have {remaining_actions} action points remaining."
-        return to_return
+        accepted = room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost, self.command_valid)
+        if accepted:
+            to_return = "Order Accepted."
+            if room.combat is not None:
+                action_count = room.combat.sum_actions_for_entity(target_player)
+                remaining_actions = target_player.actions - action_count
+                if 0 < remaining_actions < target_player.actions:
+                    to_return = to_return + f"You have {remaining_actions} action points remaining."
+            return to_return

@@ -1,0 +1,38 @@
+{
+    "constructor": "DuelistDagger",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "DuelistDagger",
+    "slot": "hand",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {},
+    "attacks": [
+        {
+            "name": "slash",
+            "hit_bonus": 1,
+            "dmg_type": "slash",
+            "dmg_roll": [
+                2,
+                4
+            ],
+            "dmg_bonus": 0,
+            "action_cost": 1
+        },
+        {
+            "name": "stab",
+            "hit_bonus": 3,
+            "dmg_type": "pierce",
+            "dmg_roll": [
+                3,
+                4
+            ],
+            "dmg_bonus": 0,
+            "action_cost": 1
+        }
+    ],
+    "default_attack": "stab",
+    "crit_behavior": "triple_dmg"
+}

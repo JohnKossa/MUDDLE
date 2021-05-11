@@ -8,6 +8,8 @@ from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import Par
 
 
 class UseItem(PartialCombatCommand):
+    from game_objects.CombatEntity import CombatEntity
+
     def __init__(self):
         super().__init__()
         self.aliases: List[str] = [
@@ -25,6 +27,21 @@ class UseItem(PartialCombatCommand):
             "Params:",
             "    0: The name of the item to use"
         ])
+
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+        # look for a matched item in belt only, calling use_effect on it
+        # look for matched item in belt then bag, calling use_effect on it
+        from utils.ListHelpers import get_by_index
+        item_name = get_by_index(params, 0, None)
+        if item_name is None:
+            return False
+        if isinstance(source_player, Character):
+            matched_item = source_player.inventory.get_belt_item_by_name(item_name)
+        else:
+            return False
+        if matched_item is None:
+            return False
+        return True
 
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         # look for matched item in belt then bag, calling use_effect on it
@@ -63,6 +80,7 @@ class UseItem(PartialCombatCommand):
         matched_item = source_player.inventory.get_belt_item_by_name(item_name)
         if matched_item is None:
             game.discord_connection.send_game_chat_sync(f"{item_name} was not found on belt", [source_player.discord_user])
+            return
         game.discord_connection.send_game_chat_sync(f"{source_player.name} uses {matched_item.name}.")
         matched_item.use_effect(game, source_player, params[1:])
         matched_item.quantity = matched_item.quantity - 1

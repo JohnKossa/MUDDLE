@@ -9,6 +9,8 @@ from utils.TriggerFunc import TriggerFunc
 
 
 class DodgeCommand(CombatOnlyCommand):
+    from game_objects.CombatEntity import CombatEntity
+
     def __init__(self, aliases: List[str] = None):
         super().__init__()
         self.combat_action_cost: int = 1
@@ -24,6 +26,12 @@ class DodgeCommand(CombatOnlyCommand):
             "Costs 5 stamina to use.",
             "Params: None"
         ])
+
+    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+        """Check if the command is still valid."""
+        if source_player.stamina >= 5:
+            return True
+        return False
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
         if source_player.stamina < 5:

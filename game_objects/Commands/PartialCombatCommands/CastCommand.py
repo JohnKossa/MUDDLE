@@ -8,47 +8,38 @@ from game_objects.Commands.PartialCombatCommands.PartialCombatCommand import Par
 from utils.ListHelpers import get_by_index
 
 
-class Drop(PartialCombatCommand):
-    from game_objects.CombatEntity import CombatEntity
-
+class Cast(PartialCombatCommand):
     def __init__(self):
         super().__init__()
         self.aliases: List[str] = [
-            "Drop",
-            "Discard"
+            "Cast",
+            "Magic"
         ]
         self.combat_action_cost: int = 0
 
     @classmethod
     def show_help(cls) -> str:
         return "\n".join([
-            "Not yet implemented: Will drop a held or stored item on the floor of the current room ",
+            "Not yet implemented: Will cast a known spell",
             "Params:",
-            "    0: Item Name",
-            "    1: (optional) Quantity"
+            "    0: Spell Name",
+            "    1: Target"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
-        """Check if the command is still valid."""
-        from utils.CommandHelpers import match_bag_item
-        target_item = get_by_index(params, 0)
-        if target_item is None:
-            return False
-        if isinstance(source_player, Character):
-            matched_item = match_bag_item(source_player, params)
-        else:
-            return False
-        if matched_item is None:
-            return False
-        return True
-
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message):
+        # get character from user name
+        # look up spell from known spells or from spellbook if one is equipped
+        # if spell can be used out of combat
+        #   check for valid targets
+        #   if valid
+        #       do it
+
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
         target_item = get_by_index(params, 0)
         if target_item is None:
-            return Drop.show_help()
+            return Cast.show_help()
         room = player.current_room
         player_bag = player.inventory.bag
         matched_item = player.inventory.get_bag_item_by_name(target_item)
