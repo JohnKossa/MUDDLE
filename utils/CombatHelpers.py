@@ -91,9 +91,7 @@ class CritBehaviors:
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
         assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
         fire_status = OnFireStatus(target)
-        fire_status.attach_triggers(game)
-        target.status_effects.append(fire_status)
-        fire_status.on_attach(game)
+        target.add_status(game, fire_status)
         game.discord_connection.send_game_chat_sync(
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
         game.discord_connection.send_game_chat_sync(f"{target.combat_name} is engulfed in flames!")

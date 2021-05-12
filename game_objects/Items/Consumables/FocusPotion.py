@@ -29,9 +29,7 @@ class FocusPotion(Consumable):
     def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} drinks a focus potion. Hit chance increased.")
         status = FocusPotionStatus(source_player)
-        status.attach_triggers(game)
-        source_player.status_effects.append(status)
-        status.on_attach(game)
+        source_player.add_status(game, status)
 
 
 class FocusPotionStatus(StatusEffect):

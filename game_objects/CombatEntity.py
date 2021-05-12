@@ -19,6 +19,11 @@ class CombatEntity:
         self.assign_damage = assign_damage
         self.base_actions = 2
 
+    def add_status(self, game, status):
+        self.status_effects.append(status)
+        status.attach_triggers(game)
+        status.on_attach(game)
+
     @property
     def display_health(self) -> str:
         return str(round(self.health, 1))
