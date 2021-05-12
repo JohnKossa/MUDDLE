@@ -40,9 +40,9 @@ class DodgeCommand(CombatOnlyCommand):
             source_player.stamina = source_player.stamina - 5
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} dodges.")
             status = DodgeStatus(source_player)
-            status.on_attach(game)
             status.attach_triggers(game)
             source_player.status_effects.append(status)
+            status.on_attach(game)
 
 
 class DodgeStatus(StatusEffect):
