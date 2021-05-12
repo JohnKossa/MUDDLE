@@ -190,6 +190,5 @@ class CharacterInventory:
     def generate_loot_table(self) -> LootTable:
         from game_objects.LootTable import LootTable
         all_items = self.bag + list(filter(lambda x: x is not None, self.equipment.values()))
-        item_count = len(all_items)
-        loot_table_items = map(lambda x: (x, 1/item_count), all_items)
+        loot_table_items = map(lambda x: (x, .5), all_items)
         return LootTable(loot_table_items)

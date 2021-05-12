@@ -20,6 +20,15 @@ class OnFireStatus(StatusEffect):
             "leave_room": TriggerFunc(self.tick)
         }
 
+    def on_attach(self, game: Game):
+        """If parent already has an OnFire status, remove this and boost that status by 1"""
+        for status in self.parent.status_effects:
+            if isinstance(status, OnFireStatus):
+                status.data["level"] = status.data["level"]+1
+                self.parent.status_effects.remove(self)
+                self.parent = None
+                self.detach_triggers(game)
+
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:
         if source_entity != self.parent:
             return

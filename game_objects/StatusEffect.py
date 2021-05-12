@@ -15,6 +15,9 @@ class StatusEffect(object):
         self.actions = 0
         self.parent: CombatEntity = parent
 
+    def on_attach(self, game: Game) -> None:
+        pass
+
     def attach_triggers(self, game: Game) -> None:
         for k, v, in self.triggers.items():
             game.on(k, v)
