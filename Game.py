@@ -91,6 +91,17 @@ class Game:
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_npcs))
 
+    def heal_safe_room_occupants(self) -> None:
+        import datetime
+        from game_objects.Maze.SafeRoom import SafeRoom
+        for player in self.players:
+            if isinstance(player.current_room, SafeRoom):
+                player.health += (player.max_health - player.health) * .05
+                player.stamina += (player.max_stamina - player.stamina) * .05
+                player.mana += (player.max_mana - player.mana) * .05
+        self.scheduler.schedule_task(
+            ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.heal_safe_room_occupants))
+
     def setup_hooks(self) -> None:
         import datetime
         from utils.Scheduler import ScheduledTask
@@ -102,6 +113,7 @@ class Game:
         self.on("maze_reset", TriggerFunc(self.invalidate_player_maps))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
         self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_npcs))
+        self.scheduler.schedule_task(ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=1), self.heal_safe_room_occupants))
 
     def invalidate_player_maps(self, **kwargs) -> None:
         for player in self.players:
@@ -148,6 +160,16 @@ class Game:
         chosen_rooms = viable_rooms[:loot_stash_count]
         for room in chosen_rooms:
             room.fixtures.append(TreasureChest())
+
+    def seed_safe_rooms(self) -> None:
+        from game_objects.Maze.SafeRoom import SafeRoom
+        viable_rooms = list(filter(lambda x: x != self.maze.entry_room and x != self.maze.exit_room, self.maze.rooms))
+        safe_room_count = 2
+        viable_rooms.sort(key=lambda x: x.num_neighbors, reverse=True)
+        chosen_rooms = viable_rooms[:safe_room_count]
+        for room in chosen_rooms:
+            self.maze.rooms.append(SafeRoom.clone_from_MazeRoom(room))
+            self.maze.rooms.remove(room)
 
     def start_combat(self, source_player: Optional[Character], room: Optional[Room] = None, **kwargs) -> None:
         if room is None:
@@ -197,6 +219,7 @@ class Game:
         self.maze.generate_maze((random.randrange(1, width - 1), width - 1), (random.randrange(1, width - 1), 0), difficulty=difficulty)
         self.delete_all_enemies()
         self.seed_enemies()
+        self.seed_safe_rooms()
         self.seed_loot_stashes()
         self.return_players_to_start()
         if self.discord_connection is not None:

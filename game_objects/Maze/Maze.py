@@ -159,6 +159,7 @@ class Maze:
         return "```"+result+"```"
 
     def admin_map(self, game: Game) -> str:
+        from game_objects.Maze.SafeRoom import SafeRoom
         result = ""
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
         count = 0
@@ -178,6 +179,8 @@ class Maze:
             elif room in player_rooms:
                 replacement = player_rooms.index(room)+1
                 grid[y_coord][x_coord] = str(replacement)
+            elif isinstance(room, SafeRoom):
+                grid[y_coord][x_coord] = "s"
             elif room in enemy_rooms:
                 grid[y_coord][x_coord] = "e"
             elif room in treasure_rooms:

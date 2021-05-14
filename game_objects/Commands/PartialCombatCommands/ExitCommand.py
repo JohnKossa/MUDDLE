@@ -47,11 +47,11 @@ class Exit(PartialCombatCommand):
         if door is None:
             return f"Invalid direction. Room has no {direction} exit."
         old_room = source_player.current_room
-        game.trigger("before_leave_room", source_player=source_player, room=old_room)
-        game.trigger("before_enter_room", source_player=source_player, room=door)
+        game.trigger("before_leave_room", source_player=source_player, source_entity=source_player, room=old_room)
+        game.trigger("before_enter_room", source_player=source_player, source_entity=source_player, room=door)
         source_player.current_room = door
-        game.trigger("leave_room", source_player=source_player, room=old_room)
-        game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
+        game.trigger("leave_room", source_player=source_player, source_entity=source_player, room=old_room)
+        game.trigger("enter_room", source_player=source_player, source_entity=source_player, room=source_player.current_room)
         return source_player.current_room.describe(game)
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:

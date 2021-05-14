@@ -2,6 +2,39 @@ from __future__ import annotations
 from typing import List
 
 
+def pronoun_3p_subject(obj) -> str:
+    if not hasattr(obj, "gender"):
+        return "they"
+    elif obj.gender == "male":
+        return "he"
+    elif obj.gender == "female":
+        return "she"
+    else:
+        return "they"
+
+
+def pronoun_3p_object(obj) -> str:
+    if not hasattr(obj, "gender"):
+        return "them"
+    elif obj.gender == "male":
+        return "him"
+    elif obj.gender == "female":
+        return "her"
+    else:
+        return "them"
+
+
+def pronoun_3p_possessive(obj) -> str:
+    if not hasattr(obj, "gender"):
+        return "their"
+    elif obj.gender == "male":
+        return "his"
+    elif obj.gender == "female":
+        return "her"
+    else:
+        return "their"
+
+
 def enumerate_objects(items: List[str]) -> str:
     if len(items) == 1:
         return items[0]
