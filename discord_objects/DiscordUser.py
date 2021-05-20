@@ -40,14 +40,8 @@ class UserUtils:
 
     @staticmethod
     def get_user_by_username(username: str, discord_users: List[DiscordUser]) -> Optional[DiscordUser]:
-        for user in discord_users:
-            if user.username == username:
-                return user
-        return None
+        return next((user for user in discord_users if user.username == username), None)
 
     @staticmethod
     def get_character_by_username(username: str, discord_users: List[DiscordUser]) -> Optional[Character]:
-        for user in discord_users:
-            if user.username == username:
-                return user.current_character
-        return None
+        return next((user.current_character for user in discord_users if user.username == username), None)

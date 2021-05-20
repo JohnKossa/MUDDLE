@@ -27,6 +27,7 @@ class Character(CombatEntity, GameEntity):
         self.skills: CharacterSkills = CharacterSkills(self)
         self.inventory: CharacterInventory = CharacterInventory()
         self.discord_user: Optional[DiscordUser] = None
+        self.known_spells = []
         self.max_health: int = 100
         self.health: int = 100
         self.max_stamina: int = 100

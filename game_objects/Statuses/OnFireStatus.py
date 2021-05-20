@@ -5,6 +5,7 @@ from Game import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.StatusEffect import StatusEffect
 from utils.TriggerFunc import TriggerFunc
+from utils.Constanats import Triggers, DamageTypes
 
 
 class OnFireStatus(StatusEffect):
@@ -16,18 +17,22 @@ class OnFireStatus(StatusEffect):
             "level": 1
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.tick)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.tick)
         }
 
     def on_attach(self, game: Game):
         """If parent already has an OnFire status, remove this and boost that status by 1"""
+        joined_to_other = False
         for status in self.parent.status_effects:
-            if isinstance(status, OnFireStatus):
+            if (status is not self) and isinstance(status, OnFireStatus):
                 status.data["level"] = status.data["level"]+1
-                self.parent.status_effects.remove(self)
-                self.parent = None
-                self.detach_triggers(game)
+                joined_to_other = True
+                break
+        if joined_to_other:
+            self.parent.status_effects.remove(self)
+            self.parent = None
+            self.detach_triggers(game)
 
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:
         if source_entity != self.parent:
@@ -35,8 +40,8 @@ class OnFireStatus(StatusEffect):
         from utils.Dice import roll
         from utils.CombatHelpers import assign_damage
         resistances = source_entity.resistances
-        fire_dmg_res = resistances["dmg"].get("fire", 0)
-        fire_hit_res = resistances["hit"].get("fire", 0)
+        fire_dmg_res = resistances["dmg"].get(DamageTypes.Fire, 0)
+        fire_hit_res = resistances["hit"].get(DamageTypes.Fire, 0)
         dmg_roll = roll(self.data["level"], 6, fire_dmg_res)
         game.discord_connection.send_game_chat_sync(f"The fire on {source_entity.combat_name} rages. " + assign_damage(game, None, source_entity, dmg_roll))
         extinguish_roll = roll(1, 20, source_entity.luck + fire_hit_res)
@@ -55,4 +60,4 @@ class OnFireStatus(StatusEffect):
             else:
                 game.discord_connection.send_game_chat_sync(f"The fire on {source_entity.combat_name} appears to shrink.")
 
-        self.hit_resistances["fire"] = fire_hit_res + self.data["level"]
+        self.hit_resistances[DamageTypes.Fire] = fire_hit_res + self.data["level"]

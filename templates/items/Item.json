@@ -4,7 +4,7 @@
     "max_stack_size": 1,
     "weight": 0,
     "name": "Item",
-    "slot": "Body",
+    "slot": "body",
     "max_hitpoints": 100,
     "hit_points": 100,
     "active_effects": [],

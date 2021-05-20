@@ -15,6 +15,7 @@ class CombatEntity:
         self.current_room: Optional[Room] = None
         self.dead: bool = False
         self.status_effects = []
+        self.known_spells = []
         self.luck: int = 0
         self.assign_damage = assign_damage
         self.base_actions = 2

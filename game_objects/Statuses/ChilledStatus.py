@@ -4,27 +4,29 @@ from typing import Optional
 from Game import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.StatusEffect import StatusEffect
+from utils.Constanats import DamageTypes
 from utils.TriggerFunc import TriggerFunc
 
 
 class ChilledStatus(StatusEffect):
     def __init__(self, parent, turns=5):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.hit_bonus = -1
         self.hit_resistances = {
-            "ice": -2
+            DamageTypes.Ice: -2
         }
         self.dmg_resistances = {
-            "ice": -2,
-            "fire": 1,
-            "bludgeon": -3
+            DamageTypes.Ice: -2,
+            DamageTypes.Fire: 1,
+            DamageTypes.Bludgeon: -3
         }
         self.data = {
             "turns": turns
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.remove_on_leave_room)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.remove_on_leave_room)
         }
 
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:

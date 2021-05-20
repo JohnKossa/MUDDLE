@@ -54,7 +54,8 @@ class Take(PartialCombatCommand):
             room.items = []
             return "\n".join(pickup_strings)
         else:
-            matched_item = next(filter(lambda x: x.name.lower() == target_item_name.lower(), items), None)
+            matched_item = next((x for x in items if x.name.lower() == target_item_name.lower()), None)
+            # matched_item = next(filter(lambda x: x.name.lower() == target_item_name.lower(), items), None)
             if matched_item is None:
                 return "Item not found"
             player.inventory.add_item_to_bag(matched_item)
@@ -65,7 +66,7 @@ class Take(PartialCombatCommand):
         target_item = params[0]
         room = source_player.current_room
         items = room.items
-        matched_item = next(filter(lambda x: x.name.lower() == target_item.lower(), items), None)
+        matched_item = next((x for x in items if x.name.lower() == target_item.lower()), None)
         if matched_item is None:
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} attempted to pick up a picked up  a {target_item} but could not find any.")
             return

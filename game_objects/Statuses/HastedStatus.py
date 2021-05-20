@@ -11,13 +11,14 @@ class HastedStatus(StatusEffect):
     # TODO if parent already has slowed status, this status counteracts it
     def __init__(self, parent, turns=5):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.actions = 1
         self.data = {
             "turns": turns
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.remove_on_leave_room)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.remove_on_leave_room)
         }
 
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:

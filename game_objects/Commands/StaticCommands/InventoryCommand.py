@@ -20,6 +20,7 @@ class InventoryCommand(Command):
 
     def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
+        from utils.Constanats import EquipmentSlots
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
         player.inventory.consolidate_items()
@@ -27,11 +28,11 @@ class InventoryCommand(Command):
         if len(player.inventory.equipment.values()) > 0:
             to_return = to_return + "Equipment:\n"
         for k, v in player.inventory.equipment.items():
-            if v is not None and k != "belt":
+            if v is not None and k != EquipmentSlots.Belt:
                 to_return = to_return + k.capitalize()+": "+v.name+"\n"
-            if k == "belt" and len(v) > 0:
+            if k == EquipmentSlots.Belt and len(v) > 0:
                 to_return = to_return + "Belt:"
-                for item_stack in player.inventory.equipment["belt"]:
+                for item_stack in player.inventory.equipment[EquipmentSlots.Belt]:
                     to_return = to_return + f"\n{item_stack.quantity}x {item_stack.name}"
         if len(player.inventory.bag) > 0:
             to_return = to_return + "\nBag:"

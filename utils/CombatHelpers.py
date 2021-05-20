@@ -60,6 +60,7 @@ class CritBehaviors:
     @staticmethod
     def double_damage(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
         """Roll damage twice"""
+        from utils.Constanats import Triggers
         dmg_bonus = target.dmg_bonus
         dmg_resistance = target.resistances["dmg"]
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance) + calculate_damage(
@@ -67,11 +68,12 @@ class CritBehaviors:
         assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
         game.discord_connection.send_game_chat_sync(
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
-        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+        game.trigger(Triggers.AttackHit, source=source, target=target, damage=damage_to_assign)
 
     @staticmethod
     def triple_damage(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
         """Roll damage three times"""
+        from utils.Constanats import Triggers
         dmg_bonus = target.dmg_bonus
         dmg_resistance = target.resistances["dmg"]
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance) + calculate_damage(
@@ -80,12 +82,13 @@ class CritBehaviors:
         assign_damage_response = target.assign_damage(game, source, target, damage_to_assign)
         game.discord_connection.send_game_chat_sync(
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
-        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+        game.trigger(Triggers.AttackHit, source=source, target=target, damage=damage_to_assign)
 
     @staticmethod
     def apply_status_fire(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
         """Apply onfire status to target"""
         from game_objects.Statuses.OnFireStatus import OnFireStatus
+        from utils.Constanats import Triggers
         dmg_bonus = target.dmg_bonus
         dmg_resistance = target.resistances["dmg"]
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
@@ -95,11 +98,12 @@ class CritBehaviors:
         game.discord_connection.send_game_chat_sync(
             f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response)
         game.discord_connection.send_game_chat_sync(f"{target.combat_name} is engulfed in flames!")
-        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+        game.trigger(Triggers.AttackHit, source=source, target=target, damage=damage_to_assign)
 
     @staticmethod
     def vampirism(game: Game, attack_action: AttackAction, source: CombatEntity, target: CombatEntity, weapon: Optional[Weapon], **kwargs):
         """Roll damage and restore that amount of health in addition to the damage"""
+        from utils.Constanats import Triggers
         dmg_bonus = target.dmg_bonus
         dmg_resistance = target.resistances["dmg"]
         damage_to_assign = calculate_damage(attack_action, dmg_bonus, dmg_resistance)
@@ -107,6 +111,6 @@ class CritBehaviors:
         damage_to_restore = min(damage_to_assign, source.max_health-source.health)
         source.health = source.health + damage_to_restore
         game.discord_connection.send_game_chat_sync(
-            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response + f"{source.combat_name} restores {damage_to_assign} health.")
-        game.trigger("attack_hit", source=source, target=target, damage=damage_to_assign)
+            f"{source.combat_name} uses {attack_action.name}. Critical hit! " + assign_damage_response + f" {source.combat_name} restores {damage_to_assign} health.")
+        game.trigger(Triggers.AttackHit, source=source, target=target, damage=damage_to_assign)
 

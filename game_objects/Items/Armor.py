@@ -2,14 +2,16 @@ from __future__ import annotations
 from typing import List
 
 from game_objects.Items.Equipment import Equipment
+from utils.Constanats import DamageTypes
 
 
 class Armor(Equipment):
     from game_objects.Commands.Command import Command
 
     def __init__(self):
+        from utils.Constanats import EquipmentSlots
         super().__init__()
-        self.slot: str = "Body"
+        self.slot: str = EquipmentSlots.Body
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.damage_resistances: dict = {}
         self.hit_resistances: dict = {}
@@ -43,16 +45,16 @@ class PlateArmor(Armor):
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronPlate"
         self.damage_resistances: dict = {
-            "slash": 2,
-            "pierce": 0,
-            "bludgeon": 1,
-            "electricity": -5
+            DamageTypes.Slash: 2,
+            DamageTypes.Pierce: 0,
+            DamageTypes.Bludgeon: 1,
+            DamageTypes.Electricity: -5
         }
         self.hit_resistances: dict = {
-            "slash": 2,
-            "pierce": 1,
-            "bludgeon": 0,
-            "electricity": -1
+            DamageTypes.Slash: 2,
+            DamageTypes.Pierce: 1,
+            DamageTypes.Bludgeon: 0,
+            DamageTypes.Electricity: -1
         }
 
     def get_commands(self, game) -> List[Command]:
@@ -67,16 +69,16 @@ class ChainArmor(Armor):
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronChainmail"
         self.damage_resistances: dict = {
-            "slash": 2,
-            "pierce": 1,
-            "bludgeon": 1,
-            "electricity": -3
+            DamageTypes.Slash: 2,
+            DamageTypes.Pierce: 1,
+            DamageTypes.Bludgeon: 1,
+            DamageTypes.Electricity: -3
         }
         self.hit_resistances: dict = {
-            "slash": 2,
-            "pierce": 1,
-            "bludgeon": 0,
-            "electricity": -1
+            DamageTypes.Slash: 2,
+            DamageTypes.Pierce: 1,
+            DamageTypes.Bludgeon: 0,
+            DamageTypes.Electricity: -1
         }
 
     def get_commands(self, game) -> List[Command]:
@@ -90,20 +92,20 @@ class Gambeson(Armor):
         super().__init__()
         self.name: str = "Gambeson"
         self.damage_resistances: dict = {
-            "slash": 1,
-            "pierce": 0,
-            "bludgeon": 2,
-            "electricity": 2,
-            "ice": 2,
-            "fire": -1,
+            DamageTypes.Slash: 1,
+            DamageTypes.Pierce: 0,
+            DamageTypes.Bludgeon: 2,
+            DamageTypes.Electricity: 2,
+            DamageTypes.Ice: 2,
+            DamageTypes.Fire: -1,
         }
         self.hit_resistances: dict = {
-            "slash": 1,
-            "pierce": 0,
-            "bludgeon": 0,
-            "electricity": 0,
-            "ice": 0,
-            "fire": -1
+            DamageTypes.Slash: 1,
+            DamageTypes.Pierce: 0,
+            DamageTypes.Bludgeon: 0,
+            DamageTypes.Electricity: 0,
+            DamageTypes.Ice: 0,
+            DamageTypes.Fire: -1
         }
 
     def get_commands(self, game) -> List[Command]:

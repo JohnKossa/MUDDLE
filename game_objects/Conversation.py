@@ -21,6 +21,7 @@ class Conversation:
         self.active_triggers = []
 
     def init_conversation(self, game, source_dict) -> None:
+        from utils.Constanats import Triggers
         self.dialog_dict = source_dict
         self.relationship = self.npc.get_relationship(self.character.name)
         for possible_init in self.dialog_dict["init"]:
@@ -35,7 +36,7 @@ class Conversation:
         from utils.TriggerFunc import TriggerFunc
         leave_room_trigger = TriggerFunc(self.cleanup_on_leave_room)
         self.active_triggers.append(leave_room_trigger)
-        game.once("leave_room", leave_room_trigger)
+        game.once(Triggers.LeaveRoom, leave_room_trigger)
 
     def cleanup_on_leave_room(self, source_player=None, game=None, **kwargs) -> None:
         if source_player == self.character:
@@ -80,6 +81,7 @@ class Conversation:
         self.say_node(game)
 
     def cleanup(self, game) -> None:
+        from utils.Constanats import Triggers
         if self.room is not None:
             self.room.conversations.remove(self)
         self.npc = None
@@ -89,4 +91,4 @@ class Conversation:
         self.room = None
         self.possible_responses = []
         for trigger in self.active_triggers:
-            game.off("leave_room", trigger)
+            game.off(Triggers.LeaveRoom, trigger)

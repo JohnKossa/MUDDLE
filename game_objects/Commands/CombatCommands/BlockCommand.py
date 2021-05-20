@@ -5,6 +5,7 @@ from Game import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from game_objects.StatusEffect import StatusEffect
+from utils.Constanats import DamageTypes
 from utils.TriggerFunc import TriggerFunc
 
 
@@ -40,13 +41,14 @@ class BlockCommand(CombatOnlyCommand):
 class BlockingStatus(StatusEffect):
     def __init__(self, parent):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.hit_resistances = {
-            "pierce": 1,
-            "slash": 1
+            DamageTypes.Pierce: 1,
+            DamageTypes.Slash: 1
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.remove_on_leave_room)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.remove_on_leave_room)
         }
         self.parent.assign_damage = BlockingStatus.assign_damage
 

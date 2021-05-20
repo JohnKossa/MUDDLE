@@ -164,10 +164,11 @@ class Maze:
         grid = [['X' for i in range(self.width*2 + 1)] for ii in range(self.height*2+1)]
         count = 0
         players = game.players
-        player_rooms = list(map(lambda x: x.current_room, players))
-        enemies = list(filter(lambda x: x.dead is False, game.enemies))
-        enemy_rooms = list(map(lambda x: x.current_room, enemies))
-        treasure_rooms = list(filter(lambda x: len(x.fixtures) > 0, self.rooms))
+        player_rooms = [x.current_room for x in players]
+        enemies = [x for x in game.enemies if x.dead is False]
+        enemy_rooms = [x.current_room for x in enemies]
+        treasure_rooms = [x for x in self.rooms if len(x.fixtures) > 0]
+        safe_rooms = [x for x in self.rooms if isinstance(x, SafeRoom)]
         for room in self.rooms:
             y_coord = 2*room.y_coord+1
             x_coord = 2*room.x_coord+1
@@ -179,7 +180,7 @@ class Maze:
             elif room in player_rooms:
                 replacement = player_rooms.index(room)+1
                 grid[y_coord][x_coord] = str(replacement)
-            elif isinstance(room, SafeRoom):
+            elif room in safe_rooms:
                 grid[y_coord][x_coord] = "s"
             elif room in enemy_rooms:
                 grid[y_coord][x_coord] = "e"

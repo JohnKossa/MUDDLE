@@ -30,7 +30,7 @@ class LootCommand(NoncombatCommand):
         object_name = get_by_index(params, 0, None)
         if object_name is None:
             return "No object specified to loot. Usage is:\n"+LootCommand.show_help()
-        matched_object = next(filter(lambda fixture: fixture.name.lower() == object_name.lower() and hasattr(fixture, "items"), room.fixtures), None)
+        matched_object = next((fixture for fixture in room.fixtures if fixture.name.lower() == object_name.lower() and hasattr(fixture, "items")), None)
         if matched_object is None:
             return f"Lootable object {object_name} not found."
         looted_items = matched_object.items

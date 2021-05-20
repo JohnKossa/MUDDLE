@@ -2,6 +2,7 @@ from __future__ import annotations
 import random
 from typing import List
 from game_objects.Enemy import Enemy
+from utils.Constanats import DamageTypes
 
 
 class BossEnemy(Enemy):
@@ -20,29 +21,29 @@ class StoneGolem(BossEnemy):
         self.health = 150
         self.natural_armor = {
             "hit": {
-                "slash": 3,
-                "fire": 5,
-                "pierce": 2,
-                "bludgeon": 0
+                DamageTypes.Slash: 3,
+                DamageTypes.Fire: 5,
+                DamageTypes.Pierce: 2,
+                DamageTypes.Bludgeon: 0
             },
             "dmg": {
-                "slash": 1,
-                "fire": 5,
-                "pierce": 1,
-                "bludgeon": -3,
-                "ice": 1
+                DamageTypes.Slash: 1,
+                DamageTypes.Fire: 5,
+                DamageTypes.Pierce: 1,
+                DamageTypes.Bludgeon: -3,
+                DamageTypes.Ice: 1
             }
         }
         self.possible_attacks: List[(int, AttackAction)] = [
             (2, AttackAction(name="punch",
                              hit_bonus=1,
-                             dmg_type="bludgeon",
+                             dmg_type=DamageTypes.Bludgeon,
                              dmg_roll=(2, 10),
                              dmg_bonus=0,
                              action_cost=1)),
             (1, AttackAction(name="smash",
                              hit_bonus=2,
-                             dmg_type="bludgeon",
+                             dmg_type=DamageTypes.Bludgeon,
                              dmg_roll=(3, 20),
                              dmg_bonus=0,
                              action_cost=2))
@@ -70,35 +71,35 @@ class StrawGolem(BossEnemy):
         self.health = 150
         self.natural_armor = {
             "hit": {
-                "slash": -1,
-                "fire": -5,
-                "pierce": 1,
-                "bludgeon": 2
+                DamageTypes.Slash: -1,
+                DamageTypes.Fire: -5,
+                DamageTypes.Pierce: 1,
+                DamageTypes.Bludgeon: 2
             },
             "dmg": {
-                "slash": -1,
-                "fire": -5,
-                "pierce": 1,
-                "bludgeon": 3,
-                "ice": 3
+                DamageTypes.Slash: -1,
+                DamageTypes.Fire: -5,
+                DamageTypes.Pierce: 1,
+                DamageTypes.Bludgeon: 3,
+                DamageTypes.Ice: 3
             }
         }
         self.possible_attacks: List[(int, AttackAction)] = [
             (2, AttackAction(name="punch",
                              hit_bonus=1,
-                             dmg_type="bludgeon",
+                             dmg_type=DamageTypes.Bludgeon,
                              dmg_roll=(2, 10),
                              dmg_bonus=0,
                              action_cost=1)),
             (1, AttackAction(name="hay hook",
                              hit_bonus=2,
-                             dmg_type="pierce",
+                             dmg_type=DamageTypes.Pierce,
                              dmg_roll=(3, 6),
                              dmg_bonus=1,
                              action_cost=1)),
             (1, AttackAction(name="smash",
                              hit_bonus=2,
-                             dmg_type="bludgeon",
+                             dmg_type=DamageTypes.Bludgeon,
                              dmg_roll=(3, 20),
                              dmg_bonus=0,
                              action_cost=2))

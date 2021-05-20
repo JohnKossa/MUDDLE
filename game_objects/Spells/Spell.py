@@ -6,3 +6,4 @@ class Spell:
         self.usable_in_combat = True
         self.usable_out_of_combat = True
         self.data = {}
+        # TODO come up with a way to specify targets declaratively

@@ -5,6 +5,7 @@ from Game import Game
 from game_objects.Character.Character import Character
 from game_objects.Commands.CombatCommands.CombatCommand import CombatOnlyCommand
 from game_objects.StatusEffect import StatusEffect
+from utils.Constanats import DamageTypes
 from utils.TriggerFunc import TriggerFunc
 
 
@@ -46,17 +47,18 @@ class DodgeCommand(CombatOnlyCommand):
 class DodgeStatus(StatusEffect):
     def __init__(self, parent):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.hit_resistances = {
-            "bludgeon": 1,
-            "pierce": 1,
-            "slash": 1,
-            "electricity": 1,
-            "ice": 1,
-            "fire": 1
+            DamageTypes.Bludgeon: 1,
+            DamageTypes.Pierce: 1,
+            DamageTypes.Slash: 1,
+            DamageTypes.Electricity: 1,
+            DamageTypes.Ice: 1,
+            DamageTypes.Fire: 1
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.detach_on_turn_start, self.parent),
-            "leave_room": TriggerFunc(self.detach_on_turn_start, self.parent)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.detach_on_turn_start, self.parent),
+            Triggers.LeaveRoom: TriggerFunc(self.detach_on_turn_start, self.parent)
         }
 
     def detach_on_turn_start(self, source_player: Optional[Character] = None, game: Optional[Game] = None, **kwargs) -> None:

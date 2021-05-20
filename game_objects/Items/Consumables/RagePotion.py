@@ -35,13 +35,14 @@ class RagePotion(Consumable):
 class RagePotionStatus(StatusEffect):
     def __init__(self, parent, strength: Optional[int] = None, duration: Optional[int] = None):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.dmg_bonus = 2 if strength is None else strength
         self.data = {
             "remaining_turns": 5 if duration is None else duration
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.decrement_on_turn_start, self.parent),
-            "leave_room": TriggerFunc(self.detach_on_leave_room, self.parent)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.decrement_on_turn_start, self.parent),
+            Triggers.LeaveRoom: TriggerFunc(self.detach_on_leave_room, self.parent)
         }
 
     def decrement_on_turn_start(self, source_player: Optional[Character] = None, game: Optional[Game] = None, **kwargs):

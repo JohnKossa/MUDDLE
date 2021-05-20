@@ -55,7 +55,10 @@ class Game:
         for file in onlyfiles:
             with open("savefiles/characters/"+file, "r") as infile:
                 to_add = Character.from_dict(game=self, source_dict=json.load(infile))
-                to_add.current_room = self.maze.entry_room
+                if to_add.zone == "Labyrinth":
+                    to_add.current_room = self.maze.entry_room
+                else:
+                    to_add.current_room = self.town.get_room_by_name("Town Square")
                 to_add.discord_user.current_character = to_add
                 self.players_dict[to_add.guid] = to_add
                 self.players.append(to_add)
@@ -73,7 +76,7 @@ class Game:
                     json.dump(player_dict, outfile, indent=4)
             except:
                 print(f"Unable to save player {player.name}")
-        print("Saving players")
+        print(f"Saving players {str(datetime.datetime.now())}")
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_players))
 
@@ -87,7 +90,7 @@ class Game:
                     json.dump(npc_dict, outfile, indent=4)
             except:
                 print(f"Unable to save npc {npc.name}")
-        print("Saving players")
+        print(f"Saving NPCs {str(datetime.datetime.now())}")
         self.scheduler.schedule_task(
             ScheduledTask(datetime.datetime.now() + datetime.timedelta(minutes=5), self.save_npcs))
 
@@ -95,7 +98,7 @@ class Game:
         import datetime
         from game_objects.Maze.SafeRoom import SafeRoom
         for player in self.players:
-            if isinstance(player.current_room, SafeRoom):
+            if isinstance(player.current_room, SafeRoom) or player.zone == "Town":
                 player.health += (player.max_health - player.health) * .05
                 player.stamina += (player.max_stamina - player.stamina) * .05
                 player.mana += (player.max_mana - player.mana) * .05
@@ -213,6 +216,7 @@ class Game:
 
     def init_maze(self, width: int = 9, height: int = 9, difficulty: int = 6) -> None:
         from game_objects.Maze.Maze import Maze
+        from utils.Constanats import Triggers
         if self.maze is not None:
             self.maze.cleanup()
         self.maze = Maze(width=width, height=height)
@@ -224,7 +228,7 @@ class Game:
         self.return_players_to_start()
         if self.discord_connection is not None:
             self.discord_connection.send_game_chat_sync("Rebuilding maze")
-        self.trigger("maze_reset", game=self)
+        self.trigger(Triggers.MazeReset, game=self)
 
     def return_players_to_start(self) -> None:
         for player in self.players:

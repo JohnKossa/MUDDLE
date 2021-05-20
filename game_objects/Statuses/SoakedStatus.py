@@ -4,6 +4,7 @@ from typing import Optional
 from Game import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.StatusEffect import StatusEffect
+from utils.Constanats import DamageTypes
 from utils.TriggerFunc import TriggerFunc
 
 
@@ -11,22 +12,23 @@ class Soaked(StatusEffect):
     #  TODO: have this status remove the on fire status when applied
     def __init__(self, parent, turns=3):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.hit_resistances = {
-            "ice": -2,
-            "fire": 3,
-            "electricity": -10
+            DamageTypes.Ice: -2,
+            DamageTypes.Fire: 3,
+            DamageTypes.Electricity: -10
         }
         self.dmg_resistances = {
-            "ice": -3,
-            "fire": 2,
-            "electricity": -5
+            DamageTypes.Ice: -3,
+            DamageTypes.Fire: 2,
+            DamageTypes.Electricity: -5
         }
         self.data = {
             "turns": turns
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.remove_on_leave_room)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.remove_on_leave_room)
         }
 
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:

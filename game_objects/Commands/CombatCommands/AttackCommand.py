@@ -70,6 +70,7 @@ class AttackCommand(CombatOnlyCommand):
         from game_objects.Enemy import Enemy
         from utils.CommandHelpers import match_enemy, match_player
         from utils.CombatHelpers import CritBehaviors
+        from utils.Constanats import Triggers
         enemies = source_player.current_room.combat.enemies
         players = source_player.current_room.combat.players
         target = None
@@ -107,4 +108,4 @@ class AttackCommand(CombatOnlyCommand):
             damage_to_assign = calculate_damage(self.attack_action, dmg_bonus, dmg_resistance)
             assign_damage_response = target.assign_damage(game, source_player, target, damage_to_assign)
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} uses {self.attack_action.name}. "+assign_damage_response)
-            game.trigger("attack_hit", source=source_player, target=target, damage=damage_to_assign)
+            game.trigger(Triggers.AttackHit, source=source_player, target=target, damage=damage_to_assign)

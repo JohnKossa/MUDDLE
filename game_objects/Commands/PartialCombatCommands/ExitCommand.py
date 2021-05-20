@@ -38,6 +38,7 @@ class Exit(PartialCombatCommand):
 
     def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
+        from utils.Constanats import Triggers
         source_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         room = source_player.current_room
         direction = get_by_index(params, 0)
@@ -47,20 +48,22 @@ class Exit(PartialCombatCommand):
         if door is None:
             return f"Invalid direction. Room has no {direction} exit."
         old_room = source_player.current_room
-        game.trigger("before_leave_room", source_player=source_player, source_entity=source_player, room=old_room)
-        game.trigger("before_enter_room", source_player=source_player, source_entity=source_player, room=door)
+        game.trigger(Triggers.BeforeLeaveRoom, source_player=source_player, source_entity=source_player, room=old_room)
+        game.trigger(Triggers.BeforeEnterRoom, source_player=source_player, source_entity=source_player, room=door)
         source_player.current_room = door
-        game.trigger("leave_room", source_player=source_player, source_entity=source_player, room=old_room)
-        game.trigger("enter_room", source_player=source_player, source_entity=source_player, room=source_player.current_room)
+        game.trigger(Triggers.LeaveRoom, source_player=source_player, source_entity=source_player, room=old_room)
+        game.trigger(Triggers.EnterRoom, source_player=source_player, source_entity=source_player, room=source_player.current_room)
         return source_player.current_room.describe(game)
 
     def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+        from utils.Constanats import Triggers
         from utils.TriggerFunc import TriggerFunc
         # after combat finishes, leave room
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} runs for the door.")
-        game.once("round_end", TriggerFunc(self.leave_room, game, source_player, params))
+        game.once(Triggers.RoundEnd, TriggerFunc(self.leave_room, game, source_player, params))
 
     def leave_room(self, source_player: Character, params: List[Any], game: Optional[Game] = None, **kwargs) -> None:
+        from utils.Constanats import Triggers
         discord_user = source_player.discord_user
         room = source_player.current_room
         direction = params[0]
@@ -69,9 +72,9 @@ class Exit(PartialCombatCommand):
             game.discord_connection.send_game_chat_sync(f"Invalid direction. Room has no {direction} exit.", tagged_users=[discord_user])
             return
         old_room = source_player.current_room
-        game.trigger("before_leave_room", source_player=source_player, room=old_room)
-        game.trigger("before_enter_room", source_player=source_player, room=door)
+        game.trigger(Triggers.BeforeLeaveRoom, source_player=source_player, room=old_room)
+        game.trigger(Triggers.BeforeEnterRoom, source_player=source_player, room=door)
         source_player.current_room = door
-        game.trigger("leave_room", source_player=source_player, room=old_room)
-        game.trigger("enter_room", source_player=source_player, room=source_player.current_room)
+        game.trigger(Triggers.LeaveRoom, source_player=source_player, room=old_room)
+        game.trigger(Triggers.EnterRoom, source_player=source_player, room=source_player.current_room)
         return game.discord_connection.send_game_chat_sync(source_player.current_room.describe(game), tagged_users=[discord_user])

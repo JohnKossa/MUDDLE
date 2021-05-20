@@ -5,6 +5,7 @@ import Game
 from game_objects.AttackAction import AttackAction
 from game_objects.CombatEntity import CombatEntity
 from game_objects.GameEntity import GameEntity
+from utils.Constanats import DamageTypes
 from utils.Dice import roll
 from utils.CombatHelpers import sum_resistances
 
@@ -31,7 +32,7 @@ class Enemy(CombatEntity, GameEntity):
             "dmg": {}
         }
         self.possible_attacks: List[(int, AttackAction)] = [
-            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0))
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0))
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
@@ -102,8 +103,8 @@ class Goblin(Enemy):
         self.health = 25
         self.max_health = 25
         self.possible_attacks: List[(int, AttackAction)] = [
-            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
-            (3, AttackAction(name="stab", hit_bonus=1, dmg_type="pierce", dmg_roll=(1, 10), dmg_bonus=0))
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0)),
+            (3, AttackAction(name="stab", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 10), dmg_bonus=0))
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
@@ -131,9 +132,9 @@ class Kobold(Enemy):
         self.health = 15
         self.max_health = 15
         self.possible_attacks: List[(int, AttackAction)] = [
-            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=0)),
-            (1, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(2, 4), dmg_bonus=0)),
-            (1, AttackAction(name="stab", hit_bonus=3, dmg_type="pierce", dmg_roll=(3, 4), dmg_bonus=0))
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0)),
+            (1, AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(2, 4), dmg_bonus=0)),
+            (1, AttackAction(name="stab", hit_bonus=3, dmg_type=DamageTypes.Pierce, dmg_roll=(3, 4), dmg_bonus=0))
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
         from game_objects.Items.Item import Coins
@@ -163,19 +164,19 @@ class Orc(Enemy):
         self.health = 75
         self.max_health = 75
         self.possible_attacks: List[(int, AttackAction)] = [
-            (1, AttackAction(name="punch", hit_bonus=0, dmg_type="bludgeon", dmg_roll=(1, 4), dmg_bonus=1)),
-            (3, AttackAction(name="slash", hit_bonus=1, dmg_type="slash", dmg_roll=(1, 16), dmg_bonus=0))
+            (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=1)),
+            (3, AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(1, 16), dmg_bonus=0))
         ]
         self.armor_bonus: dict = {
             "hit": {
-                "slash": 2,
-                "pierce": 1,
-                "electrcity": -1
+                DamageTypes.Slash: 2,
+                DamageTypes.Pierce: 1,
+                DamageTypes.Electricity: -1
             },
             "dmg": {
-                "pierce": 2,
-                "bludgeon": 1,
-                "electricity": -5
+                DamageTypes.Pierce: 2,
+                DamageTypes.Bludgeon: 1,
+                DamageTypes.Electricity: -5
             }
         }
         from game_objects.Items.Consumables.HealthPotion import HealthPotion

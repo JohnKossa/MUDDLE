@@ -49,6 +49,7 @@ class UseItem(PartialCombatCommand):
         # TODO check if item quantity is less than 0 after
         from discord_objects.DiscordUser import UserUtils
         from utils.ListHelpers import get_by_index
+        from utils.Constanats import EquipmentSlots
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
         item_name = get_by_index(params, 0, None)
@@ -65,7 +66,7 @@ class UseItem(PartialCombatCommand):
         matched_item.quantity = matched_item.quantity-1
         if matched_item.quantity == 0:
             if source_container == "belt":
-                player.inventory.equipment["belt"].remove(matched_item)
+                player.inventory.equipment[EquipmentSlots.Belt].remove(matched_item)
             elif source_container == "bag":
                 player.inventory.bag.remove(matched_item)
         return f"{item_name} used"
@@ -74,6 +75,7 @@ class UseItem(PartialCombatCommand):
         # look for a matched item in belt only, calling use_effect on it
         # look for matched item in belt then bag, calling use_effect on it
         from utils.ListHelpers import get_by_index
+        from utils.Constanats import EquipmentSlots
         item_name = get_by_index(params, 0, None)
         if item_name is None:
             game.discord_connection.send_game_chat_sync("Item name not specified. Usage is:\n" + UseItem.show_help(), [source_player.discord_user])
@@ -85,4 +87,4 @@ class UseItem(PartialCombatCommand):
         matched_item.use_effect(game, source_player, params[1:])
         matched_item.quantity = matched_item.quantity - 1
         if matched_item.quantity == 0:
-            source_player.inventory.equipment["belt"].remove(matched_item)
+            source_player.inventory.equipment[EquipmentSlots.Belt].remove(matched_item)

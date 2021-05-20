@@ -4,26 +4,28 @@ from typing import Optional
 from Game import Game
 from game_objects.CombatEntity import CombatEntity
 from game_objects.StatusEffect import StatusEffect
+from utils.Constanats import DamageTypes
 from utils.TriggerFunc import TriggerFunc
 
 
 class StaggeredStatus(StatusEffect):
     def __init__(self, parent, turns=1):
         super().__init__(parent)
+        from utils.Constanats import Triggers
         self.hit_bonus = -1
         self.hit_resistances = {
-            "slash": -1,
-            "pierce": -1,
-            "bludgeon": -1,
-            "fire": -1,
-            "electricity": -1
+            DamageTypes.Slash: -1,
+            DamageTypes.Pierce: -1,
+            DamageTypes.Bludgeon: -1,
+            DamageTypes.Fire: -1,
+            DamageTypes.Electricity: -1
         }
         self.data = {
             "turns": 1
         }
         self.triggers = {
-            "before_entity_combat": TriggerFunc(self.tick),
-            "leave_room": TriggerFunc(self.remove_on_leave_room)
+            Triggers.BeforeEntityCombat: TriggerFunc(self.tick),
+            Triggers.LeaveRoom: TriggerFunc(self.remove_on_leave_room)
         }
 
     def tick(self, source_entity: Optional[CombatEntity] = None, game: Optional[Game] = None, **kwargs) -> None:

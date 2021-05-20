@@ -33,7 +33,7 @@ class TalkCommand(NoncombatCommand):
         if npc_name is None and len(npcs) == 1:
             chosen_npc = npcs[0]
         else:
-            chosen_npc = next(filter(lambda x: x.name == npc_name, npcs), None)
+            chosen_npc = next((npc for npc in npcs if npc.name == npc_name), None)
         if chosen_npc is None:
             return "Named person was not found"
         new_conversation = Conversation()
@@ -62,7 +62,7 @@ class SayCommand(NoncombatCommand):
         player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         current_room = player.current_room
         conversations = current_room.conversations
-        my_conversation = next(filter(lambda x: x.character == player, conversations), None)
+        my_conversation = next((conversation for conversation in conversations if conversation.character == player), None)
         if my_conversation is None:
             raise Exception(f"Conversation is none")
         my_conversation.handle_response(game, params[0])

@@ -45,6 +45,7 @@ class Combat:
         game.scheduler.schedule_task(self.round_schedule_object)
 
     def process_round(self, game: Game) -> None:
+        from utils.Constanats import Triggers
         self.processing_round = True
         from game_objects.Character.Character import Character
         # all players dead or left room, end combat
@@ -80,7 +81,7 @@ class Combat:
         for actor in sorted_initiative_list:
             if actor.dead:
                 continue
-            game.trigger("before_entity_combat", source_entity=actor, room=self.room)
+            game.trigger(Triggers.BeforeEntityCombat, source_entity=actor, room=self.room)
             if actor.dead:
                 continue
             for order in self.orders[actor]:
@@ -95,10 +96,10 @@ class Combat:
                 self.cleanup_dead_players(game)
 
                 # TODO additional cleanup for items
-            game.trigger("after_entity_combat", source_entity=actor)
+            game.trigger(Triggers.AfterEntityCombat, source_entity=actor)
 
         # post-round actions
-        game.trigger("round_end", room=self.room)
+        game.trigger(Triggers.RoundEnd, room=self.room)
 
         self.players = list(filter(lambda x: not x.dead, self.room.get_characters(game)))
         self.enemies = list(filter(lambda x: not x.dead, self.room.get_enemies(game)))
@@ -175,6 +176,7 @@ class Combat:
                 print("Failsafe triggered when attempting to determine actions.")
 
     def cleanup_dead_enemies(self, game: Game) -> None:
+        from utils.Constanats import Triggers
         for enemy in self.enemies:
             if enemy.health <= 0:
                 enemy.dead = True
@@ -184,9 +186,10 @@ class Combat:
                     if len(dropped_items):
                         game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
                         self.room.items = self.room.items + dropped_items
-                game.trigger("enemy_defeated", source_enemy=enemy, room=self.room)
+                game.trigger(Triggers.EnemyDefeated, source_enemy=enemy, room=self.room)
 
     def cleanup_dead_players(self, game: Game) -> None:
+        from utils.Constanats import Triggers
         for player in self.players:
             if player.health <= 0:
                 player.dead = True
@@ -195,7 +198,7 @@ class Combat:
                 if len(dropped_items):
                     game.discord_connection.send_game_chat_sync("Some items clatter to the floor.")
                     self.room.items = self.room.items + dropped_items
-                game.trigger("player_defeated", source_player=player)
+                game.trigger(Triggers.PlayerDefeated, source_player=player)
 
     def add_player(self, game: Game, player: Character) -> None:
         if player not in self.initiatives:
