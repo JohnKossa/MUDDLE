@@ -25,6 +25,10 @@ class MazeRoom(Room):
         self.starting_room = False
         self.exit_room = False
 
+    def describe_room(self) -> str:
+        from templates.TemplateLoaders import load_maze_room_description
+        return load_maze_room_description(self.description_seed, "description_long")
+
     @property
     def connected_neighbors(self) -> List[Room]:
         result = []

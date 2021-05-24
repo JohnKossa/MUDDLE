@@ -10,14 +10,8 @@ class SafeRoom(MazeRoom):
         super(SafeRoom, self).__init__(x_coord, y_coord)
 
     def describe_room(self) -> str:
-        return " ".join([
-            "As you pass through the door, a golden heraldic crest appears on the door behind you.",
-            "It appears this room is protected by some sort of magical seal.",
-            "A tranquil fountain sits in the center of the room, lit not by torches, but candles placed delicately about its rim.",
-            "The usual dusty floor of the dungeon has turned instead to dirt, and a few tufts of grass poke up from it.",
-            "A very different sight from the rest of the rooms, this room has a somewhat calming presence to it.",
-            "This may be a good place to take a rest, should the need arise."
-        ])
+        from templates.TemplateLoaders import load_safe_room_description
+        return load_safe_room_description(self.description_seed, "description_long")
 
     @staticmethod
     def clone_from_MazeRoom(maze_room: MazeRoom):

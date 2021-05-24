@@ -1,8 +1,67 @@
 [
   {
+    "weight": 5,
     "description_long": "You are in a room. This is the long form of it not being very interesting.",
     "description_short": "You are in a room. It's not very interesting.",
     "description_lowlight": "The room is dimly lit. It's not very interesting.",
     "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 2,
+    "description_long": [
+      "This room seems a little brighter than others.",
+      "As you glance upward, you can see bits of the outside sky poking in.",
+      "In the cracks in the cobblestones below you, you see tiny clumps of moss making the most of this light.",
+      "It's not very interesting."
+    ],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 2,
+    "description_long": [
+      "A dank scent fills this room.",
+      "The walls appear to have a light coating of algae on them, probably from the increased moisture.",
+      "You hear a faint dripping sound that you soon realize is coming from a rusted water pump in the corner",
+      "You're not sure what the implications of drinking water out of a rusty pump in a magical labryth are, but in a pinch, you could probably fill a container here.",
+      "It's super interesting."
+    ],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 1,
+    "description_long": [
+      "You are in a room.",
+      "Along one wall, you see a humanoid skeleton slumped over, dressed in brown robes, but severely dried out.",
+      "It seems to have been here for quite some time.",
+      "Clutched in its bony fingers is a dusty tome.",
+      "It's super interesting."
+    ],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 1,
+    "description_long": [
+      "This room doesn't seem to fit in at all with the others.",
+      "Instead of the usual dungeon-esque aesthetic, this looks like someone's bedroom.",
+      "A green woolen carpet covers most of the floor, with a neatly made four-poster bed in the center.",
+      "There appears to be a small sitting area on the side of the bed with a serving platter atop it.",
+      "But who would want to stay in a room in a dungeon?",
+      "It's super interesting"
+    ],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 1,
+    "description_long": [
+      "You are in a room.",
+      "In a corner sits a workstation with round wooden table, some flasks and bowls, and a tiny stone fire pit set into its center.",
+      "It appears to be some sort of alchemy lab.",
+      "It's super interesting"],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in otherwise front of your face."
   }
 ]
