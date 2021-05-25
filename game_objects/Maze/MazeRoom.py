@@ -8,6 +8,8 @@ from utils.TextHelpers import enumerate_objects
 
 
 class MazeRoom(Room):
+    descriptions = None
+
     def __init__(self, x_coord: int, y_coord: int):
         import random
         super(MazeRoom, self).__init__(name=f"{x_coord},{y_coord}")
@@ -26,8 +28,19 @@ class MazeRoom(Room):
         self.exit_room = False
 
     def describe_room(self) -> str:
-        from templates.TemplateLoaders import load_maze_room_description
-        return load_maze_room_description(self.description_seed, "description_long")
+        if MazeRoom.descriptions is None:
+            import json
+            with open(f"templates/rooms/mazeroom.json", "r") as infile:
+                MazeRoom.descriptions = json.load(infile)
+        import random
+        random.seed(self.description_seed)
+        selected_description = random.choices(MazeRoom.descriptions, weights=list(
+            description.get("weight", 1) for description in MazeRoom.descriptions))[0]["description_long"]
+        if isinstance(selected_description, list):
+            return "\n".join(selected_description)
+        if isinstance(selected_description, str):
+            return selected_description
+        return ""
 
     @property
     def connected_neighbors(self) -> List[Room]:

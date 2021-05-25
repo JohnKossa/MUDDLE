@@ -1,18 +1,14 @@
 from __future__ import annotations
 from typing import Dict
 
-#from game_objects.Items.Item import Item
-#from game_objects.NPC import NPC
 
-
-def load_safe_room_description(seed, description_type)-> str:
+def load_room_description(seed: int, description_type: str, room_type: str) -> str:
     import json
     import random
-    with open(f"templates/rooms/saferoom.json", "r") as infile:
+    with open(f"templates/rooms/{room_type}.json", "r") as infile:
         descriptions = json.load(infile)
         random.seed(seed)
-        selected_description = \
-        random.choices(descriptions, weights=list(description.get("weight", 1) for description in descriptions))[0][
+        selected_description = random.choices(descriptions, weights=list(description.get("weight", 1) for description in descriptions))[0][
             description_type]
         if isinstance(selected_description, list):
             return "\n".join(selected_description)
@@ -21,18 +17,12 @@ def load_safe_room_description(seed, description_type)-> str:
         print("Tried to load a description, but it was neither a list nor a string.")
 
 
-def load_maze_room_description(seed, description_type) -> str:
-    import json
-    import random
-    with open(f"templates/rooms/mazeroom.json", "r") as infile:
-        descriptions = json.load(infile)
-        random.seed(seed)
-        selected_description = random.choices(descriptions, weights=list(description.get("weight", 1) for description in descriptions))[0][description_type]
-        if isinstance(selected_description, list):
-            return "\n".join(selected_description)
-        if isinstance(selected_description, str):
-            return selected_description
-        print("Tried to load a description, but it was neither a list nor a string.")
+def load_safe_room_description(seed: int, description_type: str) -> str:
+    return load_room_description(seed, description_type, "saferoom")
+
+
+def load_maze_room_description(seed: int, description_type: str) -> str:
+    return load_room_description(seed, description_type, "mazeroom")
 
 
 def load_npc_from_template(filename) -> 'NPC':

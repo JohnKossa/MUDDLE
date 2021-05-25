@@ -6,12 +6,25 @@ from game_objects.Maze.MazeRoom import MazeRoom
 
 
 class SafeRoom(MazeRoom):
+    descriptions = None
+
     def __init__(self, x_coord: int, y_coord: int):
         super(SafeRoom, self).__init__(x_coord, y_coord)
 
     def describe_room(self) -> str:
-        from templates.TemplateLoaders import load_safe_room_description
-        return load_safe_room_description(self.description_seed, "description_long")
+        if SafeRoom.descriptions is None:
+            import json
+            with open(f"templates/rooms/saferoom.json", "r") as infile:
+                MazeRoom.descriptions = json.load(infile)
+        import random
+        random.seed(self.description_seed)
+        selected_description = random.choices(MazeRoom.descriptions, weights=list(
+            description.get("weight", 1) for description in MazeRoom.descriptions))[0]["description_long"]
+        if isinstance(selected_description, list):
+            return "\n".join(selected_description)
+        if isinstance(selected_description, str):
+            return selected_description
+        return ""
 
     @staticmethod
     def clone_from_MazeRoom(maze_room: MazeRoom):
