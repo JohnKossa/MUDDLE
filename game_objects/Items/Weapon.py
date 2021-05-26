@@ -134,6 +134,20 @@ class Mace(Weapon):
         self.default_attack: str = "strike"
 
 
+class CrudgelOfChione(Weapon):
+    def __init__(self):
+        super().__init__()
+        from game_objects.AttackAction import AttackAction
+        self.name: str = "CrudgelOfChione"
+        self.attacks: List[AttackAction] = [
+            AttackAction(name="froststrike", hit_bonus=2, dmg_type=DamageTypes.Ice, dmg_roll=(1, 8), dmg_bonus=1),
+            AttackAction(name="strike", hit_bonus=2, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 8), dmg_bonus=1),
+            AttackAction(name="smash", hit_bonus=1, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 16), dmg_bonus=2, action_cost=2)
+        ]
+        self.default_attack: str = "froststrike"
+        self.crit_behavior = "apply_status_chilled"
+
+
 class Spear(Weapon):
     from game_objects.Commands.Command import Command
 
@@ -146,6 +160,18 @@ class Spear(Weapon):
             AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=2)
         ]
         self.default_attack: str = "stab"
+
+
+class PerunsPike(Weapon):
+    def __init__(self):
+        super().__init__()
+        from game_objects.AttackAction import AttackAction
+        self.name: str = "PerunsPike"
+        self.attacks: List[AttackAction] = [
+            AttackAction(name="shock", hit_bonus=1, dmg_type=DamageTypes.Electricity, dmg_roll=(1, 12), dmg_bonus=2),
+            AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=1)
+        ]
+        self.default_attack: str = "shock"
 
 
 class Axe(Weapon):
