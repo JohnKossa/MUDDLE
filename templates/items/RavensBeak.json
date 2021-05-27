@@ -1,0 +1,49 @@
+{
+    "constructor": "RavensBeak",
+    "quantity": 1,
+    "max_stack_size": 1,
+    "weight": 0,
+    "name": "RavensBeak",
+    "slot": "hand",
+    "max_hitpoints": 100,
+    "hit_points": 100,
+    "active_effects": [],
+    "resistances": {},
+    "attacks": [
+        {
+            "name": "stab",
+            "hit_bonus": 1,
+            "dmg_type": "pierce",
+            "dmg_roll": [
+                1,
+                12
+            ],
+            "dmg_bonus": 0,
+            "action_cost": 1
+        },
+        {
+            "name": "spike",
+            "hit_bonus": 0,
+            "dmg_type": "pierce",
+            "dmg_roll": [
+                1,
+                16
+            ],
+            "dmg_bonus": 2,
+            "action_cost": 2
+        },
+        {
+            "name": "hammer",
+            "hit_bonus": 0,
+            "dmg_type": "bludgeon",
+            "dmg_roll": [
+                1,
+                12
+            ],
+            "dmg_bonus": 2,
+            "action_cost": 2
+        }
+    ],
+    "default_attack": "stab",
+    "crit_behavior": "default"
+}

@@ -65,8 +65,6 @@ class Sword(Weapon):
 
 
 class Torch(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -79,8 +77,6 @@ class Torch(Weapon):
 
 
 class Dagger(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -93,8 +89,6 @@ class Dagger(Weapon):
 
 
 class DuelistDagger(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -120,8 +114,6 @@ class WerebatFang(Weapon):
 
 
 class Mace(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -149,8 +141,6 @@ class CrudgelOfChione(Weapon):
 
 
 class Spear(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -175,8 +165,6 @@ class PerunsPike(Weapon):
 
 
 class Axe(Weapon):
-    from game_objects.Commands.Command import Command
-
     def __init__(self):
         super().__init__()
         from game_objects.AttackAction import AttackAction
@@ -185,3 +173,16 @@ class Axe(Weapon):
             AttackAction(name="slash", hit_bonus=0, dmg_type=DamageTypes.Slash, dmg_roll=(1, 16), dmg_bonus=0)
         ]
         self.default_attack: str = "slash"
+
+
+class RavensBeak(Weapon):
+    def __init__(self):
+        super().__init__()
+        from game_objects.AttackAction import AttackAction
+        self.name: str = "RavensBeak"
+        self.attacks: List[AttackAction] = [
+            AttackAction(name="stab", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=0),
+            AttackAction(name="spike", hit_bonus=0, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 16), dmg_bonus=2, action_cost=2),
+            AttackAction(name="hammer", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 12), dmg_bonus=2, action_cost=2),
+        ]
+        self.default_attack: str = "stab"
