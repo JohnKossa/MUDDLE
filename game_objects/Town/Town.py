@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import Optional
 
 from game_objects.Room import Room
 from game_objects.Town.ApothecaryStore import ApothecaryStore
@@ -12,7 +12,7 @@ from game_objects.Town.TownSquare.TownSquare import TownSquare
 
 class Town:
     def __init__(self):
-        self.rooms: List[Room] = []
+        self.rooms: list[Room] = []
         self.entry_room: Optional[Room] = None
         self.generate_town()
 

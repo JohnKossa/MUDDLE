@@ -54,35 +54,13 @@ def item_mappings() -> Dict[str, 'Item']:
     from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
     from game_objects.Items.Consumables.RagePotion import RagePotion
     from game_objects.Items.Consumables.FocusPotion import FocusPotion
-
     from game_objects.Items.Item import Item, Coins, DungeonMap
-    return {
-        "Armor": Armor,
-        "PlateArmor": PlateArmor,
-        "ChainArmor": ChainArmor,
-        "Gambeson": Gambeson,
-        "Sword": Sword,
-        "Torch": Torch,
-        "Dagger": Dagger,
-        "DuelistDagger": DuelistDagger,
-        "WerebatFang": WerebatFang,
-        "RavensBeak": RavensBeak,
-        "Mace": Mace,
-        "CrudgelOfChione": CrudgelOfChione,
-        "PerunsPike": PerunsPike,
-        "Spear": Spear,
-        "Axe": Axe,
-        "Item": Item,
-        "Coins": Coins,
-        "Weapon": Weapon,
-        "Shield": Shield,
-        "HealthPotion": HealthPotion,
-        "StaminaPotion": StaminaPotion,
-        "FocusPotion": FocusPotion,
-        "RagePotion": RagePotion,
-        "ManaPotion": ManaPotion,
-        "DungeonMap": DungeonMap
-    }
+    supported_items = [
+        Armor, PlateArmor, ChainArmor, Gambeson, Sword, Torch, Dagger, Mace, Spear, Axe, Weapon, DuelistDagger,
+        WerebatFang, RavensBeak, PerunsPike, CrudgelOfChione, Shield, HealthPotion, ManaPotion, StaminaPotion,
+        RagePotion, FocusPotion, Item, Coins, DungeonMap
+    ]
+    return {x.__name__: x for x in supported_items}
 
 
 def generate_item_templates() -> None:

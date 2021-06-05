@@ -1,5 +1,3 @@
-from typing import List
-
 import discord
 
 import Game
@@ -20,7 +18,7 @@ class AdminMap(Command):
             "Params: None"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         if discord_user.is_admin:

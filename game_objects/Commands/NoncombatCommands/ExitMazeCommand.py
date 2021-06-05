@@ -1,8 +1,6 @@
 from __future__ import annotations
 import discord
 
-from typing import List
-
 import Game
 from game_objects.Commands.NoncombatCommands.NoncombatCommand import NoncombatCommand
 
@@ -19,7 +17,7 @@ class ExitMaze(NoncombatCommand):
             "Params: None"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character

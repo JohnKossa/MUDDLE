@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from Game import Game
 from game_objects.CombatEntity import CombatEntity
@@ -12,13 +12,13 @@ from utils.TriggerFunc import TriggerFunc
 class BlockCommand(CombatOnlyCommand):
     from game_objects.CombatEntity import CombatEntity
 
-    def __init__(self, aliases: List[str] = None):
+    def __init__(self, aliases: list[str] = None):
         super().__init__()
         self.combat_action_cost: int = 1
         if aliases is not None:
-            self.aliases: List[str] = aliases
+            self.aliases: list[str] = aliases
         else:
-            self.aliases: List[str] = ["Block"]
+            self.aliases: list[str] = ["Block"]
 
     @classmethod
     def show_help(cls) -> str:
@@ -28,11 +28,11 @@ class BlockCommand(CombatOnlyCommand):
             "Params: None",
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         # could optionally check for a shield or an item tha grants block, but might not be worth it
         return True
 
-    def do_combat_action(self, game: Game, source_entity: CombatEntity, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_entity: CombatEntity, params: list[Any]) -> None:
         game.discord_connection.send_game_chat_sync(f"{source_entity.combat_name} raises their shield.")
         status = BlockingStatus(source_entity)
         source_entity.add_status(status)

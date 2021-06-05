@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List
+from typing import Any
 
 import Game
 from game_objects.Character.Character import Character
@@ -13,7 +13,7 @@ class PartialCombatCommand(Command):
     def __init__(self):
         super().__init__()
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         target_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         if target_player is None:
@@ -24,18 +24,18 @@ class PartialCombatCommand(Command):
         else:
             return self.enqueue_order(game, target_player, params)
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         """Check if the command is still valid."""
         print("default validity command used")
         return True
 
-    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_noncombat(self, game: Game, params: list[str], message: discord.Message) -> str:
         return ""
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]) -> None:
         pass
 
-    def enqueue_order(self, game: Game, target_player: Character, params: List[Any]) -> str:
+    def enqueue_order(self, game: Game, target_player: Character, params: list[Any]) -> str:
         room = target_player.current_room
         accepted = room.combat.accept_player_order(game, target_player, self.do_combat_action, params, self.combat_action_cost, self.command_valid)
         if accepted:

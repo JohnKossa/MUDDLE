@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import Optional
 
 from game_objects.Commands.Command import Command
 from game_objects.Commands.NoncombatCommands.ExitMazeCommand import ExitMaze
@@ -17,7 +17,7 @@ class MazeRoom(Room):
         self.y_coord: int = y_coord
         self.width: int = 1
         self.height: int = 1
-        self.possible_neighbors: List[MazeRoom] = []
+        self.possible_neighbors: list[MazeRoom] = []
         self.north_door: Optional[MazeRoom] = None
         self.east_door: Optional[MazeRoom] = None
         self.south_door: Optional[MazeRoom] = None
@@ -43,7 +43,7 @@ class MazeRoom(Room):
         return ""
 
     @property
-    def connected_neighbors(self) -> List[Room]:
+    def connected_neighbors(self) -> list[Room]:
         result = []
         if self.north_door is not None:
             result.append(self.north_door)
@@ -109,7 +109,7 @@ class MazeRoom(Room):
             formatted_list = enumerate_objects(valid_exits)
             return f"Exits include {formatted_list}"
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         to_return = super().get_commands(game)
         if self.starting_room or self.exit_room:
             to_return = to_return + [ExitMaze()]
@@ -118,7 +118,7 @@ class MazeRoom(Room):
 
 class RoomUtils:
     @staticmethod
-    def get_all_neighbors(rooms: List[MazeRoom]) -> List[MazeRoom]:
+    def get_all_neighbors(rooms: list[MazeRoom]) -> list[MazeRoom]:
         neighbors = []
         for room in rooms:
             if room is not None:
@@ -128,11 +128,11 @@ class RoomUtils:
         return neighbors
 
     @staticmethod
-    def get_room_by_coords(x: int, y: int, rooms: List[Room]) -> Optional[MazeRoom]:
+    def get_room_by_coords(x: int, y: int, rooms: list[Room]) -> Optional[MazeRoom]:
         return next(iter(filter(lambda i: i.x_coord == x and i.y_coord == y, rooms)), None)
 
     @staticmethod
-    def get_neighbor_in_in_direction(room: MazeRoom, direction: str, rooms: List[MazeRoom]) -> Optional[MazeRoom]:
+    def get_neighbor_in_in_direction(room: MazeRoom, direction: str, rooms: list[MazeRoom]) -> Optional[MazeRoom]:
         if room is None:
             return None
         offsets = {
@@ -147,9 +147,9 @@ class RoomUtils:
         return None
 
     @staticmethod
-    def get_row(y: int, rooms: List[MazeRoom]) -> List[MazeRoom]:
+    def get_row(y: int, rooms: list[MazeRoom]) -> list[MazeRoom]:
         return [i for i in rooms if i.y_coord == y]
 
     @staticmethod
-    def get_col(x: int, rooms: List[MazeRoom]) -> List[MazeRoom]:
+    def get_col(x: int, rooms: list[MazeRoom]) -> list[MazeRoom]:
         return [i for i in rooms if i.x_coord == x]

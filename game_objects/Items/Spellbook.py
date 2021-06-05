@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List
 
 from game_objects.Commands.Command import Command
 from game_objects.Items.Equipment import Equipment
@@ -9,6 +8,8 @@ class Spellbook(Equipment):
     def __init__(self):
         super().__init__()
         self.name: str = "Spellbook"
+        self.weight = 8.8
+        self.traits = self.traits + ["book", "magical"]
         self.slot: str = "hand"
         self.spells: list = []
 
@@ -26,5 +27,5 @@ class Spellbook(Equipment):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game)

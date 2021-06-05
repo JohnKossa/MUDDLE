@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Any
+from typing import Any
 
 import Game
 from game_objects.Character.Character import Character
@@ -25,7 +25,7 @@ class HealthPotion(Consumable):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def use_effect(self, game: Game, source_player: Character, params: list[Any]) -> None:
         from utils.Dice import roll
         raw_roll = roll(5, 20, source_player.luck)
         previous_health = source_player.health

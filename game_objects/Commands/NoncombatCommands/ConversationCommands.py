@@ -1,7 +1,7 @@
 from __future__ import annotations
 import discord
 
-from typing import List, Optional
+from typing import Optional
 
 import Game
 
@@ -23,7 +23,7 @@ class TalkCommand(NoncombatCommand):
             "  0: NPC name"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         from game_objects.Conversation import Conversation
         player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
@@ -57,7 +57,7 @@ class SayCommand(NoncombatCommand):
             "  0: Response Number"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> Optional[str]:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> Optional[str]:
         from discord_objects.DiscordUser import UserUtils
         player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
         current_room = player.current_room

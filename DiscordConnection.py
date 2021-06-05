@@ -4,7 +4,7 @@ import os
 import re
 
 from dotenv import load_dotenv
-from typing import List, Optional
+from typing import Optional
 
 from discord_objects.DiscordUser import DiscordUser, UserUtils
 from utils.Scheduler import Scheduler
@@ -40,10 +40,10 @@ class CustomClient(discord.Client):
         if len(self.game.players) == 0:
             self.game.load_players()
 
-    def send_game_chat_sync(self, text: str, tagged_users: List[DiscordUser] = []) -> None:
+    def send_game_chat_sync(self, text: str, tagged_users: list[DiscordUser] = []) -> None:
         self.loop.create_task(self.send_game_chat(text, tagged_users=tagged_users))
 
-    async def send_game_chat(self, text, tagged_users: List[DiscordUser] = []) -> None:
+    async def send_game_chat(self, text, tagged_users: list[DiscordUser] = []) -> None:
         if self.game_channel is None:
             print("No game channel set.")
             return

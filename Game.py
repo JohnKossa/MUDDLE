@@ -4,7 +4,7 @@ import inspect
 import math
 import random
 
-from typing import List, Optional
+from typing import Optional
 from utils.Scheduler import ScheduledTask
 
 
@@ -27,22 +27,22 @@ class Game:
         self.npcs_dict: dict = {}
         self.town: Town = Town()
         self.seed_npcs()
-        self.discord_users: List[DiscordUser] = []
+        self.discord_users: list[DiscordUser] = []
         self.hooks: dict = {}
         self.aioloop = asyncio.get_event_loop()
         self.scheduler: Scheduler = Scheduler(self.aioloop)
         self.discord_connection: Optional[CustomClient] = None
 
     @property
-    def players(self) -> List[Character]:
+    def players(self) -> list[Character]:
         return list(self.players_dict.values())
 
     @property
-    def enemies(self) -> List[Enemy]:
+    def enemies(self) -> list[Enemy]:
         return list(self.enemies_dict.values())
 
     @property
-    def npcs(self) -> List[NPC]:
+    def npcs(self) -> list[NPC]:
         return list(self.npcs_dict.values())
 
     def load_players(self) -> None:

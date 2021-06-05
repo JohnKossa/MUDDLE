@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List
+from typing import Any
 
 from Game import Game
 from game_objects.Character.Character import Character
@@ -12,7 +12,7 @@ class UseItem(PartialCombatCommand):
 
     def __init__(self):
         super().__init__()
-        self.aliases: List[str] = [
+        self.aliases: list[str] = [
             "UseItem",
             "Use",
         ]
@@ -28,7 +28,7 @@ class UseItem(PartialCombatCommand):
             "    0: The name of the item to use"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         # look for a matched item in belt only, calling use_effect on it
         # look for matched item in belt then bag, calling use_effect on it
         from utils.ListHelpers import get_by_index
@@ -43,7 +43,7 @@ class UseItem(PartialCombatCommand):
             return False
         return True
 
-    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_noncombat(self, game: Game, params: list[str], message: discord.Message) -> str:
         # look for matched item in belt then bag, calling use_effect on it
         # TODO Check if item quantity is greater than 0 before using
         # TODO check if item quantity is less than 0 after
@@ -71,7 +71,7 @@ class UseItem(PartialCombatCommand):
                 player.inventory.bag.remove(matched_item)
         return f"{item_name} used"
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]) -> None:
         # look for a matched item in belt only, calling use_effect on it
         # look for matched item in belt then bag, calling use_effect on it
         from utils.ListHelpers import get_by_index

@@ -1,6 +1,6 @@
 from __future__ import annotations
 import names
-from typing import Optional, List
+from typing import Optional
 
 import Game
 
@@ -35,6 +35,7 @@ class Character(CombatEntity, GameEntity):
         self.max_mana: int = 100
         self.mana: int = 100
         self.luck: int = 0
+        self.traits = []
         self.base_resistances: dict = {
             "hit": {},
             "dmg": {}
@@ -128,7 +129,7 @@ class Character(CombatEntity, GameEntity):
             status.parent = None
         os.remove(f"savefiles/characters/{self.name}.json")
 
-    def get_commands(self, game) -> List['Command']:
+    def get_commands(self, game) -> list['Command']:
         if self.dead:
             return []
         from game_objects.Commands.CombatCommands.DodgeCommand import DodgeCommand

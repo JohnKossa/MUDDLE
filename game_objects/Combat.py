@@ -1,7 +1,7 @@
 from __future__ import annotations
 import datetime
 import random
-from typing import Any, Callable, Dict, List,  Optional
+from typing import Any, Callable, Dict, Optional
 
 import Game
 from game_objects.Enemy import Enemy
@@ -15,8 +15,8 @@ class Combat:
     def __init__(self, players=[], enemies=[], room=None):
         from game_objects.Character.Character import Character
         from game_objects.Room import Room
-        self.players: List[Character] = players
-        self.enemies: List[Enemy] = enemies
+        self.players: list[Character] = players
+        self.enemies: list[Enemy] = enemies
         self.orders: dict = {}
         self.initiatives: dict = {}
         self.round_schedule_object: Optional[ScheduledTask] = None
@@ -70,7 +70,7 @@ class Combat:
 
         self.determine_enemy_actions()
 
-        combat_entities: List[CombatEntity] = self.players + self.enemies
+        combat_entities: list[CombatEntity] = self.players + self.enemies
 
         for entity in combat_entities:
             if entity not in self.initiatives:
@@ -136,8 +136,8 @@ class Combat:
         game.discord_connection.send_game_chat_sync(f"Accepting orders for next round in {remaining_time[0]} minutes and {remaining_time[1]} seconds")
 
     def disambiguate_enemies(self) -> None:
-        all_enemies_in_room: List[Enemy] = self.enemies.copy()
-        all_names: Dict[str, List[Enemy]] = {}
+        all_enemies_in_room: list[Enemy] = self.enemies.copy()
+        all_names: Dict[str, list[Enemy]] = {}
         while len(all_enemies_in_room) > 0:
             current_enemy = all_enemies_in_room[0]
             all_names[current_enemy.name] = list(filter(lambda x: x.name == current_enemy.name, all_enemies_in_room))
@@ -220,7 +220,7 @@ class Combat:
             return 0
         return sum(x.cost for x in order_list)
 
-    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: List[Any], cost: int, command_valid: Callable) -> bool:
+    def accept_player_order(self, game: Game, source_player: Character, action: Callable, params: list[Any], cost: int, command_valid: Callable) -> bool:
         if not command_valid(game, source_player, params):
             game.discord_connection.send_game_chat_sync("Order invalid", tagged_users=[source_player.discord_user])
             return False

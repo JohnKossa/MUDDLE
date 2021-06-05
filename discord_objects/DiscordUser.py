@@ -1,7 +1,7 @@
 from __future__ import annotations
 import discord
 
-from typing import List, Optional
+from typing import Optional
 
 from game_objects.Character.Character import Character
 from game_objects.Commands.Command import Command, RebuildMaze, NewCharacter
@@ -14,7 +14,7 @@ class DiscordUser:
         self.is_admin: bool = True if username == "kg959#1350" else False
         self.discord_obj: discord.User = discord_obj
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         from game_objects.Commands.StaticCommands.AdminMap import AdminMap
         from game_objects.Commands.StaticCommands.ShowMap import ShowMap
         from game_objects.Commands.StaticCommands.ListCommands import ListCommands
@@ -35,13 +35,13 @@ class DiscordUser:
 
 class UserUtils:
     @staticmethod
-    def print_all(discord_users: List[DiscordUser]) -> None:
+    def print_all(discord_users: list[DiscordUser]) -> None:
         print(" ".join([str(x) for x in discord_users]))
 
     @staticmethod
-    def get_user_by_username(username: str, discord_users: List[DiscordUser]) -> Optional[DiscordUser]:
+    def get_user_by_username(username: str, discord_users: list[DiscordUser]) -> Optional[DiscordUser]:
         return next((user for user in discord_users if user.username == username), None)
 
     @staticmethod
-    def get_character_by_username(username: str, discord_users: List[DiscordUser]) -> Optional[Character]:
+    def get_character_by_username(username: str, discord_users: list[DiscordUser]) -> Optional[Character]:
         return next((user.current_character for user in discord_users if user.username == username), None)

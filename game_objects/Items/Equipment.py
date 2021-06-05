@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List
+from typing import Any
 
 from game_objects.Items.Item import Item
 
@@ -12,15 +12,15 @@ class Equipment(Item):
         self.slot: str = ""
         self.max_hitpoints: int = 100
         self.hit_points: int = 100
-        self.active_effects: List[Any] = []
+        self.active_effects: list[Any] = []
         self.resistances: dict = {  # any resistance not specified is assumed to be 0
         }
 
-    def use_effect(self, game: 'Game', source_player: Character, params: List[Any]):
+    def use_effect(self, game: 'Game', source_player: Character, params: list[Any]):
         # equips the item
         pass
 
-    def get_commands(self, game) -> List['Command']:
+    def get_commands(self, game) -> list['Command']:
         # will add equip and unequip commands
         return super().get_commands(game) + []
 

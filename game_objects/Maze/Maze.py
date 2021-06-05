@@ -1,6 +1,6 @@
 from __future__ import annotations
 import random
-from typing import List, Optional
+from typing import Optional
 
 import Game
 from game_objects.Maze.MazeRoom import MazeRoom, RoomUtils
@@ -14,7 +14,7 @@ class Maze:
         else:
             self.width: int = width
             self.height: int = height
-            self.rooms: List[MazeRoom] = []
+            self.rooms: list[MazeRoom] = []
             self.entry_room: Optional[MazeRoom] = None
             self.exit_room: Optional[MazeRoom] = None
 

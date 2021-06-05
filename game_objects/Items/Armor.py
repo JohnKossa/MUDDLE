@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List
 
 from game_objects.Items.Equipment import Equipment
 from utils.Constanats import DamageTypes
@@ -33,7 +32,7 @@ class Armor(Equipment):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game) + []
 
 
@@ -44,6 +43,7 @@ class PlateArmor(Armor):
         super().__init__()
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronPlate"
+        self.traits = self.traits + ["metallic"]
         self.damage_resistances: dict = {
             DamageTypes.Slash: 2,
             DamageTypes.Pierce: 0,
@@ -57,7 +57,7 @@ class PlateArmor(Armor):
             DamageTypes.Electricity: -1
         }
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game) + []
 
 
@@ -68,6 +68,7 @@ class ChainArmor(Armor):
         super().__init__()
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronChainmail"
+        self.traits = self.traits + ["metallic"]
         self.damage_resistances: dict = {
             DamageTypes.Slash: 2,
             DamageTypes.Pierce: 1,
@@ -81,7 +82,7 @@ class ChainArmor(Armor):
             DamageTypes.Electricity: -1
         }
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game) + []
 
 
@@ -108,5 +109,5 @@ class Gambeson(Armor):
             DamageTypes.Fire: -1
         }
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game) + []

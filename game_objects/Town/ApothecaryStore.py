@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List
 
 from game_objects.Commands.Command import Command
 from game_objects.Room import Room
@@ -8,7 +7,7 @@ from game_objects.Room import Room
 class ApothecaryStore(Room):
     def __init__(self):
         super().__init__(name=f"Apothecary Store")
-        self.neighbors: List[Room] = []
+        self.neighbors: list[Room] = []
 
     def describe_room(self) -> str:
         # TODO split this into a first visit and subsequent visits description
@@ -19,5 +18,5 @@ class ApothecaryStore(Room):
             """"Welcome to Bottle of Wonders! I'm Hazel. How can I help you today?" """
         ])
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game)

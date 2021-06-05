@@ -1,5 +1,3 @@
-from typing import List
-
 import discord
 
 import Game
@@ -24,7 +22,7 @@ class ShowHelp(Command):
             "    0: Command Name"
         ])
 
-    def do_action(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
         if len(params) == 0:
             return ShowHelp.show_help()
         from discord_objects.DiscordUser import UserUtils

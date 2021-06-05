@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List
+from typing import Any
 
 from game_objects.Commands.Command import Command
 from game_objects.Commands.NoncombatCommands.LootCommand import LootCommand
@@ -14,7 +14,7 @@ class Fixture:
     def describe(self) -> str:
         return ""
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return []
 
 
@@ -59,5 +59,5 @@ class TreasureChest(Fixture):
         else:
             return "An empty wooden treasure chest sits on the floor."
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return super().get_commands(game) + [LootCommand()]

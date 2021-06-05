@@ -1,6 +1,5 @@
 from __future__ import annotations
 import random
-from typing import List
 from game_objects.Enemy import Enemy
 from utils.Constanats import DamageTypes
 
@@ -8,6 +7,7 @@ from utils.Constanats import DamageTypes
 class BossEnemy(Enemy):
     def __init__(self):
         super().__init__()
+        self.traits = self.traits + ["boss"]
 
 
 class StoneGolem(BossEnemy):
@@ -19,6 +19,7 @@ class StoneGolem(BossEnemy):
         self.name: str = "Stone Golem"
         self.max_health = 150
         self.health = 150
+        self.traits = self.traits + ["construct", "stone"]
         self.natural_armor = {
             "hit": {
                 DamageTypes.Slash: 3,
@@ -34,7 +35,7 @@ class StoneGolem(BossEnemy):
                 DamageTypes.Ice: 1
             }
         }
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.possible_attacks: list[(int, AttackAction)] = [
             (2, AttackAction(name="punch",
                              hit_bonus=1,
                              dmg_type=DamageTypes.Bludgeon,
@@ -48,7 +49,7 @@ class StoneGolem(BossEnemy):
                              dmg_bonus=0,
                              action_cost=2))
         ]
-        self.drops: List[Item] = [Coins(count=random.randint(100, 300))] + random.choices(
+        self.drops: list[Item] = [Coins(count=random.randint(100, 300))] + random.choices(
             [
                 Sword(),
                 Dagger(),
@@ -68,6 +69,7 @@ class StrawGolem(BossEnemy):
         self.name: str = "Straw Golem"
         self.max_health = 150
         self.health = 150
+        self.traits = self.traits + ["construct"]
         self.natural_armor = {
             "hit": {
                 DamageTypes.Slash: -1,
@@ -83,7 +85,7 @@ class StrawGolem(BossEnemy):
                 DamageTypes.Ice: 3
             }
         }
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.possible_attacks: list[(int, AttackAction)] = [
             (2, AttackAction(name="punch",
                              hit_bonus=1,
                              dmg_type=DamageTypes.Bludgeon,
@@ -103,7 +105,7 @@ class StrawGolem(BossEnemy):
                              dmg_bonus=0,
                              action_cost=2))
         ]
-        self.drops: List[Item] = [
+        self.drops: list[Item] = [
              Coins(count=random.randint(100, 300))
          ] + random.choices([
             Sword(),

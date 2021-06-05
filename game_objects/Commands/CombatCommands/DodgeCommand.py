@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from Game import Game
 from game_objects.Character.Character import Character
@@ -12,13 +12,13 @@ from utils.TriggerFunc import TriggerFunc
 class DodgeCommand(CombatOnlyCommand):
     from game_objects.CombatEntity import CombatEntity
 
-    def __init__(self, aliases: List[str] = None):
+    def __init__(self, aliases: list[str] = None):
         super().__init__()
         self.combat_action_cost: int = 1
         if aliases is not None:
-            self.aliases: List[str] = aliases
+            self.aliases: list[str] = aliases
         else:
-            self.aliases: List[str] = ["Dodge"]
+            self.aliases: list[str] = ["Dodge"]
 
     @classmethod
     def show_help(cls) -> str:
@@ -28,13 +28,13 @@ class DodgeCommand(CombatOnlyCommand):
             "Params: None"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         """Check if the command is still valid."""
         if source_player.stamina >= 5:
             return True
         return False
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]) -> None:
         if source_player.stamina < 5:
             game.discord_connection.send_game_chat_sync(f"{source_player.combat_name}'s stamina is too low.")
         else:

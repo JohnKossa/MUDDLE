@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import Game
 
@@ -14,16 +14,16 @@ class AttackCommand(CombatOnlyCommand):
     from game_objects.AttackAction import AttackAction
     from game_objects.Items.Weapon import Weapon
 
-    def __init__(self, attack_action: AttackAction, aliases: List[str] = None, weapon: Optional[Weapon] = None):
+    def __init__(self, attack_action: AttackAction, aliases: list[str] = None, weapon: Optional[Weapon] = None):
         from game_objects.AttackAction import AttackAction
         super().__init__()
         self.combat_action_cost: int = attack_action.action_cost
         self.source_weapon = weapon
         self.attack_action: AttackAction = attack_action
         if aliases is not None:
-            self.aliases: List[str] = aliases
+            self.aliases: list[str] = aliases
         else:
-            self.aliases: List[str] = [
+            self.aliases: list[str] = [
                 "Attack",
                 "Atk"
             ]
@@ -38,7 +38,7 @@ class AttackCommand(CombatOnlyCommand):
             "   0: Name of the enemy to attack (optional)"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy
         from utils.CommandHelpers import match_enemy, match_player
@@ -65,7 +65,7 @@ class AttackCommand(CombatOnlyCommand):
             return False
         return True
 
-    def do_combat_action(self, game: Game, source_player: CombatEntity, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: CombatEntity, params: list[Any]) -> None:
         from game_objects.Character.Character import Character
         from game_objects.Enemy import Enemy
         from utils.CommandHelpers import match_enemy, match_player

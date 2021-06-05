@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from utils.TextHelpers import enumerate_objects, pluralize
 
@@ -17,13 +17,13 @@ class Room:
         from game_objects.Items.Item import Item
         from game_objects.Conversation import Conversation
         self.name: str = name
-        self.aliases: List[str] = []
+        self.aliases: list[str] = []
         self.template: Any = None
-        self.fixtures: List[Fixture] = []
-        self.items: List[Item] = []
+        self.fixtures: list[Fixture] = []
+        self.items: list[Item] = []
         self.combat: Optional[Combat] = None
-        self.conversations: List[Conversation] = []
-        self.neighbors: List[Room] = []
+        self.conversations: list[Conversation] = []
+        self.neighbors: list[Room] = []
 
     def get_door(self, name: str) -> Optional[Room]:
         # dig through all neighbors by name then alias, returning the correct one
@@ -54,16 +54,16 @@ class Room:
                     return neighbor
         return None
 
-    def get_characters(self, game: Game) -> List[Character]:
+    def get_characters(self, game: Game) -> list[Character]:
         return list(filter(lambda x: x.current_room == self, game.players))
 
-    def get_enemies(self, game: Game) -> List[Enemy]:
+    def get_enemies(self, game: Game) -> list[Enemy]:
         return list(filter(lambda x: x.current_room == self, game.enemies))
 
-    def get_npcs(self, game: Game) -> List[NPC]:
+    def get_npcs(self, game: Game) -> list[NPC]:
         return list(filter(lambda x: x.current_room == self, game.npcs))
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
         from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
         from game_objects.Commands.NoncombatCommands.ConversationCommands import TalkCommand, SayCommand

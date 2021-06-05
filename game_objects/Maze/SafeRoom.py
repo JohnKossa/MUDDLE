@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List, Optional
 
 from game_objects.Commands.Command import Command
 from game_objects.Maze.MazeRoom import MazeRoom
@@ -49,6 +48,6 @@ class SafeRoom(MazeRoom):
         maze_room.west_door = None
         return to_return
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         to_return = super().get_commands(game)
         return to_return

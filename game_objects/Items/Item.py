@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from game_objects.GameEntity import GameEntity
 
@@ -13,6 +13,8 @@ class Item(GameEntity):
         self.max_stack_size: int = 1
         self.weight: int = 0
         self.name: str = "Item"
+        self.aliases:  list[str] = []
+        self.traits:  list[str] = []
         self.template: Any = None
 
     def to_dict(self, full_depth=True) -> dict:
@@ -22,6 +24,8 @@ class Item(GameEntity):
             "max_stack_size": self.max_stack_size,
             "weight": self.weight,
             "name": self.name,
+            "aliases": self.aliases,
+            "traits": self.traits
         }
 
     @classmethod
@@ -58,11 +62,11 @@ class Item(GameEntity):
         new_item.template = self.template
         return new_item
 
-    def use_effect(self, game: 'Game', source_player: Character, params: List[Any]) -> None:
+    def use_effect(self, game: 'Game', source_player: Character, params:  list[Any]) -> None:
         # describes what happens when a player does !use with the item
         raise Exception(f"Use effect not implemented for {self.name}")
 
-    def get_commands(self, game) -> List['Command']:
+    def get_commands(self, game) ->  list['Command']:
         return []
 
 
@@ -72,8 +76,9 @@ class Coins(Item):
         super().__init__()
         self.quantity: int = random.randrange(2, 9) if count is None else count
         self.max_stack_size: int = 1000000000
-        self.weight: int = 0
+        self.weight = .03393
         self.name: str = "GoldCoin"
+        self.traits = self.traits + ["metallic", "currency", "tiny"]
         self.template: Any = None
 
     def describe(self) -> str:
@@ -85,3 +90,4 @@ class DungeonMap(Item):
     def __init__(self):
         super().__init__()
         self.name: str = "DungeonMap"
+        self.weight = .00045

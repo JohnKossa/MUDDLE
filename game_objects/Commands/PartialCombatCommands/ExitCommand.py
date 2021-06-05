@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import Game
 from game_objects.Character.Character import Character
@@ -13,7 +13,7 @@ class Exit(PartialCombatCommand):
 
     def __init__(self):
         super().__init__()
-        self.aliases: List[str] = [
+        self.aliases: list[str] = [
             "Exit",
             "Go",
             "Door"
@@ -28,7 +28,7 @@ class Exit(PartialCombatCommand):
             "    0: The name of the door to use"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         room = source_player.current_room
         direction = params[0]
         door = room.get_door(direction.lower())
@@ -36,7 +36,7 @@ class Exit(PartialCombatCommand):
             return False
         return True
 
-    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_noncombat(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         from utils.Constanats import Triggers
         source_player = UserUtils.get_character_by_username(str(message.author), game.discord_users)
@@ -55,14 +55,14 @@ class Exit(PartialCombatCommand):
         game.trigger(Triggers.EnterRoom, source_player=source_player, source_entity=source_player, room=source_player.current_room)
         return source_player.current_room.describe(game)
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]) -> None:
         from utils.Constanats import Triggers
         from utils.TriggerFunc import TriggerFunc
         # after combat finishes, leave room
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} runs for the door.")
         game.once(Triggers.RoundEnd, TriggerFunc(self.leave_room, game, source_player, params))
 
-    def leave_room(self, source_player: Character, params: List[Any], game: Optional[Game] = None, **kwargs) -> None:
+    def leave_room(self, source_player: Character, params: list[Any], game: Optional[Game] = None, **kwargs) -> None:
         from utils.Constanats import Triggers
         discord_user = source_player.discord_user
         room = source_player.current_room

@@ -2,7 +2,7 @@
     "constructor": "Axe",
     "quantity": 1,
     "max_stack_size": 1,
-    "weight": 0,
+    "weight": 11,
     "name": "Axe",
     "slot": "hand",
     "max_hitpoints": 100,

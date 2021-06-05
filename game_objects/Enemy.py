@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import Optional
 import random
 import Game
 from game_objects.AttackAction import AttackAction
@@ -23,6 +23,7 @@ class Enemy(CombatEntity, GameEntity):
         self.description: str = None
         self.max_health: int = 50
         self.health: int = 50
+        self.traits = []
         self.natural_armor: dict = {
             "hit": {},
             "dmg": {}
@@ -31,7 +32,7 @@ class Enemy(CombatEntity, GameEntity):
             "hit": {},
             "dmg": {}
         }
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.possible_attacks: list[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0))
         ]
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch
@@ -102,7 +103,8 @@ class Goblin(Enemy):
         self.name = "Goblin"
         self.health = 25
         self.max_health = 25
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.traits = self.traits + ["goblin", "humanoid"]
+        self.possible_attacks: list[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0)),
             (3, AttackAction(name="stab", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 10), dmg_bonus=0))
         ]
@@ -131,7 +133,8 @@ class Kobold(Enemy):
         self.name = "Kobold"
         self.health = 15
         self.max_health = 15
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.traits = self.traits + ["kobold", "humanoid", "draconic"]
+        self.possible_attacks: list[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=0)),
             (1, AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(2, 4), dmg_bonus=0)),
             (1, AttackAction(name="stab", hit_bonus=3, dmg_type=DamageTypes.Pierce, dmg_roll=(3, 4), dmg_bonus=0))
@@ -163,7 +166,8 @@ class Orc(Enemy):
         self.name = "Orc"
         self.health = 75
         self.max_health = 75
-        self.possible_attacks: List[(int, AttackAction)] = [
+        self.traits = self.traits + ["orc", "humanoid"]
+        self.possible_attacks: list[(int, AttackAction)] = [
             (1, AttackAction(name="punch", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 4), dmg_bonus=1)),
             (3, AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(1, 16), dmg_bonus=0))
         ]

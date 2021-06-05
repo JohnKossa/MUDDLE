@@ -1,4 +1,4 @@
-from typing import List, Any, Optional
+from typing import Any, Optional
 
 from Game import Game
 from game_objects.Character.Character import Character
@@ -26,7 +26,7 @@ class FocusPotion(Consumable):
         to_return.__dict__.update(source_dict)
         return to_return
 
-    def use_effect(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def use_effect(self, game: Game, source_player: Character, params: list[Any]) -> None:
         game.discord_connection.send_game_chat_sync(f"{source_player.combat_name} drinks a focus potion. Hit chance increased.")
         status = FocusPotionStatus(source_player)
         source_player.add_status(game, status)

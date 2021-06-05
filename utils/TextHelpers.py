@@ -1,7 +1,3 @@
-from __future__ import annotations
-from typing import List
-
-
 def pronoun_3p_subject(obj) -> str:
     if not hasattr(obj, "gender"):
         return "they"
@@ -35,7 +31,7 @@ def pronoun_3p_possessive(obj) -> str:
         return "their"
 
 
-def enumerate_objects(items: List[str]) -> str:
+def enumerate_objects(items: list[str]) -> str:
     if len(items) == 1:
         return items[0]
     if len(items) == 2:

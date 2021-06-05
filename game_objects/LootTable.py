@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List
 
 from utils.Dice import get_random
 
@@ -16,7 +15,7 @@ class LootTable:
     def remove_item(self, item) -> None:
         self.items.remove(item)
 
-    def roll_drops(self, luck=0) -> List[Item]:
+    def roll_drops(self, luck=0) -> list[Item]:
         to_return = []
         for (item, chance) in self.items:
             if get_random(luck=luck) < chance:

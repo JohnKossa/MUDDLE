@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List
+from typing import Optional
 
 import Game
 import utils.TriggerFunc
@@ -32,7 +32,7 @@ class CharacterSkills:
     def from_dict(cls, source_dict, character) -> CharacterSkills:
         return CharacterSkills(character)
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         return []
 
 

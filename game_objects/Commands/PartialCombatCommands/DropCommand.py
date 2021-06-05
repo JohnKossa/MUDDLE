@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List
+from typing import Any
 
 from Game import Game
 from game_objects.Character.Character import Character
@@ -13,7 +13,7 @@ class Drop(PartialCombatCommand):
 
     def __init__(self):
         super().__init__()
-        self.aliases: List[str] = [
+        self.aliases: list[str] = [
             "Drop",
             "Discard"
         ]
@@ -28,7 +28,7 @@ class Drop(PartialCombatCommand):
             "    1: (optional) Quantity"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         """Check if the command is still valid."""
         from utils.CommandHelpers import match_bag_item
         target_item = get_by_index(params, 0)
@@ -42,7 +42,7 @@ class Drop(PartialCombatCommand):
             return False
         return True
 
-    def do_noncombat(self, game: Game, params: List[str], message: discord.Message):
+    def do_noncombat(self, game: Game, params: list[str], message: discord.Message):
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -64,7 +64,7 @@ class Drop(PartialCombatCommand):
             room.items.append(dropped_items)
         return f"Dropped {quantity} {matched_item.name}"
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]) -> None:
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]) -> None:
         target_item = params[0]
         room = source_player.current_room
         player_bag = source_player.inventory.bag

@@ -1,6 +1,6 @@
 from __future__ import annotations
 import random
-from typing import Optional, List
+from typing import Optional
 
 
 class CharacterInventory:
@@ -22,7 +22,7 @@ class CharacterInventory:
             EquipmentSlots.Mainhand: random.choice([Sword(), Dagger(), Mace(), Spear(), Axe(), Torch()]),
             EquipmentSlots.Belt: [HealthPotion()]
         }
-        self.bag: List[Item] = [HealthPotion()]
+        self.bag: list[Item] = [HealthPotion()]
 
     def to_dict(self) -> dict:
         from utils.Constanats import EquipmentSlots
@@ -89,7 +89,7 @@ class CharacterInventory:
             consolidation_made = False
             for i in range(len(self.bag)):
                 first_item: Item = self.bag[i]
-                remaining_items: List[Item] = self.bag[i+1:]
+                remaining_items: list[Item] = self.bag[i+1:]
                 for ii in range(len(remaining_items)):
                     second_item: Item = remaining_items[ii]
                     if first_item.able_to_join(second_item):
@@ -167,7 +167,7 @@ class CharacterInventory:
                 return
         self.bag.append(to_add)
 
-    def get_commands(self, game) -> List[Command]:
+    def get_commands(self, game) -> list[Command]:
         from game_objects.Commands.Command import Command
         from game_objects.Commands.StaticCommands.InventoryCommand import InventoryCommand
         from game_objects.Commands.NoncombatCommands.UnequipCommand import Unequip
@@ -177,7 +177,7 @@ class CharacterInventory:
         from game_objects.Items.Equipment import Equipment
         from game_objects.Items.Consumables.Consumable import Consumable
         from utils.Constanats import EquipmentSlots
-        to_return: List[Command] = [InventoryCommand()]
+        to_return: list[Command] = [InventoryCommand()]
         if len(self.bag) > 0:
             to_return.append(Drop())
         if any(x is not None for x in self.equipment.values()):

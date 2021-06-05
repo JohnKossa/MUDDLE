@@ -1,6 +1,6 @@
 from __future__ import annotations
 import discord
-from typing import Any, List
+from typing import Any
 
 import Game
 from game_objects.Character.Character import Character
@@ -13,7 +13,7 @@ class Take(PartialCombatCommand):
 
     def __init__(self):
         super().__init__()
-        self.aliases: List[str] = [
+        self.aliases: list[str] = [
             "Take",
             "Pickup"
         ]
@@ -29,7 +29,7 @@ class Take(PartialCombatCommand):
             "    0: Item Name or all (optional)"
         ])
 
-    def command_valid(self, game: Game, source_player: CombatEntity, params: List[Any]) -> bool:
+    def command_valid(self, game: Game, source_player: CombatEntity, params: list[Any]) -> bool:
         from utils.CommandHelpers import match_item
         room = source_player.current_room
         matched_item = match_item(room.items, params)
@@ -37,7 +37,7 @@ class Take(PartialCombatCommand):
             return False
         return True
 
-    def do_noncombat(self, game: Game, params: List[str], message: discord.Message) -> str:
+    def do_noncombat(self, game: Game, params: list[str], message: discord.Message) -> str:
         from discord_objects.DiscordUser import UserUtils
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
@@ -62,7 +62,7 @@ class Take(PartialCombatCommand):
             room.items.remove(matched_item)
             return f"Picked up {matched_item.quantity} {matched_item.name}"
 
-    def do_combat_action(self, game: Game, source_player: Character, params: List[Any]):
+    def do_combat_action(self, game: Game, source_player: Character, params: list[Any]):
         target_item = params[0]
         room = source_player.current_room
         items = room.items
