@@ -14,11 +14,11 @@ class SafeRoom(MazeRoom):
         if SafeRoom.descriptions is None:
             import json
             with open(f"templates/rooms/saferoom.json", "r") as infile:
-                MazeRoom.descriptions = json.load(infile)
+                SafeRoom.descriptions = json.load(infile)
         import random
         random.seed(self.description_seed)
-        selected_description = random.choices(MazeRoom.descriptions, weights=list(
-            description.get("weight", 1) for description in MazeRoom.descriptions))[0]["description_long"]
+        selected_description = random.choices(SafeRoom.descriptions, weights=list(
+            description.get("weight", 1) for description in SafeRoom.descriptions))[0]["description_long"]
         if isinstance(selected_description, list):
             return "\n".join(selected_description)
         if isinstance(selected_description, str):

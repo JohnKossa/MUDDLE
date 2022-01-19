@@ -12,6 +12,7 @@ from utils.Scheduler import Scheduler
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
+CHANNEL = os.getenv('DISCORD_CHANNEL')
 
 intents = Intents.default()
 intents.members = True
@@ -35,7 +36,10 @@ class CustomClient(discord.Client):
 
         guild = self.guilds[0]
         text_channels = guild.text_channels
-        self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
+        if CHANNEL is None:
+            self.game_channel = next(filter(lambda channel: channel.name == "muddle-game", text_channels), None)
+        else:
+            self.game_channel = next(filter(lambda channel: channel.name == CHANNEL, text_channels), None)
         await self.send_game_chat("Server started.")
         if len(self.game.players) == 0:
             self.game.load_players()

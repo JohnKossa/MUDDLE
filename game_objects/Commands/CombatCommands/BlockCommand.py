@@ -35,7 +35,7 @@ class BlockCommand(CombatOnlyCommand):
     def do_combat_action(self, game: Game, source_entity: CombatEntity, params: list[Any]) -> None:
         game.discord_connection.send_game_chat_sync(f"{source_entity.combat_name} raises their shield.")
         status = BlockingStatus(source_entity)
-        source_entity.add_status(status)
+        source_entity.add_status(game, status)
 
 
 class BlockingStatus(StatusEffect):

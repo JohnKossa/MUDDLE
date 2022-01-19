@@ -94,5 +94,7 @@ class Cast(PartialCombatCommand):
             game.discord_connection.send_game_chat_sync(
                 f"{source_player.combat_name} attempted to cast {target_spell} but can't do so while in combat.")
             return
+
+
         #   if all targets valid
         #       do it
