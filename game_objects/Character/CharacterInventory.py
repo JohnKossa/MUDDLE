@@ -18,8 +18,8 @@ class CharacterInventory:
         self.equipment = {
             EquipmentSlots.Head: None,
             EquipmentSlots.Body: Gambeson(),
-            EquipmentSlots.Offhand: None,
             EquipmentSlots.Mainhand: random.choice([Sword(), Dagger(), Mace(), Spear(), Axe(), Torch()]),
+            EquipmentSlots.Offhand: None,
             EquipmentSlots.Belt: [HealthPotion()]
         }
         self.bag: list[Item] = [HealthPotion()]

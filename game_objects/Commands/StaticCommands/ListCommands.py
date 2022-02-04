@@ -9,7 +9,8 @@ class ListCommands(Command):
         super().__init__()
         self.aliases = [
             "ListCommands",
-            "Commands"
+            "Commands",
+            "ShowCommands"
         ]
 
     @classmethod

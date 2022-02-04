@@ -66,11 +66,15 @@ class Room:
     def get_commands(self, game) -> list[Command]:
         from game_objects.Commands.PartialCombatCommands.ExitCommand import Exit
         from game_objects.Commands.PartialCombatCommands.TakeCommand import Take
+        from game_objects.Commands.NoncombatCommands.SocialCommands import HighFiveCommand
         from game_objects.Commands.NoncombatCommands.ConversationCommands import TalkCommand, SayCommand
         to_return = [Exit()]
         if len(self.items) > 0:
             to_return.append(Take())
-        to_return.append(TalkCommand())
+        if len(self.get_characters(game)) > 1:
+            to_return.append(HighFiveCommand())
+        if len(self.get_npcs(game)) > 0:
+            to_return.append(TalkCommand())
         if len(self.conversations):
             to_return.append(SayCommand())
         for fixture in self.fixtures:

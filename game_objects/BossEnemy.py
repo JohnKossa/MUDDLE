@@ -16,7 +16,7 @@ class StoneGolem(BossEnemy):
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike
         from game_objects.Items.Item import Coins, Item
         super().__init__()
-        self.name: str = "Stone Golem"
+        self.name: str = "StoneGolem"
         self.max_health = 150
         self.health = 150
         self.traits = self.traits + ["construct", "stone"]
@@ -66,7 +66,7 @@ class StrawGolem(BossEnemy):
         from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike
         from game_objects.Items.Item import Coins, Item
         super().__init__()
-        self.name: str = "Straw Golem"
+        self.name: str = "StrawGolem"
         self.max_health = 150
         self.health = 150
         self.traits = self.traits + ["construct"]

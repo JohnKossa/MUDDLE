@@ -99,6 +99,7 @@ class Game:
         from game_objects.Maze.SafeRoom import SafeRoom
         for player in self.players:
             if isinstance(player.current_room, SafeRoom) or player.zone == "Town":
+                print(f"Healing player {str(player.name)} in safe room")
                 player.health += (player.max_health - player.health) * .05
                 player.stamina += (player.max_stamina - player.stamina) * .05
                 player.mana += (player.max_mana - player.mana) * .05
