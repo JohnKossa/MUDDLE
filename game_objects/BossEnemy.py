@@ -13,7 +13,7 @@ class BossEnemy(Enemy):
 class StoneGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike, CrudgelOfChione
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "StoneGolem"
@@ -57,13 +57,13 @@ class StoneGolem(BossEnemy):
                 Mace(),
                 Axe(),
                 Torch()
-            ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike()], k=1)
+            ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike(), CrudgelOfChione()], k=1)
 
 
 class StrawGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike, CrudgelOfChione
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "StrawGolem"
@@ -114,4 +114,4 @@ class StrawGolem(BossEnemy):
             Mace(),
             Axe(),
             Torch()
-        ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike()], k=1)
+        ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike(), CrudgelOfChione()], k=1)
