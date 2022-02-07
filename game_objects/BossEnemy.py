@@ -13,7 +13,8 @@ class BossEnemy(Enemy):
 class StoneGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike, CrudgelOfChione
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, \
+            PerunsPike, CrudgelOfChione, RavensBeak
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "StoneGolem"
@@ -57,13 +58,20 @@ class StoneGolem(BossEnemy):
                 Mace(),
                 Axe(),
                 Torch()
-            ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike(), CrudgelOfChione()], k=1)
+            ], k=4) + random.choices([
+                DuelistDagger(),
+                WerebatFang(),
+                PerunsPike(),
+                CrudgelOfChione(),
+                RavensBeak()
+            ], k=1)
 
 
 class StrawGolem(BossEnemy):
     def __init__(self):
         from game_objects.AttackAction import AttackAction
-        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, PerunsPike, CrudgelOfChione
+        from game_objects.Items.Weapon import Sword, Dagger, Spear, Mace, Axe, Torch, DuelistDagger, WerebatFang, \
+            PerunsPike, CrudgelOfChione, RavensBeak
         from game_objects.Items.Item import Coins, Item
         super().__init__()
         self.name: str = "StrawGolem"
@@ -105,13 +113,17 @@ class StrawGolem(BossEnemy):
                              dmg_bonus=0,
                              action_cost=2))
         ]
-        self.drops: list[Item] = [
-             Coins(count=random.randint(100, 300))
-         ] + random.choices([
+        self.drops: list[Item] = [Coins(count=random.randint(100, 300))] + random.choices([
             Sword(),
             Dagger(),
             Spear(),
             Mace(),
             Axe(),
             Torch()
-        ], k=4) + random.choices([DuelistDagger(), WerebatFang(), PerunsPike(), CrudgelOfChione()], k=1)
+        ], k=4) + random.choices([
+            DuelistDagger(),
+            WerebatFang(),
+            PerunsPike(),
+            CrudgelOfChione(),
+            RavensBeak()
+        ], k=1)
