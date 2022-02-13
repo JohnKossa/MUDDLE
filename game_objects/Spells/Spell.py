@@ -4,6 +4,12 @@ from game_objects.StatusEffect import StatusEffect
 from game_objects.CombatEntity import CombatEntity
 
 
+class TargetTypes:
+    Player = "player"
+    Enemy = "enemy"
+    Item = "item"
+
+
 class Spell:
     def __init__(self):
         self.name = ""
@@ -15,6 +21,9 @@ class Spell:
         # TODO come up with a way to specify targets declaratively
         self.spell_effect = None
         self.target_type = None
+        self.min_targets = 0
+        self.max_targets = 1000000
+        # TODO possibly do a list of tuples of (target type, min, max)
 
 
 def attack_effect(targets: list[Any], attack: AttackAction):

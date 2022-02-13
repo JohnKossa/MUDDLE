@@ -123,19 +123,20 @@ class SizeUpCommand(Command):
         from utils.Constanats import DamageTypes
 
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
-        enemy_name = get_by_index(params, 0, None)
-        if enemy_name is None:
-            return "No enemy specified. Usage is:\n" + SizeUpCommand.show_help()
         player = discord_user.current_character
-        room = player.current_room
-        from utils.CommandHelpers import match_enemy, match_player
-        enemies = [x for x in game.enemies if x.current_room == room]
+        enemies = player.current_room.combat.enemies
         target = None
-        match_enemy_result = match_enemy(enemies, params)
-        if match_enemy_result is not None:
-            target = match_enemy_result
+        if len(params) > 0:
+            from utils.CommandHelpers import match_enemy
+            match_enemy_result = match_enemy(enemies, params)
+            if match_enemy_result is not None:
+                target = match_enemy_result
+            if target is None:
+                return "Specified enemy not found."
+        elif len(enemies) == 1:
+            target = enemies[0]
         if target is None:
-            return "Specified enemy not found."
+            return "No enemy specified. Usage is:\n" + SizeUpCommand.show_help()
         else:
             resistances = target.resistances
             hit_resistances = resistances["hit"]

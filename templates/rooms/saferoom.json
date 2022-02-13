@@ -25,5 +25,19 @@
     "description_short": "You are in a room. It's not very interesting.",
     "description_lowlight": "The room is dimly lit. It's not very interesting.",
     "description_dark": "It's so dark you can't see your hand in front of your face."
+  },{
+    "weight": 1,
+    "description_long": [
+      "As you pass through the door, a golden heraldic crest appears on the door behind you.",
+      "It appears this room is protected by some sort of magical seal.",
+      "This room seems a bit unusual. Brightly lit hundreds of tiny glowing wisps, the ground is densely covered with flowers.",
+      "Along the sides are several old pots and raised beds filled with ornamental flowers.",
+      "Given the overgrown nature of this place, it seems like this place hasn't been cultivated for quite some time.",
+      "Along the wall hangs a large rope hammock.",
+      "This may be a good place to take a rest, should the need arise."
+    ],
+    "description_short": "You are in a room. It's not very interesting.",
+    "description_lowlight": "The room is dimly lit. It's not very interesting.",
+    "description_dark": "It's so dark you can't see your hand in front of your face."
   }
 ]

@@ -86,6 +86,7 @@ class Dagger(Weapon):
         self.name: str = "Dagger"
         self.traits = self.traits + ["metallic", "simple_weapon"]
         self.weight = 2.2
+        self.max_stack_size = 10
         self.attacks: list[AttackAction] = [
             AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(2, 4), dmg_bonus=0),
             AttackAction(name="stab", hit_bonus=3, dmg_type=DamageTypes.Pierce, dmg_roll=(3, 4), dmg_bonus=0)
@@ -200,8 +201,8 @@ class RavensBeak(Weapon):
         self.weight = 13.2
         self.traits = self.traits + ["metallic"]
         self.attacks: list[AttackAction] = [
-            AttackAction(name="stab", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=0),
-            AttackAction(name="spike", hit_bonus=0, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 16), dmg_bonus=2, action_cost=2),
-            AttackAction(name="hammer", hit_bonus=0, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 12), dmg_bonus=2, action_cost=2),
+            AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=0),
+            AttackAction(name="spike", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 16), dmg_bonus=2, action_cost=2),
+            AttackAction(name="hammer", hit_bonus=1, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 16), dmg_bonus=2, action_cost=2),
         ]
         self.default_attack: str = "stab"

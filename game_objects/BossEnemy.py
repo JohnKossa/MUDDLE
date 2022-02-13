@@ -119,7 +119,6 @@ class StrawGolem(BossEnemy):
             Spear(),
             Mace(),
             Axe(),
-            Torch()
         ], k=4) + random.choices([
             DuelistDagger(),
             WerebatFang(),
