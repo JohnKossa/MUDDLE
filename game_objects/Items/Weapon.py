@@ -72,6 +72,7 @@ class Torch(Weapon):
         self.name: str = "Torch"
         self.traits = self.traits + ["elemental_weapon", "light_source", "simple_weapon"]
         self.weight = 2.2
+        self.max_stack_size = 5
         self.attacks: list[AttackAction] = [
             AttackAction(name="firepoke", hit_bonus=3, dmg_type=DamageTypes.Fire, dmg_roll=(1, 12), dmg_bonus=-1)
         ]

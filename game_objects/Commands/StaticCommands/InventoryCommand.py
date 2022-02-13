@@ -22,6 +22,7 @@ class InventoryCommand(Command):
         discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
         player = discord_user.current_character
         player.inventory.consolidate_items()
+        player.inventory.sort_items()
         to_return = ""
         if len(player.inventory.equipment.values()) > 0:
             to_return = to_return + "Equipment:\n"

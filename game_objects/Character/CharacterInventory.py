@@ -100,6 +100,9 @@ class CharacterInventory:
                 if consolidation_made:
                     break
 
+    def sort_items(self) -> None:
+        self.bag.sort(key=lambda x: x.name)
+
     def equip_item(self, item: Item, slot_name: str) -> (bool, str):
         from game_objects.Items.Equipment import Equipment
         from game_objects.Items.Consumables.Consumable import Consumable
