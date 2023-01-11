@@ -7,10 +7,11 @@ from game_objects.Items.Consumables.Consumable import Consumable
 
 
 class StaminaPotion(Consumable):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.name = "StaminaPotion"
         self.max_stack_size = 5
+        self._basevalue = 50
 
     def to_dict(self, full_depth=True) -> dict:
         to_return = super().to_dict()

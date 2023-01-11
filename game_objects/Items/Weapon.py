@@ -7,9 +7,9 @@ from utils.Constanats import DamageTypes
 class Weapon(Equipment):
     from game_objects.Commands.Command import Command
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         from game_objects.AttackAction import AttackAction
-        super().__init__()
+        super().__init__(**kwargs)
         self.slot: str = "hand"
         self.attacks: list[AttackAction] = []
         self.default_attack: str = ""
@@ -48,11 +48,12 @@ class Weapon(Equipment):
 class Sword(Weapon):
     from game_objects.Commands.Command import Command
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Sword"
         self.weight = 6.6
+        self._basevalue = 1500
         self.traits = self.traits + ["metallic"]
         self.attacks: list[AttackAction] = [
             AttackAction(name="slash", hit_bonus=2, dmg_type=DamageTypes.Slash, dmg_roll=(2, 6), dmg_bonus=1),
@@ -66,11 +67,12 @@ class Sword(Weapon):
 
 
 class Torch(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Torch"
         self.traits = self.traits + ["elemental_weapon", "light_source", "simple_weapon"]
+        self._basevalue = 1
         self.weight = 2.2
         self.max_stack_size = 5
         self.attacks: list[AttackAction] = [
@@ -81,11 +83,12 @@ class Torch(Weapon):
 
 
 class Dagger(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Dagger"
         self.traits = self.traits + ["metallic", "simple_weapon"]
+        self._basevalue = 200
         self.weight = 2.2
         self.max_stack_size = 10
         self.attacks: list[AttackAction] = [
@@ -96,12 +99,13 @@ class Dagger(Weapon):
 
 
 class DuelistDagger(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "DuelistDagger"
         self.traits = self.traits + ["metallic"]
         self.weight = 2.2
+        self._basevalue = 2000
         self.attacks: list[AttackAction] = [
             AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(2, 4), dmg_bonus=0),
             AttackAction(name="stab", hit_bonus=3, dmg_type=DamageTypes.Pierce, dmg_roll=(3, 4), dmg_bonus=0)
@@ -111,11 +115,12 @@ class DuelistDagger(Weapon):
 
 
 class WerebatFang(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "WerebatFang"
         self.weight = 2.2
+        self._basevalue = 2000
         self.attacks: list[AttackAction] = [
             AttackAction(name="impale", hit_bonus=3, dmg_type=DamageTypes.Pierce, dmg_roll=(3, 4), dmg_bonus=0)
         ]
@@ -124,12 +129,13 @@ class WerebatFang(Weapon):
 
 
 class Mace(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Mace"
         self.traits = self.traits + ["metallic"]
         self.weight = 8.8
+        self._basevalue = 1200
         self.attacks: list[AttackAction] = [
             AttackAction(name="strike", hit_bonus=2, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 8), dmg_bonus=1),
             AttackAction(name="spike", hit_bonus=1, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 6), dmg_bonus=0),
@@ -139,11 +145,12 @@ class Mace(Weapon):
 
 
 class CrudgelOfChione(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "CrudgelOfChione"
         self.weight = 8.8
+        self._basevalue = 12000
         self.attacks: list[AttackAction] = [
             AttackAction(name="froststrike", hit_bonus=2, dmg_type=DamageTypes.Ice, dmg_roll=(1, 8), dmg_bonus=1),
             AttackAction(name="strike", hit_bonus=2, dmg_type=DamageTypes.Bludgeon, dmg_roll=(1, 8), dmg_bonus=1),
@@ -154,12 +161,13 @@ class CrudgelOfChione(Weapon):
 
 
 class Spear(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Spear"
         self.traits = self.traits + ["metallic"]
         self.weight = 6.6
+        self._basevalue = 200
         self.attacks: list[AttackAction] = [
             AttackAction(name="slash", hit_bonus=1, dmg_type=DamageTypes.Slash, dmg_roll=(1, 8), dmg_bonus=0),
             AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=2)
@@ -168,12 +176,13 @@ class Spear(Weapon):
 
 
 class PerunsPike(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "PerunsPike"
         self.traits = self.traits + ["metallic"]
         self.weight = 39.6
+        self._basevalue = 2000
         self.attacks: list[AttackAction] = [
             AttackAction(name="shock", hit_bonus=1, dmg_type=DamageTypes.Electricity, dmg_roll=(1, 12), dmg_bonus=2),
             AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=1)
@@ -182,12 +191,13 @@ class PerunsPike(Weapon):
 
 
 class Axe(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "Axe"
         self.traits = self.traits + ["metallic"]
         self.weight = 8.8
+        self._basevalue = 2000
         self.attacks: list[AttackAction] = [
             AttackAction(name="slash", hit_bonus=0, dmg_type=DamageTypes.Slash, dmg_roll=(1, 16), dmg_bonus=0)
         ]
@@ -195,11 +205,12 @@ class Axe(Weapon):
 
 
 class RavensBeak(Weapon):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         from game_objects.AttackAction import AttackAction
         self.name: str = "RavensBeak"
         self.weight = 13.2
+        self._basevalue = 1500
         self.traits = self.traits + ["metallic"]
         self.attacks: list[AttackAction] = [
             AttackAction(name="stab", hit_bonus=2, dmg_type=DamageTypes.Pierce, dmg_roll=(1, 12), dmg_bonus=0),

@@ -7,9 +7,9 @@ from utils.Constanats import DamageTypes
 class Armor(Equipment):
     from game_objects.Commands.Command import Command
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         from utils.Constanats import EquipmentSlots
-        super().__init__()
+        super().__init__(**kwargs)
         self.slot: str = EquipmentSlots.Body
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.damage_resistances: dict = {}
@@ -39,10 +39,11 @@ class Armor(Equipment):
 class PlateArmor(Armor):
     from game_objects.Commands.Command import Command
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronPlate"
+        self._basevalue = 60000
         self.traits = self.traits + ["metallic"]
         self.damage_resistances: dict = {
             DamageTypes.Slash: 2,
@@ -69,6 +70,7 @@ class ChainArmor(Armor):
         # resistances bestowed to user when equipped. assumed to be 0 if not specified
         self.name: str = "IronChainmail"
         self.traits = self.traits + ["metallic"]
+        self._basevalue = 7500
         self.damage_resistances: dict = {
             DamageTypes.Slash: 2,
             DamageTypes.Pierce: 1,
@@ -92,6 +94,7 @@ class Gambeson(Armor):
     def __init__(self):
         super().__init__()
         self.name: str = "Gambeson"
+        self._basevalue = 500
         self.damage_resistances: dict = {
             DamageTypes.Slash: 1,
             DamageTypes.Pierce: 0,

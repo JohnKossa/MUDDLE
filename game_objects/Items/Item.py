@@ -7,15 +7,37 @@ from game_objects.GameEntity import GameEntity
 class Item(GameEntity):
     from game_objects import Character
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.quantity: int = 1
         self.max_stack_size: int = 1
         self.weight: int = 0
+        self._basevalue: int = 0
         self.name: str = "Item"
         self.aliases:  list[str] = []
         self.traits:  list[str] = []
         self.template: Any = None
+        self.quality: int = kwargs.get("quality", 50)
+        self._condition: int = min(kwargs.get("condition", 100), self.quality)
+
+    @property
+    def value(self):
+        if self.condition == 100:
+            multiplier: float = 4.0
+        elif self.condition > 90:
+            multiplier: float = 3.0 + (self.condition - 90)/10.0
+        else:
+            multiplier: float = self.condition/50.0
+        return int(self._basevalue * multiplier)
+
+
+    @property
+    def condition(self):
+        return self._condition
+
+    @condition.setter
+    def condition(self, val):
+        self._condition = min(self._condition, self.quality)
 
     def to_dict(self, full_depth=True) -> dict:
         return {
@@ -23,9 +45,12 @@ class Item(GameEntity):
             "quantity": self.quantity,
             "max_stack_size": self.max_stack_size,
             "weight": self.weight,
+            "quality": self.quality,
+            "_condition": self.condition,
             "name": self.name,
             "aliases": self.aliases,
-            "traits": self.traits
+            "traits": self.traits,
+            "_basevalue": self._basevalue
         }
 
     @classmethod
@@ -46,7 +71,10 @@ class Item(GameEntity):
             return False
         if self.quantity + other.quantity > self.max_stack_size:
             return False
-        # TODO when we add durability, if durability doesn't match, return false
+        if self.quality != other.quality:
+            return False
+        if self.condition != other.condition:
+            return False
         # TODO when we add custom effects (magic), return false if either has one
         return True
 
@@ -77,6 +105,7 @@ class Coins(Item):
         self.quantity: int = random.randrange(2, 9) if count is None else count
         self.max_stack_size: int = 1000000000
         self.weight = .03393
+        self._basevalue = 1
         self.name: str = "GoldCoin"
         self.traits = self.traits + ["metallic", "currency", "tiny"]
         self.template: Any = None

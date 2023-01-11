@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 import Game
 from game_objects.Commands.Command import Command
+from game_objects.Commands.NoncombatCommands.NoncombatCommand import NoncombatCommand
 import utils.TriggerFunc
 from utils.CombatHelpers import sum_resistances
 
@@ -21,7 +22,9 @@ class CharacterSkills:
         combat_sense.level = 1
         dungeon_lore = DungeonLore(self.current_character)
         dungeon_lore.level = 1
-        self.skill_entries = {"Cartography": cartography, "CombatSense": combat_sense, "DungeonLore": dungeon_lore}
+        appraise = Appraise(self.current_character)
+        appraise.level = 1
+        self.skill_entries = {"Cartography": cartography, "CombatSense": combat_sense, "DungeonLore": dungeon_lore, "Appraise": appraise}
 
     def get_by_name(self, name: str) -> CharacterSkill:
         return next(filter(lambda x: x.name == name, self.skill_entries.values()), None)
@@ -237,3 +240,100 @@ class LookupCommand(Command):
                 resp_strings.append(type.capitalize().ljust(15)+f"{hit_resistances.get(type,0 )}".ljust(15)+f"{dmg_resistances.get(type,0)}".ljust(15))
 
             return resp_strings[0] +  "```"+"\n".join(resp_strings[1:])+"```"
+
+
+class Appraise(CharacterSkill):
+    def __init__(self, source_character):
+        super().__init__(source_character)
+        self.name = "Appraise"
+
+    def get_commands(self):
+        return [AppraiseCommand()]
+
+
+class AppraiseCommand(NoncombatCommand):
+    def __init__(self):
+        super().__init__()
+        self.aliases = ["Appraise"]
+
+    @classmethod
+    def show_help(cls) -> str:
+        return "\n".join([
+            "Evaluates an item, revealing details about its apparent quality and value",
+            "Params:",
+            "  0: Name of an item in your bag"
+        ])
+
+    def do_action(self, game: Game, params: list[str], message: discord.Message) -> str:
+
+        from discord_objects.DiscordUser import UserUtils
+        from utils.ListHelpers import get_by_index
+
+        discord_user = UserUtils.get_user_by_username(str(message.author), game.discord_users)
+        player = discord_user.current_character
+        item_name = get_by_index(params, 0, None)
+        if item_name is None:
+            return "Item name not specified. Usage is:\n" + AppraiseCommand.show_help()
+        matched_item = player.inventory.get_bag_item_by_name(item_name)
+        if matched_item is None:
+            return "Item not found"
+
+        ret_string = "You carefully examine your "+item_name+".\n"
+        ret_string += quality_string(matched_item.quality)+"\n"
+        ret_string += condition_string(matched_item.condition/matched_item.quality)+"\n"
+        ret_string += f"You figure you could get about {appraise_value(matched_item)} gold for this."
+
+        return ret_string
+
+
+def quality_string(quality_score: int):
+    quality_strings = {
+        "legendary": "This item is of unbelievable quality.",  # 100
+        "masterwork": "This item is of masterful quality.",  # 90-99
+        "excellent": "This item is truly excellent. ",  # 80-89
+        "great": "This item is really well put together.",  # 70-79
+        "good": "This item looks pretty well-made.",  # 60-69
+        "normal": "This item looks okay. Not bad, but not great either.",  # 40-59
+        "poor": "This item looks like it was put together by an amateur or someone who wasn't having a great day. It'll probably work, but it's not something you'd choose to use if given the choice.",
+        # 21-39
+        "awful": "It looks like someone tried to craft this item while blindfolded and drunk. Either that or it's a joke. It's hard to believe that someone actually put any amount of effort into this."
+        # 0-20
+    }
+    if quality_score == 100:
+        return quality_strings["legendary"]
+    if quality_score >= 90:
+        return quality_strings["masterwork"]
+    if quality_score >= 80:
+        return quality_strings["excellent"]
+    if quality_score >= 70:
+        return quality_strings["great"]
+    if quality_score >= 60:
+        return quality_strings["good"]
+    if quality_score >= 40:
+        return quality_strings["normal"]
+    if quality_score >= 20:
+        return quality_strings["poor"]
+    return quality_strings["awful"]
+
+
+def condition_string(condition_pct: float):
+    condition_strings = {
+        "full_repair": "This item is in full repair.",
+        "good": "This item is in very good condition.",
+        "normal": "This item is in respectable condition.",
+        "poor": "This item is pretty heavily worn.",
+        "near-broken": "This item is on its last legs and could break at any moment."
+    }
+    if condition_pct == 1:
+        return condition_strings["full_repair"]
+    if condition_pct >= .75:
+        return condition_strings["good"]
+    if condition_pct >= .5:
+        return condition_strings["normal"]
+    if condition_pct >= .25:
+        return condition_strings["poor"]
+    return condition_strings["near-broken"]
+
+
+def appraise_value(item):
+    return item.value

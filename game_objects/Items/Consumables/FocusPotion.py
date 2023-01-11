@@ -12,6 +12,7 @@ class FocusPotion(Consumable):
         super().__init__()
         self.name = "FocusPotion"
         self.max_stack_size = 5
+        self._basevalue = 75
 
     def to_dict(self, full_depth=True) -> dict:
         to_return = super().to_dict()

@@ -114,14 +114,14 @@ class Goblin(Enemy):
         from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 10)), .30),
-            (HealthPotion(),                     .20),
-            (StaminaPotion(),                    .10),
-            (Torch(),                            .10),
-            (Dagger(),                           .10),
-            (Axe(),                              .08),
-            (Sword(),                            .05),
-            (Mace(),                             .03),
-            (Spear(),                            .03)
+            (HealthPotion(quality=random.randint(1, 70), condition=100),  .20),
+            (StaminaPotion(quality=random.randint(1, 70), condition=100), .10),
+            (Torch(quality=random.randint(1, 70), condition=100),         .10),
+            (Dagger(quality=random.randint(1, 70), condition=100),        .10),
+            (Axe(quality=random.randint(1, 70), condition=100),           .08),
+            (Sword(quality=random.randint(1, 70), condition=100),         .05),
+            (Mace(quality=random.randint(1, 70), condition=100),          .03),
+            (Spear(quality=random.randint(1, 70), condition=100),         .03)
         ])
         self.drops = self.loot_table.roll_drops()
 
@@ -145,14 +145,14 @@ class Kobold(Enemy):
         from game_objects.Items.Consumables.StaminaPotion import StaminaPotion
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 10)), .50),
-            (Dagger(),                           .50),
-            (HealthPotion(),                     .20),
-            (StaminaPotion(),                    .10),
-            (Torch(),                            .10),
-            (Axe(),                              .03),
-            (Sword(),                            .03),
-            (Mace(),                             .03),
-            (Spear(),                            .03)
+            (Dagger(quality=random.randint(1, 70), condition=100),                           .50),
+            (HealthPotion(quality=random.randint(1, 70), condition=100),                     .20),
+            (StaminaPotion(quality=random.randint(1, 70), condition=100),                    .10),
+            (Torch(quality=random.randint(1, 70), condition=100),                            .10),
+            (Axe(quality=random.randint(1, 70), condition=100),                              .03),
+            (Sword(quality=random.randint(1, 70), condition=100),                            .03),
+            (Mace(quality=random.randint(1, 70), condition=100),                             .03),
+            (Spear(quality=random.randint(1, 70), condition=100),                            .03)
         ])
         self.drops = self.loot_table.roll_drops()
 
@@ -188,12 +188,12 @@ class Orc(Enemy):
         from game_objects.Items.Item import Coins
         self.loot_table = LootTable([
             (Coins(count=random.randint(1, 100)), .50),
-            (HealthPotion(),                      .50),
-            (PlateArmor(),                        .30),
-            (StaminaPotion(),                     .20),
-            (Axe(),                               .20),
-            (Sword(),                             .10),
-            (Mace(),                              .10),
-            (Spear(),                             .10)
+            (HealthPotion(quality=random.randint(1, 70), condition=100),                      .50),
+            (PlateArmor(quality=random.randint(20, 70), condition=100),                        .30),
+            (StaminaPotion(quality=random.randint(1, 70), condition=100),                     .20),
+            (Axe(quality=random.randint(20, 70), condition=100),                               .20),
+            (Sword(quality=random.randint(20, 70), condition=100),                             .10),
+            (Mace(quality=random.randint(20, 70), condition=100),                              .10),
+            (Spear(quality=random.randint(20, 70), condition=100),                             .10)
         ])
         self.drops = self.loot_table.roll_drops()

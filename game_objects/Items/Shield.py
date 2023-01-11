@@ -11,6 +11,7 @@ class Shield(Equipment):
         self.name: str = "IronRoundShield"
         self.traits = self.traits + ["metallic"]
         self.weight = 11
+        self._basevalue = 2000
         self.slot: str = "hand"
 
     def to_dict(self, full_depth=True) -> dict:

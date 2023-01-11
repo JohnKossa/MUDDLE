@@ -7,7 +7,7 @@ from game_objects.Items.Item import Item
 class Equipment(Item):
     from game_objects import Character
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.slot: str = ""
         self.max_hitpoints: int = 100
