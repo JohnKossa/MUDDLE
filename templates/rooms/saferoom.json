@@ -2,42 +2,74 @@
   {
     "weight": 1,
     "description_long": [
-        "As you pass through the door, a golden heraldic crest appears on the door behind you.",
-        "It appears this room is protected by some sort of magical seal.",
-        "A tranquil fountain sits in the center of the room, lit not by torches, but candles placed delicately about its rim.",
-        "The usual dusty floor of the dungeon has turned instead to dirt, and a few tufts of grass poke up from it.",
-        "A very different sight from the rest of the rooms, this room has a somewhat calming presence to it.",
-        "This may be a good place to take a rest, should the need arise."
+        "As you cross the threshold, you feel a sudden sense of safety. Behind you, a golden heraldic crest materializes on the door, a sign of powerful protective magic at work.",
+        "The room itself is a peaceful oasis, a stark contrast to the oppressive dungeon. At the heart of the room is a tranquil fountain, its gentle trickling sound adding to the serenity. The glow of candles arranged around the fountain rim bathes the room in a soft, soothing light.",
+        "Instead of the dungeon's usual stone floor, your feet find a cushion of earth, where a few tufts of grass have bravely sprouted. This unexpected greenery adds a gentle freshness to the room.",
+        "Compared to the rest of the dungeon, this space feels like a sanctuary. It's calming, restful, a place to gather your strength. If fatigue ever threatens to overtake you, you'd be hard-pressed to find a better place to rest."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A protected room with a tranquil fountain and grassy floor. It's calm and soothing.",
+    "description_lowlight": "In the dim light, the flickering candles cast dancing shadows, creating a serene, dreamlike atmosphere.",
+    "description_dark": "Even in the darkness, the peaceful sound of the fountain and the scent of grass imbue the room with a comforting presence."
+  },
+  {
     "weight": 1,
     "description_long": [
-        "As you pass through the door, a golden heraldic crest appears on the door behind you.",
-        "It appears this room is protected by some sort of magical seal.",
-        "This room is brightly lit by a fire roaring in a stone fireplace along the back wall.",
-        "Flanking it on either side sit two large leather armchairs. They look rather cozy.",
-        "It doesn't seem usual to find a sitting room in a place like this.",
-        "This may be a good place to take a rest, should the need arise."
+        "As you step into the room, a golden heraldic crest appears on the door behind you, indicating a strong magical seal protecting the room.",
+        "Inside, a roaring fire in a stone fireplace casts flickering light and shadows on the walls. The room is warm and inviting.",
+        "On either side of the fireplace, two large leather armchairs sit. They look well-worn but extremely comfortable. A perfect place to rest tired bones.",
+        "It's an unexpected find in the midst of the dungeon, a cozy sitting room that almost feels like home. If you find yourself in need of rest, this would be an ideal place."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A protected room with a roaring fireplace and cozy armchairs. It's warm and inviting.",
+    "description_lowlight": "Under dim light, the fire's glow becomes even more comforting, casting dancing shadows that seem to keep any ill-intent at bay.",
+    "description_dark": "Even in the darkness, the warmth of the room and the crackling fire make it a reassuring space to rest."
+  },
+  {
     "weight": 1,
     "description_long": [
-      "As you pass through the door, a golden heraldic crest appears on the door behind you.",
-      "It appears this room is protected by some sort of magical seal.",
-      "This room seems a bit unusual. Brightly lit hundreds of tiny glowing wisps, the ground is densely covered with flowers.",
-      "Along the sides are several old pots and raised beds filled with ornamental flowers.",
-      "Given the overgrown nature of this place, it seems like this place hasn't been cultivated for quite some time.",
-      "Along the wall hangs a large rope hammock.",
-      "This may be a good place to take a rest, should the need arise."
+      "As you enter the room, a golden heraldic crest appears on the door behind you, signifying the room's magical protection.",
+      "The room is a riot of colors, brightly lit by hundreds of tiny glowing wisps. The floor is a floral carpet, teeming with blossoms of all hues.",
+      "Old pots and raised beds filled with ornamental flowers line the room, creating an overgrown yet beautiful spectacle. It seems like this place hasn't been tended to for quite some time, but nature has claimed it in the most charming way.",
+      "Hanging on the wall is a large rope hammock, just waiting for an occupant. This room, with its fragrant flowers and enchanting light, promises a safe and restful respite should you need one."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
+    "description_short": "A protected room filled with flowers and lit by glowing wisps. It's magical and restful.",
+    "description_lowlight": "In the dim light, the glowing wisps seem even more magical, their soft glow illuminating the flowers in a mesmerizing play of light.",
+    "description_dark": "In complete darkness, the room's tranquility is palpable, and the scent of the flowers is comforting."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+        "Upon entering this room, a golden heraldic crest materializes on the door behind you, a sure sign of protective magic.",
+        "A radiant, circular skylight in the center of the ceiling fills the room with daylight, casting long, dramatic shadows.",
+        "Several plush pillows and cushions are scattered around the room, all appearing remarkably clean and inviting.",
+        "The room carries a quiet peace with it, a sanctuary from the otherwise hostile environment of the dungeon.",
+        "Should the need to rest overcome you, this room seems like a comforting haven."
+    ],
+    "description_short": "A bright, cushion-filled room shielded by a magical seal. A comforting oasis in the dungeon.",
+    "description_lowlight": "As the daylight wanes, the room remains comforting, its cushions inviting under the dim light.",
+    "description_dark": "Even in darkness, the room exudes a warm and inviting atmosphere. You can feel the soft cushions underfoot."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+        "As you step inside, a golden heraldic crest etches itself onto the door behind you, indicating powerful protection magic at work.",
+        "This room appears to be a well-stocked library, complete with rows of towering bookshelves, filled to the brim with ancient tomes.",
+        "A large oak desk rests in the center of the room, with a high-backed, leather-bound chair tucked neatly under it. A dimly lit lamp sits atop the desk, casting a soft glow.",
+        "The scent of old books fills the air, creating a sense of serenity. A perfect place for rest and perhaps some light reading."
+    ],
+    "description_short": "A magically protected library full of ancient books. It's serene and inviting.",
+    "description_lowlight": "Under the dim light, the room takes on a mysterious allure, the lamp's glow barely reaching the book spines.",
+    "description_dark": "Even in complete darkness, the comforting smell of old books and parchment fills the air."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+      "Upon entering the room, a golden heraldic crest reveals itself on the door behind you, signifying an enchantment of protection.",
+      "Inside, the room is filled with the pleasant aroma of freshly baked bread. A large stone hearth occupies one corner, with a few loaves of bread still cooling.",
+      "A long wooden table laden with fresh fruits, cheese, and a pitcher of what looks like fresh milk sits in the center. A welcome sight for a weary traveler.",
+      "This room offers not just a place to rest, but a chance to satiate your hunger. It would be a shame not to partake in the bounty."
+    ],
+    "description_short": "A magically protected room filled with freshly baked bread and food. Inviting and satisfying.",
+    "description_lowlight": "Even under dim light, the welcoming scent of fresh bread pervades the room.",
+    "description_dark": "In the pitch-black room, you can still smell the comforting aroma of freshly baked bread."
   }
 ]

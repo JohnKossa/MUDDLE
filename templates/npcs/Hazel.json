@@ -24,7 +24,8 @@
                 "text": "Hazel says in her usual squeaky voice, \"Well, hello again {character.name}. Good to see you again.\"",
                 "responses": [
                     "WHERE_PARENTS_FAMILIAR",
-                    "WHAT_DO_YOU_SELL"
+                    "WHAT_DO_YOU_SELL",
+                    "ASK_AGE"
                 ]
             },
             "INTRODUCTION_RESP": {
@@ -43,6 +44,23 @@
             "PARENTS_RESP_HONEST": {
                 "text": "\"Oh, I haven't seen them in a loooong time. They died over a hundred years ago. This is my shop. If there's anything you need, I can probably get it for you.\"",
                 "responses": [
+                    "WHAT_DO_YOU_SELL"
+                ]
+            },
+            "ASK_AGE_RESP_HONEST": {
+                "text": "You know, I actually lost count ages ago. It's been so long that I've truly forgotten.",
+                "condition": "relationship['opinion'] >= 1",
+                "effect": "relationship['familiarity'] += 1",
+                "responses": [
+                    "WHERE_PARENTS_FAMILIAR",
+                    "WHAT_DO_YOU_SELL"
+                ]
+            },
+            "ASK_AGE_RESP_EVASIVE": {
+                "text": "Now, that's not a very polite question to ask, is it? It's considered quite rude to ask someone their age.",
+                "condition": "relationship['opinion'] < 1",
+                "responses": [
+                    "WHERE_PARENTS_FAMILIAR",
                     "WHAT_DO_YOU_SELL"
                 ]
             },
@@ -71,6 +89,11 @@
                 "condition": "relationship['familiarity'] >= 1",
                 "dialog": "PARENTS_RESP_HONEST"
             },
+            "ASK_AGE": {
+                "text": "Hazel, if you don't mind me asking, how old are you really?",
+                "condition": "relationship['familiarity'] >= 1",
+                "dialog": "ASK_AGE_RESP_HONEST"
+            },
             "WHAT_DO_YOU_SELL": {
                 "text": "So, what all do you sell here?",
                 "dialog": "WHAT_I_SELL"
@@ -79,6 +102,10 @@
     },
     "relationship": {
         "Horace Hamilton": {
+            "familiarity": 1,
+            "opinion": 0
+        },
+        "Michael Lundquist": {
             "familiarity": 1,
             "opinion": 0
         }

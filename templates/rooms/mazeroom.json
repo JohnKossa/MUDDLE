@@ -1,72 +1,125 @@
 [
   {
     "weight": 5,
-    "description_long": "You are in a room. This is the long form of it not being very interesting.",
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_long": "You find yourself in a seemingly empty room. The walls are adorned with ancient, faded tapestries that barely retain their original color. The floor is bare and cold to touch, and a vague sense of unease lingers in the air.",
+    "description_short": "An empty room with faded tapestries and an eerie atmosphere.",
+    "description_lowlight": "The dimness of the room adds to its eeriness, with faint silhouettes of the tapestries dancing on the walls.",
+    "description_dark": "As the darkness takes over, a faint draught can be felt, but the room gives away no secrets."
+  },
+  {
     "weight": 4,
     "description_long": [
-      "Cobwebs drape along sides of the room clinging to cracks in the stonework and several rows of shackles lining the wall.",
-      "You briefly wonder what this room used to be used for, but decide that's better left to the imagination."
+      "Cobwebs form a haunting pattern across the ceiling and walls of this room, appearing as ancient lacework in the gloomy light. Heavy iron shackles, rusted with age, line the walls.",
+      "You briefly wonder about the long-forgotten occupants of this place, but some things are better left in the past."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A haunted room with cobwebs and rusted shackles.",
+    "description_lowlight": "In the dim light, the cobwebs seem to move as if alive, and the shackles emit a chilling whisper.",
+    "description_dark": "Shrouded in darkness, you can almost hear the faint echoes of despair from a time long past."
+  },
+  {
     "weight": 3,
     "description_long": [
-      "This room seems a little brighter than others.",
-      "As you glance upward, you can see bits of the outside sky poking in.",
-      "In the cracks in the cobblestones below you, you see tiny clumps of moss making the most of this light."
+      "This room stands in stark contrast to the others, with rays of sunlight streaming through the cracks in the ceiling. Small tufts of resilient moss grow between the cobblestones, thriving in the meager light."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A brighter room with rays of sunlight and small moss tufts.",
+    "description_lowlight": "As the light diminishes, the moss seems to glow faintly, creating a serene atmosphere.",
+    "description_dark": "Even in complete darkness, the room holds a feeling of peace and resilience."
+  },
+  {
     "weight": 2,
     "description_long": [
-      "A dank scent fills this room.",
-      "The walls appear to have a light coating of algae on them, probably from the increased moisture.",
-      "You hear a faint dripping sound that you soon realize is coming from a rusted water pump in the corner",
-      "You're not sure what the implications of drinking water out of a rusty pump in a magical labryth are, but in a pinch, you could probably fill a container here."
+      "The air in this room is heavy with the scent of damp earth. The walls glisten with a light coating of algae, and a rusty pump stands in a corner, dripping water rhythmically onto the stone floor.",
+      "Drinking from this pump might not be the best idea, but in a dire situation, it could be a lifeline."
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A damp room with algae-covered walls and a rusty pump.",
+    "description_lowlight": "With limited light, the dripping sound seems to echo, creating an eerie melody.",
+    "description_dark": "In the dark, you feel the humidity of the room and hear the constant drip, drip, drip of the water."
+  },
+  {
     "weight": 1,
     "description_long": [
-      "You are in a room.",
-      "Along one wall, you see a humanoid skeleton slumped over, dressed in brown robes, but severely dried out.",
-      "It seems to have been here for quite some time.",
-      "Clutched in its bony fingers is a dusty tome."
+      "A morbid scene greets you in this room. A skeleton dressed in tattered robes rests against a wall, its bony fingers gripping a dusty, ancient tome. It's a grim reminder of the dungeon's history.",
+      "Curiosity piques at the sight of the book. What knowledge might it hold?"
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A room with a skeleton holding a dusty tome.",
+    "description_lowlight": "The dim light casts an eerie glow on the skeleton and the book, creating a macabre tableau.",
+    "description_dark": "In the dark, you feel the presence of the past, waiting to share its secrets."
+  },
+  {
     "weight": 1,
     "description_long": [
-      "This room doesn't seem to fit in at all with the others.",
-      "Instead of the usual dungeon-esque aesthetic, this looks like someone's bedroom.",
-      "A green woolen carpet covers most of the floor, with a neatly made four-poster bed in the center.",
-      "There appears to be a small sitting area on the side of the bed with a serving platter atop it.",
-      "But who would want to stay in a room in a dungeon?"
+      "This room is an anomaly in the dungeon. It resembles a homely bedroom with a neatly made four-poster bed and a woolen carpet. A cozy sitting area is set to the side, with a silver serving tray on a small table.",
+      "Who would choose to make a home in such a place?"
     ],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in front of your face."
-  },{
+    "description_short": "A bedroom-like room with a four-poster bed and a sitting area.",
+    "description_lowlight": "In the dim light, the room feels even cozier, but also a bit surreal, considering its location.",
+    "description_dark": "As the darkness settles, the warmth of the room seems to fade, replaced with a sense of unease."
+  },
+  {
     "weight": 1,
     "description_long": [
-      "You are in a room.",
-      "In a corner sits a workstation with round wooden table, some flasks and bowls, and a tiny stone fire pit set into its center.",
-      "It appears to be some sort of alchemy lab.",
-      "It's super interesting"],
-    "description_short": "You are in a room. It's not very interesting.",
-    "description_lowlight": "The room is dimly lit. It's not very interesting.",
-    "description_dark": "It's so dark you can't see your hand in otherwise front of your face."
+      "This room holds a surprise. A workstation sits in a corner, complete with a round table, various flasks, and bowls, and a small fire pit. The setup screams alchemy, piquing your interest.",
+      "What sort of experiments were conducted here?"
+    ],
+    "description_short": "A room with an alchemist's workstation.",
+    "description_lowlight": "In the dim light, the shadows seem to dance around the workstation, hinting at the arcane rituals performed here.",
+    "description_dark": "In the utter darkness, the room holds a sense of foreboding, as if some unseen force watches you."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+      "You find yourself in what appears to be a gallery room.",
+      "The walls are adorned with faded tapestries and dusty portraits, their subjects long forgotten.",
+      "Despite their age, the tapestries and paintings seem to hold a certain dignity, a silent testament to the past.",
+      "A thick layer of dust covers the floor, disturbed only by your footsteps."
+    ],
+    "description_short": "You are in a gallery of faded tapestries and dusty portraits. The room holds a silent testament to the past.",
+    "description_lowlight": "With dim light, the faded colors of the tapestries seem to come alive, their images whispering tales of the past.",
+    "description_dark": "Even in the darkness, you can feel the room's history surrounding you."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+        "You step into a dimly lit room.",
+        "The room appears to be a long-abandoned forge with an old anvil sitting in the middle, a pile of rusted tools lying scattered nearby.",
+        "In the corner of the room, a heap of charcoal still sits, waiting to be ignited after a long period of disuse.",
+        "Despite the decay, there is a sense of the intense heat and labor that once filled this space."
+    ],
+    "description_short": "You are in an old, abandoned forge. The remnants of previous labor still linger.",
+    "description_lowlight": "The room, dimly lit, reveals shadows of a forge that once roared with activity.",
+    "description_dark": "In the darkness, the silhouette of the old anvil barely stands out."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+      "You step into a room with a sense of heaviness.",
+      "The air is thick with an unidentifiable, spicy scent, possibly from the numerous urns neatly arranged on wooden shelves.",
+      "Each urn is sealed and bears a distinct symbol; perhaps they are ingredients for some forgotten ritual or recipe."
+    ],
+    "description_short": "You are in a room filled with sealed urns on shelves, each bearing a distinct symbol.",
+    "description_lowlight": "In the dim light, the symbols on the urns appear more cryptic, their meaning obscured.",
+    "description_dark": "In the darkness, the outline of the urns on the shelves are barely visible."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+      "You enter a room where silence reigns supreme.",
+      "In the center of the room, a life-size stone statue of a knight stands guard, its stone sword pointing downwards.",
+      "The stonework is exquisite, but the identity of the knight, like the room's purpose, is a mystery."
+    ],
+    "description_short": "You are in a quiet room, dominated by a stone statue of an unknown knight.",
+    "description_lowlight": "Under the dim light, the shadows of the stone knight stretch across the room, adding to its mystery.",
+    "description_dark": "In the darkness, the silhouette of the stone statue looms, a silent sentinel."
+  },
+  {
+    "weight": 1,
+    "description_long": [
+      "You find yourself in a room where the faint sounds of ticking clocks echo.",
+      "Several ancient, ornate timepieces adorn the walls, each ticking at its own unique rhythm.",
+      "Whether these clocks tell the right time is uncertain, but their ceaseless tick-tock creates an unusual harmony."
+    ],
+    "description_short": "You are in a room filled with ancient clocks, each ticking at its own rhythm.",
+    "description_lowlight": "Under the low light, the gleam of the clocks' hands is barely visible, yet their ticking remains constant.",
+    "description_dark": "In the darkness, the ticking of the clocks is the only sound that fills the room."
   }
 ]
